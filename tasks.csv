@@ -71,7 +71,6 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,11,"replace_except_first",1,ex17,"[]","['always']","['alw*ys']","[None]"
 2023,8,11,"replace",1,ex18,"[]","['mix','pod']","['mid','pox']","[None]"
 2023,8,11,"replace",1,ex18,"[]","['dog','dinner']","['donner','dig']","[None]"
-
 2023,8,12,"simplecalculator",1,ex3a,"[12,12,'+']","[]","[24]","[None]"
 2023,8,12,"simplecalculator",1,ex3a,"[12,12,'*']","[]","[144]","[None]"
 2023,8,12,"simplecalculator",1,ex3,"[]","[5,6,'*']","[30]","[None]"
