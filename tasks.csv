@@ -24,7 +24,6 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,4,"noar",1,ex8,"[]","[6]","['יש לגייס דחוף חניכים לשבט','תנועת נוער למימוש החזון של יצירת חברה לומדת ועושה']","[None]"
 2023,8,4,"colors",1,ex9,"[]","['yellow']","['צהוב','צבעים מזינים את נפש האדם ומעניקים לו תמיד שמחה ותקווה']","[None]"
 2023,8,4,"colors",1,ex9,"[]","['blue']","['כחול','צבעים מזינים את נפש האדם ומעניקים לו תמיד שמחה ותקווה']","[None]"
-
 2023,8,5,"showticket",1,ex1,"[]","[10]","[480]","[None]"
 2023,8,5,"showticket",2,ex1,"[]","[110]","[4730]","[None]"
 2023,8,5,"roads",1,ex2,"[]","['tomer',5]","['tomer 150']","[None]"
@@ -41,7 +40,6 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,5,"bus",1,ex7,"[]","[20,10]","['ADULT',600]","[None]"
 2023,8,5,"bus",1,ex8,"[]","[30,40]","[40,10]","[None]"
 2023,8,5,"bus",1,ex8,"[]","[50,33]","[50,17]","[None]"
-
 2023,8,11,"wordnextletter",1,ex3,"[]","['abcd']","['97', '98', '99', '100'']","[None]"
 2023,8,11,"wordnextletter",1,ex4,"[]","['abcd']","['bcde']","[None]"
 2023,8,11,"wordnextletter",2,ex4,"[]","['zoo']","['app']","[None]"
@@ -104,9 +102,7 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,12,"female_male",1,ex9b,"[]","['female','female','male','male','male','male','male','male']","['males']","[None]"
 2023,8,12,"female_male",1,ex9b,"[]","['female','female','female','female','female','female','male','male']","['females']","[None]"
 2023,8,12,"female_male",1,ex9b,"[]","['female','female','female','female','male','male','male','male']","['equal']","[None]"
-
 2023,8,13,"exists",1,ex5,"[]","['ron','dan','mor','uri','tamar','adi','mor']","['לא נוכל לשבצך בכיתה זו']","[None]"
 2023,8,13,"exists",1,ex5,"[]","['ron','dan','mor','uri','tamar','adi','noa']","[['ron','dan','mor','uri','tamar','adi','noa']]","[None]"
-
 2023,8,15,"calc_tuple",1,ex2a,"[10,12]","[]","[]","[(22,120,2)]"
 2023,8,15,"calc_tuple",1,ex2b,"[]","[10,14]","[22,120,2]","[None]"
