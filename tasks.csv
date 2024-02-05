@@ -101,9 +101,9 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,12,"female_male",1,ex9a,"['male','male']","[]","[]","['m']"
 2023,8,12,"female_male",1,ex9a,"['male','female']","[]","[]","['v']"
 2023,8,12,"female_male",1,ex9a,"['female','female']","[]","[]","['f']"
-2023,8,12,"female_male",1,ex9b,"[]","['female','female','male','male','male','male','male','male']","['males']","[]"
-2023,8,12,"female_male",1,ex9b,"[]","['female','female','female','female','female','female','male','male']","['females']","[]"
-2023,8,12,"female_male",1,ex9b,"[]","['female','female','female','female','male','male','male','male']","['equal']","[]"
+2023,8,12,"female_male",1,ex9b,"[]","['female','female','male','male','male','male','male','male']","['males']","[None]"
+2023,8,12,"female_male",1,ex9b,"[]","['female','female','female','female','female','female','male','male']","['females']","[None]"
+2023,8,12,"female_male",1,ex9b,"[]","['female','female','female','female','male','male','male','male']","['equal']","[None]"
 
 2023,8,13,"exists",1,ex5,"[]","['ron','dan','mor','uri','tamar','adi','mor']","['לא נוכל לשבצך בכיתה זו']","[None]"
 2023,8,13,"exists",1,ex5,"[]","['ron','dan','mor','uri','tamar','adi','noa']","[['ron','dan','mor','uri','tamar','adi','noa']]","[None]"
