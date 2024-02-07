@@ -103,5 +103,7 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,12,"female_male",1,ex9b,"[]","['female','female','female','female','male','male','male','male']","['equal']","[None]"
 2023,8,13,"exists",1,ex5,"[]","['ron','dan','mor','uri','tamar','adi','mor']","['לא נוכל לשבצך בכיתה זו']","[None]"
 2023,8,13,"exists",1,ex5,"[]","['ron','dan','mor','uri','tamar','adi','noa']","[['ron','dan','mor','uri','tamar','adi','noa']]","[None]"
+2023,8,13,"5prices",1,ex6,"[]","[10,20,15,40,15]","[100]","[None]"
+2023,8,13,"avg",1,ex7,"[]","[85,80,95,50,70,100,80]","[]","[None]"
 2023,8,15,"calc_tuple",1,ex2a,"[10,12]","[]","[]","[(22,120,2)]"
 2023,8,15,"calc_tuple",1,ex2b,"[]","[10,14]","[22,120,2]","[None]"
