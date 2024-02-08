@@ -74,7 +74,7 @@ def print(*args,  **kwargs):
         with open('output.txt', "w",encoding='ISO-8859-8') as out:
             __builtin__.print(*args, **kwargs, file=out)
         with open('output.txt', "r",encoding='ISO-8859-8') as out:
-            txt_batch = out.read().strip()
+            txt_batch = out.read() #.strip()
         run.output_lst.append(txt_batch)
         return txt_batch
     else:
