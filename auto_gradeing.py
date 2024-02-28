@@ -44,7 +44,8 @@ def get_questions(exercise_key):
 
 def import_tasks(grade,question_set,questions ):
   t=[]
-  df = pd.read_csv('./tasks.csv',sep=',',on_bad_lines='skip',encoding='utf-8')
+  task_url = r'https://raw.githubusercontent.com/tomer2b/auto_grading/main/tasks.csv'  # ./tasks.csv'
+  df = pd.read_csv(task_url,sep=',',on_bad_lines='skip',encoding='utf-8')
 
   df = df[df['class']==grade]
   df.question_set = df.question_set.astype(str)
