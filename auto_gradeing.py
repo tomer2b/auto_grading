@@ -51,7 +51,7 @@ def import_tasks(grade,question_set,questions ):
   df.question_set = df.question_set.astype(str)
   # ignore last letter of exercise_set in case last letter is subset of questions
   exerciser_set=str(question_set)[:-1] if not str(question_set).isnumeric() else str(question_set)
-  df = df[df['question_set']==[exerciser_set]]     
+  df = df[df['question_set']==exerciser_set]     
   df = df[df['function'].isin([f'{str(q)}' for q in questions]) ]
   # df = df[df['question_set'].str.contains(1)]
   #   print(df[['function','func_arg_list','in_list','exp_out_list','return_values']])
