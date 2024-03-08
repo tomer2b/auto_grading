@@ -47,7 +47,7 @@ def import_tasks(grade,question_set,questions ):
   
   df = pd.read_csv('./tasks.csv',sep=',',on_bad_lines='skip',encoding='utf-8')
 
-  df = df[df['class']==grade]
+  # df = df[df['class']==grade]
   df.question_set = df.question_set.astype(str)
   # ignore last letter of exercise_set in case last letter is subset of questions
   exerciser_set=str(question_set)[:-1] if not str(question_set).isnumeric() else str(question_set)
