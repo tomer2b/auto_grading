@@ -107,8 +107,6 @@ class CheckAssignment:
         # self.runs = tests
 
 
-
-
     def run_task(self,func, parms, in_list, expected_result, return_values):
         try:
 
