@@ -26,8 +26,8 @@ questions_dic={
     # '12':['3a','3b','4a','4b','5a','5b','6a',6,'7a','7b','8a','8b','9a','9b'], # functions
     '12a':['ex3a','ex3','ex4a','ex4','how_many_legs','ex5','ex6a'], # functions
     '12b':['ex7a','ex7b','ex8a','ex8b','ex9a','ex9b'], # functions
-    '13a':['ex5','ex6','ex7','ex8'],
-    '13b':['ex101','ex102','ex103','ex104','ex105','ex106','ex107'],
+    '13a':['ex5','ex6','ex7','ex8'], # lists
+    '13b':['ex101','ex102','ex103','ex104','ex105','ex106','ex107'], # lists of list
     '14':['ex201','ex202','ex203','ex204']
    }
 
