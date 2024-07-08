@@ -110,6 +110,7 @@ class CheckAssignment:
     def run_task(self,func, parms, in_list, expected_result, return_values):
         RED_TEXT='\033[41m'
         REGULAR_TEXT='\033[0m'
+        GREEN_TEXT='\033[92m'
         try:
 
             self.input_lst=in_list
@@ -125,7 +126,7 @@ class CheckAssignment:
             expected_result = [str(x) for x in expected_result]
             if self.output_lst == expected_result:
               if (return_values == list(result)):
-                return True,func_call,'Excellent'
+                return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}'
               else:
                 return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {RED_TEXT}{str(return_values)}{REGULAR_TEXT}'
             else:
