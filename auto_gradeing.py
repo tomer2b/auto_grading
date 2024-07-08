@@ -108,7 +108,7 @@ class CheckAssignment:
 
 
     def run_task(self,func, parms, in_list, expected_result, return_values):
-        RED_TEXT='\033[41m'
+        RED_TEXT='\033[91m'
         REGULAR_TEXT='\033[0m'
         GREEN_TEXT='\033[92m'
         try:
@@ -128,12 +128,12 @@ class CheckAssignment:
               if (return_values == list(result)):
                 return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}'
               else:
-                return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {RED_TEXT}{str(return_values)}{REGULAR_TEXT}'
+                return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}'
             else:
               if (return_values == list(result)):
-                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {RED_TEXT}{str(expected_result)}{REGULAR_TEXT}'
+                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
               else:
-                return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {RED_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {RED_TEXT}{str(expected_result)}{REGULAR_TEXT}'
+                return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
           
 
         except Exception as e:
