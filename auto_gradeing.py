@@ -8,6 +8,10 @@ import builtins as __builtin__
 test_weight=0.2
 question_weight=0.8
 
+RED_TEXT='\033[91m'
+REGULAR_TEXT='\033[0m'
+GREEN_TEXT='\033[92m'
+
 # the key is the MD file source
 questions_dic={
     '2':['ex2','ex3','ex4'],
@@ -108,9 +112,7 @@ class CheckAssignment:
 
 
     def run_task(self,func, parms, in_list, expected_result, return_values):
-        RED_TEXT='\033[91m'
-        REGULAR_TEXT='\033[0m'
-        GREEN_TEXT='\033[92m'
+
         try:
 
             self.input_lst=in_list
@@ -171,13 +173,13 @@ def run_test(tasks,student_functions):
         run_time=end-start
         if run_results[ex_count][0]==True:
             correct_answer+=1
-            output += f'Ok {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]}  '
+            output += f'{GREEN_TEXT}Ok{REGULAR_TEXT} {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]}  '
             # print(output)
             output += '\n'
         else:
 
             error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            output += f'X  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {error_msg}'
+            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {RED_TEXT}{error_msg}{REGULAR_TEXT}'
             # print(output)
             output += '\n'
 
