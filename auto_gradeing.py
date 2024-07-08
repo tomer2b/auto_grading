@@ -10,16 +10,16 @@ question_weight=0.8
 
 # the key is the MD file source
 questions_dic={
-    '2':['ex2','ex3','ex4'],
-    '3':['ex9','ex10','ex11','ex12','ex13','ex14','ex15'],
-    '4':['ex4','ex5','ex6','ex7','ex8','ex9'],
-    '5':['ex1','ex2','ex3','ex4','ex5','ex6','ex7'],
-    '6':['ex2','ex3','ex4','ex5','ex6'],
+    '02':['ex2','ex3','ex4'],
+    '03':['ex9','ex10','ex11','ex12','ex13','ex14','ex15'],
+    '04':['ex4','ex5','ex6','ex7','ex8','ex9'],
+    '05':['ex1','ex2','ex3','ex4','ex5','ex6','ex7'],
+    '06':['ex2','ex3','ex4','ex5','ex6'],
     '7a':['ex2','ex3','ex4','ex5','ex6','ex7','ex8','ex9','ex10','ex11','ex12'],
     '7b':['ex100','ex101','ex102','ex103','ex104','ex107'],
     '8a':['ex2','ex3','ex4','ex5'],
     '8b':['ex11','ex12','ex13','ex14','ex15','ex16','ex17','ex18'],
-    '9':[],
+    '09':[],
     '10':[],
     '11':['ex4','ex6','ex7','ex8','ex9','ex10','ex11','ex12','ex13','ex14'], # strings
     '11z':['ex4','ex6','ex7','ex8','ex9','ex10','ex11','ex12','ex13','ex14','ex15','ex16','ex17','ex18','ex19'], # strings
