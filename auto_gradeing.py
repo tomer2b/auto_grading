@@ -179,7 +179,7 @@ def run_test(tasks,student_functions):
         else:
 
             error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {RED_TEXT}{error_msg}{REGULAR_TEXT}'
+            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {error_msg}'
             # print(output)
             output += '\n'
 
