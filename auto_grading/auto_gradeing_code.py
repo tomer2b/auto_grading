@@ -1,7 +1,7 @@
 # Copyright (C) 2024 Tomer Tubi - All Rights Reserved
 
 import pandas as pd
-
+import importlib.resources as pkg_resource
 import time
 import builtins as __builtin__
 
@@ -49,8 +49,8 @@ def get_questions(exercise_key):
 
 def import_tasks(grade,question_set,questions ):
   t=[]
-  
-  df = pd.read_csv('data/tasks.csv',sep=',',on_bad_lines='skip',encoding='utf-8')
+  with pkg_resource.open_text('auto_grading.data','tasks.csv') as file:
+    df = pd.read_csv(file,sep=',',on_bad_lines='skip',encoding='utf-8')
 
   # df = df[df['class']==grade]
   df.question_set = df.question_set.astype(str)
