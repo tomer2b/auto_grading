@@ -1,7 +1,7 @@
 # Copyright (C) 2024 Tomer Tubi - All Rights Reserved
 
 import pandas as pd
-import urllib.request
+
 import time
 import builtins as __builtin__
 
