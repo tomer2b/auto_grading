@@ -5,6 +5,7 @@ import urllib.request
 import time
 import builtins as __builtin__
 
+
 test_weight=0.2
 question_weight=0.8
 
@@ -49,7 +50,7 @@ def get_questions(exercise_key):
 def import_tasks(grade,question_set,questions ):
   t=[]
   
-  df = pd.read_csv('./tasks.csv',sep=',',on_bad_lines='skip',encoding='utf-8')
+  df = pd.read_csv('./data/tasks.csv',sep=',',on_bad_lines='skip',encoding='utf-8')
 
   # df = df[df['class']==grade]
   df.question_set = df.question_set.astype(str)

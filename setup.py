@@ -6,6 +6,9 @@ setup(
     packages=find_packages(),
     install_requires=[],
     include_package_data=True,
+    package_data={
+        'auto_grading': ['data/tasks.csv'],  # Specify the path relative to the package
+    },    
     description="A module for automatic grading python assignments for students",
     author="Tomer Tubi",
     author_email="tomer2b@gmail.com",
