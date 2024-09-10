@@ -15,6 +15,7 @@ GREEN_TEXT='\033[92m'
 
 # the key is the MD file source
 questions_dic={
+    '1':['ex1','ex2','ex3','ex4','ex5','ex6'],
     '2':['ex2','ex3','ex4'],
     '3':['ex9','ex10','ex11','ex12','ex13','ex14','ex15'],
     '4':['ex4','ex5','ex6','ex7','ex8','ex9'],
