@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name="auto_grading",
-    version="0.19",
+    version="0.20",
     packages=find_packages(),
     install_requires=[],
     include_package_data=True,
     package_data={
-        'auto_grading': ['data/tasks.csv'],  # Specify the path relative to the package
+        'auto_grading': ['tasks.csv'],  # Specify the path relative to the package
 
     },    
     description="A module for automatic grading python assignments for students",
