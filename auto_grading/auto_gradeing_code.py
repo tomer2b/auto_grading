@@ -50,7 +50,7 @@ def get_questions(exercise_key):
 
 def import_tasks(grade,question_set,questions ):
   t=[]
-  with pkg_resource.open_text('auto_grading.data','tasks.csv') as file:
+  with pkg_resource.open_text('auto_grading','tasks.csv') as file:
     df = pd.read_csv(file,sep=',',on_bad_lines='skip',encoding='utf-8')
 
   # df = df[df['class']==grade]
