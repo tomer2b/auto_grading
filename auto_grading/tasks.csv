@@ -210,7 +210,7 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2024,11,102,"strings",20,not_bad,"['This movie is not so bad']","[]","['This movie is good\n']","[None]"
 2024,11,102,"strings",21,not_bad,"['This dinner is not that bad!']","[]","['This dinner is good!\n']","[None]"
 2024,11,102,"strings",22,not_bad,"['This tea is not hot']","[]","['This tea is not hot\n']","[None]"
-2024,11,102,"strings",23,not_bad,"['It\\'s bad yet not']","[]","['It\\'s bad yet not\n']","[None]"
+2024,11,102,"strings",23,not_bad,"['Its bad yet not']","[]","['Its bad yet not\n']","[None]"
 2024,11,102,"strings",24,front_back,"['abcd', 'xy']","[]","['abxcdy\n']","[None]"
 2024,11,102,"strings",25,front_back,"['abcde', 'xyz']","[]","['abcxydez\n']","[None]"
 2024,11,102,"strings",26,front_back,"['Kitten', 'Donut']","[]","['KitDontenut\n']","[None]"
