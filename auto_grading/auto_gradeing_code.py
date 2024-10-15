@@ -35,7 +35,12 @@ questions_dic={
     '13a':['ex5','ex6','ex7','ex8'], # lists
     '13b':['ex101','ex102','ex103','ex104','ex105','ex106','ex107'], # lists of list
     '14':['ex201','ex202','ex203','ex204'],
-    '102':['donuts','both_ends','fix_start','mix_up','verbing','not_bad','front_back']
+    '101':['sum_arithmetic'],
+    '102':['donuts','both_ends','fix_start','mix_up','verbing','not_bad','front_back'],
+    '103':['factorial','beep','is_palindrom','show_digits','sum_digits'],
+    '104':['sort_asc','multiply_items','sum_list','largest_number','copy_list','convert2string','valid_email','remove_item','create_email_address','valid_ip_address','summer'],
+    '105':['match_ends','front_x','sort_last','remove_adjacent','linear_merge'],
+    '108':['is_capital_letter','is_credit_card','is_phone_number','is_email','is_valid_ip_address','find_all_emails']
    }
 
 curr_exercise_key = 0
