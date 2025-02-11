@@ -85,7 +85,7 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,7,"for",1,ex101,"[]","['part1',7,'part2',20,'part3',5,'part4',8,'part5',30]","['part2\n','part5\n','total:70\n']","[None]"
 2023,8,7,"for",1,ex101,"[]","['part1',15,'part2',2,'part3',50,'part4',40,'part5',3]","['part1\n','part3\n','part4\n','total:110\n']","[None]"
 2023,8,7,"for",1,ex102,"[]","['tomer',15,'noam',2,'orit',50,'harel',40,'yahel',3]","['orit BONUS\n','harel BONUS\n','total:110\n']","[None]"
-2023,8,7,"for",1,ex103,"[]","['tomer',4,94,'noam',5,98,'orit',4,95,'harel',5,98,'yahel',5,97]","['tomer 4 95\n','noam 5 98 A\n','orit 5 95\n','harel 5 98 A\n','yahel 5 97 A\n','5 points:3\n']","[None]"
+2023,8,7,"for",1,ex103,"[]","['tomer',4,95,'noam',5,98,'orit',4,95,'harel',5,98,'yahel',5,97]","['tomer 4 95\n','noam 5 98 A\n','orit 5 95\n','harel 5 98 A\n','yahel 5 97 A\n','5 points:3\n']","[None]"
 2023,8,7,"for",1,ex104,"[]","['tomer',2,'noam',3,'orit',4,'harel',5,'yahel',21]","['tomer 80\n','noam 115\n','orit 140\n','harel 175\n','yahel 735\n','above20:1\n']","[None]"
 2023,8,7,"for",1,ex104,"[]","['tomer',2,'noam',30,'orit',4,'harel',5,'yahel',21]","['tomer 80\n','noam 1050\n','orit 140\n','harel 175\n','yahel 735\n','above20:2\n']","[None]"
 2023,8,7,"for",1,ex105,"[]","['black','red','white','black','white']","['1 black\n','2 red\n','3 white\n','4 black\n','5 white\n','days black:2\n']","[None]"
