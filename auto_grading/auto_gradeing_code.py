@@ -47,13 +47,18 @@ questions_dic={
 
 curr_exercise_key = 0
 
-qu1 = queue.Queue()
-for num in [2, 69, 12, 7, 33, 61]:
-    qu1.put(num)
-qu2 = queue.Queue()
-for num in [7, 42, 13, 6]:
-    qu2.put(num)
+# qu1 = queue.Queue()
+# for num in [2, 69, 12, 7, 33, 61]:
+#     qu1.put(num)
+# qu2 = queue.Queue()
+# for num in [7, 42, 13, 6]:
+#     qu2.put(num)
 
+def create_queue(items):
+    q = queue.Queue()
+    for item in items:
+        q.put(item)
+    return q
 
 def print_my_queue(q):
     items = list(q.queue)  
