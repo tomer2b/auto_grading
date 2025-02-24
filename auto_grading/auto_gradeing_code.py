@@ -151,6 +151,7 @@ class CheckAssignment:
             self.input_counter = 0
             self.output_lst = []
             result = eval(func + '(' + str(parms)[1:-1] + ')')
+            print(func + '(' + str(parms)[1:-1] + ')')
             if type(result) == tuple:
                 result = list(result)
             else:
