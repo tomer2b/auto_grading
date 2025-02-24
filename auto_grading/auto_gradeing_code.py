@@ -3,6 +3,7 @@
 import pandas as pd
 import importlib.resources as pkg_resource
 import time
+import queue
 import builtins as __builtin__
 
 
@@ -35,7 +36,7 @@ questions_dic={
     '13a':['ex5','ex6','ex7','ex8'], # lists
     '13b':['ex101','ex102','ex103','ex104','ex106','ex107'], 
     '13c':['ex201','ex202','ex203','ex204'], # lists of list
-    '14':['ex201','ex202','ex203','ex204'],
+    '14':['ex1'],
     '101':['sum_arithmetic','my_power','is_prime','count_div4','sum7_numbers','fibonachi'],
     '102':['donuts','both_ends','fix_start','mix_up','verbing','not_bad','front_back'],
     '103':['factorial','beep','is_palindrom','show_digits','sum_digits'],
@@ -45,6 +46,23 @@ questions_dic={
    }
 
 curr_exercise_key = 0
+
+qu1 = queue.Queue()
+for num in [2, 69, 12, 7, 33, 61]:
+    qu1.put(num)
+qu2 = queue.Queue()
+for num in [7, 42, 13, 6]:
+    qu2.put(num)
+
+
+def print_my_queue(q):
+    items = list(q.queue)  
+    if not items:
+        print("Queue is empty")
+        return
+    
+    print(" => ".join(map(str, items)) + " => head")
+
 
 def get_questions(exercise_key):
   global curr_exercise_key
