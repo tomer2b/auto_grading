@@ -214,7 +214,7 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,14,"queue1",1,ex6,"[create_queue([2, 14, 10, 7, 30, 61])]","[]","['2\n','10\n','30\n']","[None]"
 2023,8,14,"queue1",1,ex7,"[create_queue([2, 14, 10, 7, 30, 61]),99]","[]","[]","[False]"
 2023,8,14,"queue1",1,ex7,"[create_queue([2, 14, 10, 7, 30, 61]),7]","[]","[]","[True]"
-2023,8,14,"queue1",1,ex8,"[create_queue([-2, 14, -10, 7, -30, 61]),7]","[]","[]","[create_queue([14, 7, 61])]"
+2023,8,14,"queue1",1,ex8,"[create_queue([-2, 14, -10, 7, -30, 61])]","[]","[]","[create_queue([14, 7, 61])]"
 2023,8,15,"calc_tuple",1,ex2b,"[]","[10,14]","['22,120,2']","[None]"
 2024,11,101,"loops",1,sum_arithmetic,"[5]","[]","[]","[15]"
 2024,11,101,"loops",2,sum_arithmetic,"[6]","[]","[]","[21]"

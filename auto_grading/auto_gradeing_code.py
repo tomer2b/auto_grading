@@ -156,7 +156,7 @@ class CheckAssignment:
             if 'create_queue' in parms:
                 result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
             else:
-                result = eval(func + '(' + str(parms)[1:-1] + ')')
+                result = eval(func + '(' + str(eval(parms))[1:-1] + ')')
                 
             if type(result) == tuple:
                 result = list(result)
