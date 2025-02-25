@@ -202,7 +202,7 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,13,"students",1,ex203,"[[['Itamar',95,97,87,100],['May',35,66,77,88],['David',90,88,100,60]]]","[]","['Itamar: 95.5\n','May: 69.0\n','David: 87.0\n','private lession: [\'May\']\n']","[None]"
 2023,8,13,"students",1,ex204,"[[['Harry Potter',3,40],['Da Vinci Code',5,60],['Diary of a Wimpy Kid',2,50],['Ali Baba',4,25]]]","[]","['books: 14\n','value: 620.0\n','less than 10 copies: [\'Harry Potter\', \'Da Vinci Code\', \'Diary of a Wimpy Kid\', \'Ali Baba\']\n']","[None]"
 2023,8,13,"students",1,ex204,"[[['Harry Potter',3,40],['Da Vinci Code',5,60],['Diary of a Wimpy Kid',12,50],['Ali Baba',14,25]]]","[]","['books: 34\n','value: 1370.0\n','less than 10 copies: [\'Harry Potter\', \'Da Vinci Code\']\n']","[None]"
-2023,8,14,"queue1",1,ex1,"[create_queue([2, 69, 12, 7, 33, 61])]","[]","[]","[]"
+2023,8,14,"queue1",1,ex1,"[create_queue([2, 69, 12, 7, 33, 61])]","[]","[]","[None]"
 2023,8,15,"calc_tuple",1,ex2b,"[]","[10,14]","['22,120,2']","[None]"
 2024,11,101,"loops",1,sum_arithmetic,"[5]","[]","[]","[15]"
 2024,11,101,"loops",2,sum_arithmetic,"[6]","[]","[]","[21]"
