@@ -91,10 +91,10 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,7,"for",1,ex105,"[]","['black','red','white','black','white']","['1 black\n','2 red\n','3 white\n','4 black\n','5 white\n','days black:2\n']","[None]"
 2023,8,7,"for",1,ex105,"[]","['black','red','black','black','red']","['1 black\n','2 red\n','3 black\n','4 black\n','5 red\n','days black:3\n']","[None]"
 2023,8,7,"for",1,ex106,"[]","['tomer','a','noam','b','orit','ab','harel','o','yahel','o']","['tomer a\n','noam b\n','orit ab\n','harel o\n','yahel o\n','type o:2\n']","[None]"
-2023,8,15,"blood_donation",1,ex106,"[]","['john','a','mike','o','sarah','b','emma','o','liam','ab']","['john a\n','mike o\n','sarah b\n','emma o\n','liam ab\n','type o:2\n']",[none]
-2023,8,15,"blood_donation",2,ex106,"[]","['ethan','o','mia','a','olivia','b','noah','o','lucas','o']","['ethan o\n','mia a\n','olivia b\n','noah o\n','lucas o\n','3\n']",[none]
-2023,8,15,"trip_registration",1,ex107,"[]","['levi',2,'cohen',4,'mizrahi',3,'peretz',5,'goldberg',1]","['levi 2\n','cohen 4 discount\n','mizrahi 3\n','peretz 5 discount\n','goldberg 1\n','15\n']",[none]
-2023,8,15,"trip_registration",2,ex107,"[]","['shwartz',1,'avraham',2,'dayan',4,'baruch',5,'levi',3]","['shwartz 1\n','avraham 2\n','dayan 4 discount\n','baruch 5 discount\n','levi 3\n','15\n']",[none]
+2023,8,7,"blood_donation",1,ex106,"[]","['john','a','mike','o','sarah','b','emma','o','liam','ab']","['john a\n','mike o\n','sarah b\n','emma o\n','liam ab\n','type o:2\n']",[none]
+2023,8,7,"blood_donation",2,ex106,"[]","['ethan','o','mia','a','olivia','b','noah','o','lucas','o']","['ethan o\n','mia a\n','olivia b\n','noah o\n','lucas o\n','3\n']",[none]
+2023,8,7,"trip_registration",1,ex107,"[]","['levi',2,'cohen',4,'mizrahi',3,'peretz',5,'goldberg',1]","['levi 2\n','cohen 4 discount\n','mizrahi 3\n','peretz 5 discount\n','goldberg 1\n','15\n']",[none]
+2023,8,7,"trip_registration",2,ex107,"[]","['shwartz',1,'avraham',2,'dayan',4,'baruch',5,'levi',3]","['shwartz 1\n','avraham 2\n','dayan 4 discount\n','baruch 5 discount\n','levi 3\n','15\n']",[none]
 2023,8,8,"while",1,ex2,"[]","[100,260,-1]","['יש לשלם בהקדם תשלומי הורים!!!\n','שולמו תשלומי הורים לביהס\n','total collected: 360\n']","[None]"
 2023,8,8,"while",1,ex2,"[]","[300,250,-2]","['שולמו תשלומי הורים לביהס\n','יש לשלם בהקדם תשלומי הורים!!!\n','total collected: 550\n']","[None]"
 2023,8,8,"while",1,ex3,"[]","[90,92,70,999]","['1 תלמיד מצטיין\n','2 תלמיד מצטיין\n','3 לומד יפה\n']","[None]"
