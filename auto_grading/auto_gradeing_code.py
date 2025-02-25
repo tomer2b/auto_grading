@@ -160,14 +160,14 @@ class CheckAssignment:
                 
             if type(result) == tuple:
                 result = list(result)
+            elif type(result) == queue:
+                result = list(result.queue)
             else:
                 result = [result]
 
             func_call = func + '(' + str(parms)[1:-1] + ')'
             expected_result = [str(x) for x in expected_result]
-            # with open(r'C:\\TEACHING\\Code\\PythonProjects\\PythonProjects\\Python\\Global\\grading_system\\tempcode\\file.txt','w') as out_result:
-            #   out_result.write(str(list(result))) #self.output_lst,list(result))
-            #   out_result.write(str(self.output_lst))            
+            # check if the output is the same           
             if self.output_lst == expected_result:
               if (return_values == list(result)):
                 return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}'
