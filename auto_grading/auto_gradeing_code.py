@@ -60,6 +60,9 @@ def create_queue(items):
         q.put(item)
     return q
 
+def are_queues_equal(q1, q2):
+    return list(q1.queue) == list(q2.queue)  # Compare queue contents as lists
+
 def print_my_queue(q):
     items = list(q.queue)  
     if not items:
@@ -151,7 +154,7 @@ class CheckAssignment:
             self.input_counter = 0
             self.output_lst = []
             if 'create_queue' in parms:
-                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,'ex1':ex1})
+                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,str(func):func})
             else:
                 result = eval(func + '(' + str(parms)[1:-1] + ')')
                 
