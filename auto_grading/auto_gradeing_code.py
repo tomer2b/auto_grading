@@ -36,7 +36,7 @@ questions_dic={
     '13a':['ex5','ex6','ex7','ex8'], # lists
     '13b':['ex101','ex102','ex103','ex104','ex106','ex107'], 
     '13c':['ex201','ex202','ex203','ex204'], # lists of list
-    '14':['ex1'],
+    '14':['ex1','ex2','ex3','ex4','ex5','ex6','ex7','ex8'],
     '101':['sum_arithmetic','my_power','is_prime','count_div4','sum7_numbers','fibonachi'],
     '102':['donuts','both_ends','fix_start','mix_up','verbing','not_bad','front_back'],
     '103':['factorial','beep','is_palindrom','show_digits','sum_digits'],
