@@ -146,7 +146,7 @@ class CheckAssignment:
         # self.runs = tests
 
 
-    def run_task(self,func, parms, in_list, expected_result, return_values):
+    def run_task(self,func, parms, in_list, expected_result, return_values,student_functions):
 
         try:
 
@@ -154,7 +154,7 @@ class CheckAssignment:
             self.input_counter = 0
             self.output_lst = []
             if 'create_queue' in parms:
-                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,str(func):func})
+                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
             else:
                 result = eval(func + '(' + str(parms)[1:-1] + ')')
                 
@@ -208,7 +208,7 @@ def run_test(tasks,student_functions):
     for i in range(len(tasks)):
         run.test_mode = True
         start = time.time()
-        run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4])
+        run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4],student_functions)
         end = time.time()
         
         run.test_mode = False
