@@ -150,8 +150,11 @@ class CheckAssignment:
             self.input_lst=in_list
             self.input_counter = 0
             self.output_lst = []
-            result = eval(func + '(' + str(parms)[1:-1] + ')')
-            print(func + '(' + str(parms)[1:-1] + ')')
+            if 'create_queue' in parms:
+                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,'ex1':ex1})
+            else:
+                result = eval(func + '(' + str(parms)[1:-1] + ')')
+                
             if type(result) == tuple:
                 result = list(result)
             else:
