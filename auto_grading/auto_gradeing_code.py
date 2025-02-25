@@ -95,7 +95,7 @@ def import_tasks(grade,question_set,questions ):
   for key, value in df.iterrows():
     sublist=[]
     sublist.append(value["function"])
-    sublist.append([]) if value["func_arg_list"]==None else  sublist.append(eval(value["func_arg_list"]))
+    sublist.append([]) if value["func_arg_list"]==None else  sublist.append(value["func_arg_list"])
     sublist.append([]) if value["in_list"]==None else  sublist.append(eval(value["in_list"] ))
     sublist.append([]) if value["exp_out_list"]==None else  sublist.append(eval(value["exp_out_list"]) )
     sublist.append([]) if value["return_values"]==None else  sublist.append(eval(value["return_values"]) )
