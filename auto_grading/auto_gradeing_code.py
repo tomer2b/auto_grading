@@ -160,7 +160,7 @@ class CheckAssignment:
                 
             if type(result) == tuple:
                 result = list(result)
-            elif type(result) == queue:
+            elif isinstance(result, queue.Queue) :
                 result = list(result.queue)
             else:
                 result = [result]
