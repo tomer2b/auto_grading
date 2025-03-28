@@ -107,7 +107,7 @@ year,class,question_set,description,test_number,function,func_arg_list,in_list,e
 2023,8,8,"ex11",1,ex11,"[]","['Dana',97,'Eli',88,'Roni',95,'FINISH']","['Dana 97\n','Eli 88\n','Roni 95\n','Number of students with score > 95: 1\n']","[None]"
 2023,8,8,"ex12",1,ex12,"[]","['Dan',2,'Eve',3,'Frank',1,'SOF']","['Dan 18\n','Eve 27\n','Frank 9\n','Number of customers: 3\n']","[None]"
 2023,8,8,"ex12",1,ex12,"[]","['Gabi',4,'Hila',5,'Itay',2,'SOF']","['Gabi 36\n','Hila 45\n','Itay 18\n','Number of customers: 3\n']","[None]"
-2023,8,8,"ex13",1,ex13,"[]","[2.5,'Alice',10,'Bob',15,'Charlie',20,'BYE']","['Alice 25.0\n','Bob 37.5\n','Charlie 50.0\n','Total collected: 112.5\n']","[None]"
+2023,8,8,"ex13",1,ex13,"[]","[2.5,'Alice',10,'Charlie',15,'BYE']","['Alice 25.0\n','Charlie 37.5\n','Total collected: 62.5\n']","[None]"
 2023,8,8,"ex13",1,ex13,"[]","[3.0,'David',5,'Eden',8,'Flora',12,'BYE']","['David 15.0\n','Eden 24.0\n','Flora 36.0\n','Total collected: 75.0\n']","[None]"
 2023,8,8,"ex14",1,ex14,"[]","['Noa',1,'Liam',2,'Maya',1,'David',3,'SOF']","['Hagai 2\n','Hadas 1\n']","[None]"
 2023,8,8,"ex14",1,ex14,"[]","['Omer',2,'Shira',2,'Tal',1,'Yuval',1,'SOF']","['Hagai 2\n','Hadas 2\n']","[None]"
