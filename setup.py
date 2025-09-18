@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="auto_grading",
-    version="0.307",
+    version="0.308",
     packages=find_packages(),
     install_requires=[],
     include_package_data=True,
