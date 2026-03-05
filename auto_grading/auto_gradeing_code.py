@@ -268,38 +268,39 @@ class AIManager:
             return s.connect_ex(('localhost', 11434)) == 0
 
     def setup(self):
-        """הפונקציה המרכזית שמופעלת מה-Package שלך"""
+       return True
+        # """הפונקציה המרכזית שמופעלת מה-Package שלך"""
         
-        # 1. בדיקה אם השרת כבר רץ (מונע כפילויות בהרצה חוזרת)
-        if self._is_server_running():
-            # מוודא שהמודל קיים גם אם השרת כבר רץ
-            self._pull_model_if_needed()
-            return True
+        # # 1. בדיקה אם השרת כבר רץ (מונע כפילויות בהרצה חוזרת)
+        # if self._is_server_running():
+        #     # מוודא שהמודל קיים גם אם השרת כבר רץ
+        #     self._pull_model_if_needed()
+        #     return True
 
-        # 2. איתור הנתיב של Ollama שהותקן בתא ה-Colab
-        ollama_path = shutil.which("ollama") or "/usr/local/bin/ollama"
-        print(ollama_path)
-        if not os.path.exists(ollama_path):
-            print("❌ שגיאה: פקודת ollama לא נמצאה במערכת.")
-            print("וודא שהרצת את פקודת ההתקנה בתא הראשון: !curl -fsSL https://ollama.com/install.sh | sh")
-            return False
+        # # 2. איתור הנתיב של Ollama שהותקן בתא ה-Colab
+        # ollama_path = shutil.which("ollama") or "/usr/local/bin/ollama"
+        # print(ollama_path)
+        # if not os.path.exists(ollama_path):
+        #     print("❌ שגיאה: פקודת ollama לא נמצאה במערכת.")
+        #     print("וודא שהרצת את פקודת ההתקנה בתא הראשון: !curl -fsSL https://ollama.com/install.sh | sh")
+        #     return False
 
-        # 3. הרצת השרת ברקע (רק אם הוא לא רץ)
-        print(f"🚀 מפעיל את שרת ה-AI ברקע...")
-        # שימוש ב-nohup וב-setsid מבטיח יציבות ב-Colab
-        cmd = f"nohup {ollama_path} serve > ollama_log.txt 2>&1 &"
-        subprocess.Popen(cmd, shell=True, preexec_fn=os.setsid)
+        # # 3. הרצת השרת ברקע (רק אם הוא לא רץ)
+        # print(f"🚀 מפעיל את שרת ה-AI ברקע...")
+        # # שימוש ב-nohup וב-setsid מבטיח יציבות ב-Colab
+        # cmd = f"nohup {ollama_path} serve > ollama_log.txt 2>&1 &"
+        # subprocess.Popen(cmd, shell=True, preexec_fn=os.setsid)
 
-        # 4. המתנה לעלייה ובדיקת תקינות
-        for i in range(10):
-            if self._is_server_running():
-                print("✅ שרת ה-AI עלה בהצלחה!")
-                self._pull_model_if_needed()
-                return True
-            time.sleep(2)
+        # # 4. המתנה לעלייה ובדיקת תקינות
+        # for i in range(10):
+        #     if self._is_server_running():
+        #         print("✅ שרת ה-AI עלה בהצלחה!")
+        #         self._pull_model_if_needed()
+        #         return True
+        #     time.sleep(2)
         
-        print("🛑 שגיאה: השרת לא הגיב בזמן. בדוק את ה-GPU ב-Colab.")
-        return False
+        # print("🛑 שגיאה: השרת לא הגיב בזמן. בדוק את ה-GPU ב-Colab.")
+        # return False
 
     def _pull_model_if_needed(self):
         """מוודא שהמודל הספציפי משוך ומוכן לעבודה"""
