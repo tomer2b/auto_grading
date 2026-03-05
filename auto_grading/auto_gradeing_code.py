@@ -275,52 +275,44 @@ class AIManager:
             return s.connect_ex(('localhost', 11434)) == 0
 
     def _install_and_run(self):
-            ollama_path = "/usr/local/bin/ollama"
+        ollama_path = "/usr/local/bin/ollama"
+        
+        # 1. ניקוי תהליכים ישנים ותקועים (חשוב מאוד ב-Colab)
+        os.system("pkill ollama > /dev/null 2>&1")
+        time.sleep(1)
+
+        # 2. התקנה יסודית אם חסר
+        if not os.path.exists(ollama_path):
+            print("📦 Installing Ollama engine...")
+            # שימוש ב-subprocess.run מבטיח שנחכה לסיום ההתקנה
+            subprocess.run("curl -fsSL https://ollama.com/install.sh | sh", 
+                        shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            time.sleep(2)
+
+        # 3. הרצה ברקע - הדרך הכי יציבה ב-Colab
+        print("🚀 Launching Ollama server...")
+        # אנחנו מריצים דרך shell כדי לוודא שמשתני הסביבה (PATH) מתעדכנים
+        subprocess.Popen(
+            f"nohup {ollama_path} serve > ollama_log.txt 2>&1 &",
+            shell=True,
+            preexec_fn=os.setsid
+        )
+
+        # 4. המתנה אקטיבית עם בדיקת לוגים
+        print("⏳ Waiting for server to initialize...")
+        for i in range(15):
+            if self._is_server_running():
+                print("✅ AI Server is Online and Ready!")
+                return True
+            time.sleep(2)
             
-            # 1. בדיקה אם ollama חסר - התקנה יסודית
-            if not os.path.exists(ollama_path):
-                print("📦 Ollama not found. Starting deep installation...")
-                # שימוש ב-shell=True וב-wait כדי לוודא שההתקנה מסתיימת
-                install_command = "curl -fsSL https://ollama.com/install.sh | sh"
-                process = subprocess.run(install_command, shell=True, capture_output=True, text=True)
-                
-                if process.returncode != 0:
-                    print(f"❌ Installation failed: {process.stderr}")
-                    return False
-                
-                # המתנה אקטיבית עד שהקובץ נוצר על הדיסק
-                for _ in range(10):
-                    if os.path.exists(ollama_path):
-                        os.chmod(ollama_path, 0o755) # וידוא הרשאות הרצה
-                        break
-                    time.sleep(2)
+        # אם הגענו לכאן, משהו השתבש - נדפיס את הלוג לדיבג
+        if os.path.exists("ollama_log.txt"):
+            with open("ollama_log.txt", "r") as f:
+                print(f"❌ Server logs:\n{f.read()}")
+        
+        return False
 
-            # 2. בדיקה אחרונה - אם הקובץ עדיין לא שם, יש בעיה חמורה
-            if not os.path.exists(ollama_path):
-                print(f"❌ Error: {ollama_path} still missing after installation.")
-                return False
-
-            # 3. הרצה ברקע עם טיפול בשגיאות
-            print("🚀 Launching Ollama server...")
-            try:
-                subprocess.Popen(
-                    [ollama_path, "serve"],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    preexec_fn=os.setsid
-                )
-            except Exception as e:
-                print(f"❌ Failed to spawn process: {e}")
-                return False
-
-            # 4. המתנה לעלייה
-            for i in range(10):
-                if self._is_server_running():
-                    print("✅ AI Server is Online!")
-                    return True
-                time.sleep(2)
-            
-            return False
     def ask(self, prompt):
 
         """שליחת שאלה למודל וקבלת תשובה נקייה"""
