@@ -263,32 +263,41 @@ def ask_ollama(prompt, model="llama3.2:1b"):
     except Exception as e:
         return f"שגיאה בתקשורת עם Ollama: {e}"
     
-    
-def start_ollama_server():
-    # 1. בדיקה אם ollama כבר מותקן, אם לא - התקנה
-    if os.system("command -v ollama > /dev/null") != 0:
-        print("Installing Ollama...")
-        os.system("curl -fsSL https://ollama.com/install.sh | sh")
 
-    # 2. הרצת השרת כתהליך רקע
-    # הפקודה nohup שומרת עליו רץ גם אם ה-shell נסגר, ו-& שולח לרקע
-    process = subprocess.Popen(
-        ["ollama", "serve"],
-        stdout=subprocess.DEVNULL, 
-        stderr=subprocess.DEVNULL
-    )
+
+import subprocess
+import time
+import socket
+import os
+
+def setup_ollama(model_name="llama3.2:1b"):
+    """
+    פונקציה אחת שדואגת להכל: התקנה, הפעלה (בלי כפילויות) והורדת מודל.
+    """
+    # 1. בדיקה אם הפורט כבר תפוס (כלומר השרת כבר רץ)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        is_running = s.connect_ex(('localhost', 11434)) == 0
     
-    # 3. המתנה עד שהשרת יגיב (Health Check)
-    print("Waiting for Ollama server to start...")
-    max_retries = 5
-    for i in range(max_retries):
-        try:
-            response = requests.get("http://localhost:11434/")
-            if response.status_code == 200:
-                print("✅ Ollama is up and running!")
-                return True
-        except requests.exceptions.ConnectionError:
+    if is_running:
+        print("🔄 Ollama כבר רץ ברקע, ממשיכים הלאה...")
+    else:
+        print("🚀 מתקין ומפעיל את Ollama...")
+        # התקנה (רק אם לא מותקן)
+        if os.system("command -v ollama > /dev/null") != 0:
+            os.system("curl -fsSL https://ollama.com/install.sh | sh")
+        
+        # הרצה ברקע
+        subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
+        # המתנה קצרה לוודא שהפורט נפתח
+        for _ in range(10):
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                if s.connect_ex(('localhost', 11434)) == 0:
+                    break
             time.sleep(2)
-    
-    print("❌ Error: Ollama server failed to start.")
-    return False
+        print("✅ השרת הופעל בהצלחה.")
+
+    # 2. הורדת המודל (הפקודה הזו ב-Ollama יודעת לבד לא להוריד שוב אם המודל קיים)
+    print(f"📥 מוודא שהמודל {model_name} קיים...")
+    os.system(f"ollama pull {model_name}")
+    print(f"✨ המודל {model_name} מוכן לשימוש!")
