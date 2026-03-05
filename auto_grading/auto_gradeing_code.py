@@ -263,7 +263,7 @@ def start_ollama_server():
     
     # 3. המתנה עד שהשרת יגיב (Health Check)
     print("Waiting for Ollama server to start...")
-    max_retries = 10
+    max_retries = 5
     for i in range(max_retries):
         try:
             response = requests.get("http://localhost:11434/")
