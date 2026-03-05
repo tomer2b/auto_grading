@@ -325,3 +325,4 @@ def run_ai_manager():
     global ai_manager
     ai_manager= AIManager()
     ai_manager.setup()
+    
