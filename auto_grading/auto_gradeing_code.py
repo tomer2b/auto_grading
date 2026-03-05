@@ -278,7 +278,7 @@ class AIManager:
 
         # 2. איתור הנתיב של Ollama שהותקן בתא ה-Colab
         ollama_path = shutil.which("ollama") or "/usr/local/bin/ollama"
-        
+        print(ollama_path)
         if not os.path.exists(ollama_path):
             print("❌ שגיאה: פקודת ollama לא נמצאה במערכת.")
             print("וודא שהרצת את פקודת ההתקנה בתא הראשון: !curl -fsSL https://ollama.com/install.sh | sh")
