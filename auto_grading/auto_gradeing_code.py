@@ -239,3 +239,38 @@ def run_test(tasks,student_functions):
       question_grade=0
     final_grade=test_weight*tests_score + question_weight*question_grade
     return round(tests_score),output,round(question_grade),round(final_grade)
+
+
+import subprocess
+import time
+import requests
+import os
+
+def start_ollama_server():
+    # 1. בדיקה אם ollama כבר מותקן, אם לא - התקנה
+    if os.system("command -v ollama > /dev/null") != 0:
+        print("Installing Ollama...")
+        os.system("curl -fsSL https://ollama.com/install.sh | sh")
+
+    # 2. הרצת השרת כתהליך רקע
+    # הפקודה nohup שומרת עליו רץ גם אם ה-shell נסגר, ו-& שולח לרקע
+    process = subprocess.Popen(
+        ["ollama", "serve"],
+        stdout=subprocess.DEVNULL, 
+        stderr=subprocess.DEVNULL
+    )
+    
+    # 3. המתנה עד שהשרת יגיב (Health Check)
+    print("Waiting for Ollama server to start...")
+    max_retries = 10
+    for i in range(max_retries):
+        try:
+            response = requests.get("http://localhost:11434/")
+            if response.status_code == 200:
+                print("✅ Ollama is up and running!")
+                return True
+        except requests.exceptions.ConnectionError:
+            time.sleep(2)
+    
+    print("❌ Error: Ollama server failed to start.")
+    return False
