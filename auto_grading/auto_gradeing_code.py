@@ -244,60 +244,57 @@ def run_test(tasks,student_functions):
 
 import subprocess
 import time
-import requests
-import os
-import json
-
-def ask_ollama(prompt, model="llama3.2:1b"):
-    url = "http://localhost:11434/api/generate"
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "stream": False  # חשוב! כדי לקבל תשובה אחת מלאה ולא זרם של תווים
-    }
-    
-    try:
-        response = requests.post(url, json=payload)
-        response.raise_for_status() # בדיקה שהבקשה הצליחה
-        return response.json()['response']
-    except Exception as e:
-        return f"שגיאה בתקשורת עם Ollama: {e}"
-    
-
-
-import subprocess
-import time
 import socket
 import os
+import requests
 
-def setup_ollama(model_name="llama3.2:1b"):
-    """
-    פונקציה אחת שדואגת להכל: התקנה, הפעלה (בלי כפילויות) והורדת מודל.
-    """
-    # 1. בדיקה אם הפורט כבר תפוס (כלומר השרת כבר רץ)
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        is_running = s.connect_ex(('localhost', 11434)) == 0
-    
-    if is_running:
-        print("🔄 Ollama כבר רץ ברקע, ממשיכים הלאה...")
-    else:
-        print("🚀 מתקין ומפעיל את Ollama...")
-        # התקנה (רק אם לא מותקן)
+class AIManager:
+    def __init__(self, model_name="llama3.2:1b"):
+        self.model = model_name
+        self.url = "http://localhost:11434/api/generate"
+
+    def setup(self):
+        """מכין את הסביבה: מתקין, מפעיל ובודק כפילויות"""
+        # 1. בדיקה אם השרת כבר רץ (למניעת הרצות כפולות ב-Run All)
+        if self._is_server_running():
+            print("🔄 Ollama server is already active.")
+        else:
+            print("🚀 Initializing AI Environment (Ollama)...")
+            self._install_and_run()
+        
+        # 2. וידוא שהמודל הספציפי קיים
+        print(f"📥 Checking model: {self.model}...")
+        os.system(f"ollama pull {self.model}")
+        print(f"✨ AI is ready to use with model: {self.model}")
+
+    def _is_server_running(self):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex(('localhost', 11434)) == 0
+
+    def _install_and_run(self):
+        # התקנה אם חסר
         if os.system("command -v ollama > /dev/null") != 0:
             os.system("curl -fsSL https://ollama.com/install.sh | sh")
         
         # הרצה ברקע
         subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
-        # המתנה קצרה לוודא שהפורט נפתח
+        # המתנה לעלייה (עד 20 שניות)
         for _ in range(10):
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                if s.connect_ex(('localhost', 11434)) == 0:
-                    break
+            if self._is_server_running():
+                return
             time.sleep(2)
-        print("✅ השרת הופעל בהצלחה.")
 
-    # 2. הורדת המודל (הפקודה הזו ב-Ollama יודעת לבד לא להוריד שוב אם המודל קיים)
-    print(f"📥 מוודא שהמודל {model_name} קיים...")
-    os.system(f"ollama pull {model_name}")
-    print(f"✨ המודל {model_name} מוכן לשימוש!")
+    def ask(self, prompt):
+        """שליחת שאלה למודל וקבלת תשובה נקייה"""
+        payload = {
+            "model": self.model,
+            "prompt": prompt,
+            "stream": False
+        }
+        try:
+            response = requests.post(self.url, json=payload)
+            response.raise_for_status()
+            return response.json().get('response', 'No response received.')
+        except Exception as e:
+            return f"❌ Error: {e}"
