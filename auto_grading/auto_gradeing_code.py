@@ -251,82 +251,72 @@ import socket
 import os
 import requests
 
+import subprocess
+import os
+import time
+import socket
+import shutil
+
 class AIManager:
-    def __init__(self, model_name="llama3.2:1b"):
-        self.model = model_name
+    def __init__(self, model="llama3.2:1b"):
+        self.model = model
         self.url = "http://localhost:11434/api/generate"
 
-    def setup(self):
-        """מכין את הסביבה: מתקין, מפעיל ובודק כפילויות"""
-        # 1. בדיקה אם השרת כבר רץ (למניעת הרצות כפולות ב-Run All)
-        if self._is_server_running():
-            print("🔄 Ollama server is already active.")
-        else:
-            print("🚀 Initializing AI Environment (Ollama)...")
-            self._install_and_run()
-        
-        # 2. וידוא שהמודל הספציפי קיים
-        print(f"📥 Checking model: {self.model}...")
-        os.system(f"ollama pull {self.model}")
-        print(f"✨ AI is ready to use with model: {self.model}")
-
     def _is_server_running(self):
+        """בדיקה אם הפורט של Ollama כבר פתוח"""
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             return s.connect_ex(('localhost', 11434)) == 0
 
-    def _install_and_run(self):
-        ollama_path = "/usr/local/bin/ollama"
+    def setup(self):
+        """הפונקציה המרכזית שמופעלת מה-Package שלך"""
         
-        # 1. ניקוי תהליכים ישנים ותקועים (חשוב מאוד ב-Colab)
-        os.system("pkill ollama > /dev/null 2>&1")
-        time.sleep(1)
+        # 1. בדיקה אם השרת כבר רץ (מונע כפילויות בהרצה חוזרת)
+        if self._is_server_running():
+            # מוודא שהמודל קיים גם אם השרת כבר רץ
+            self._pull_model_if_needed()
+            return True
 
-        # 2. התקנה יסודית אם חסר
+        # 2. איתור הנתיב של Ollama שהותקן בתא ה-Colab
+        ollama_path = shutil.which("ollama") or "/usr/local/bin/ollama"
+        
         if not os.path.exists(ollama_path):
-            print("📦 Installing Ollama engine...")
-            # שימוש ב-subprocess.run מבטיח שנחכה לסיום ההתקנה
-            subprocess.run("curl -fsSL https://ollama.com/install.sh | sh", 
-                        shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            time.sleep(2)
+            print("❌ שגיאה: פקודת ollama לא נמצאה במערכת.")
+            print("וודא שהרצת את פקודת ההתקנה בתא הראשון: !curl -fsSL https://ollama.com/install.sh | sh")
+            return False
 
-        # 3. הרצה ברקע - הדרך הכי יציבה ב-Colab
-        print("🚀 Launching Ollama server...")
-        # אנחנו מריצים דרך shell כדי לוודא שמשתני הסביבה (PATH) מתעדכנים
-        subprocess.Popen(
-            f"nohup {ollama_path} serve > ollama_log.txt 2>&1 &",
-            shell=True,
-            preexec_fn=os.setsid
-        )
+        # 3. הרצת השרת ברקע (רק אם הוא לא רץ)
+        print(f"🚀 מפעיל את שרת ה-AI ברקע...")
+        # שימוש ב-nohup וב-setsid מבטיח יציבות ב-Colab
+        cmd = f"nohup {ollama_path} serve > ollama_log.txt 2>&1 &"
+        subprocess.Popen(cmd, shell=True, preexec_fn=os.setsid)
 
-        # 4. המתנה אקטיבית עם בדיקת לוגים
-        print("⏳ Waiting for server to initialize...")
-        for i in range(15):
+        # 4. המתנה לעלייה ובדיקת תקינות
+        for i in range(10):
             if self._is_server_running():
-                print("✅ AI Server is Online and Ready!")
+                print("✅ שרת ה-AI עלה בהצלחה!")
+                self._pull_model_if_needed()
                 return True
             time.sleep(2)
-            
-        # אם הגענו לכאן, משהו השתבש - נדפיס את הלוג לדיבג
-        if os.path.exists("ollama_log.txt"):
-            with open("ollama_log.txt", "r") as f:
-                print(f"❌ Server logs:\n{f.read()}")
         
+        print("🛑 שגיאה: השרת לא הגיב בזמן. בדוק את ה-GPU ב-Colab.")
         return False
 
-    def ask(self, prompt):
+    def _pull_model_if_needed(self):
+        """מוודא שהמודל הספציפי משוך ומוכן לעבודה"""
+        print(f"📥 מוודא שהמודל {self.model} מוכן...")
+        # פקודת pull ב-Ollama לא מורידה מחדש אם המודל כבר קיים
+        os.system(f"ollama pull {self.model} > /dev/null 2>&1")
 
-        """שליחת שאלה למודל וקבלת תשובה נקייה"""
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False
-        }
+    def ask(self, prompt):
+        """שליחת שאלה ל-AI (שימוש פנימי בחבילה)"""
+        import requests
+        payload = {"model": self.model, "prompt": prompt, "stream": False}
         try:
-            response = requests.post(self.url, json=payload)
-            response.raise_for_status()
-            return response.json().get('response', 'No response received.')
+            res = requests.post(self.url, json=payload, timeout=60)
+            return res.json().get('response', 'לא התקבלה תשובה')
         except Exception as e:
-            return f"❌ Error: {e}"
+            return f"שגיאה בפנייה ל-AI: {e}"
+
 
     
 
