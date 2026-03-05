@@ -275,18 +275,45 @@ class AIManager:
             return s.connect_ex(('localhost', 11434)) == 0
 
     def _install_and_run(self):
-        # התקנה אם חסר
-        if os.system("command -v ollama > /dev/null") != 0:
-            os.system("curl -fsSL https://ollama.com/install.sh | sh")
-        
-        # הרצה ברקע
-        subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        
-        # המתנה לעלייה (עד 20 שניות)
-        for _ in range(10):
-            if self._is_server_running():
-                return
-            time.sleep(2)
+            # 1. התקנה אם חסר
+            if os.system("command -v ollama > /dev/null") != 0:
+                print("Installing Ollama engine...")
+                # אנחנו מוסיפים אימות שההתקנה הצליחה
+                install_cmd = "curl -fsSL https://ollama.com/install.sh | sh"
+                os.system(install_cmd)
+                # המתנה קטנה כדי לוודא שמערכת הקבצים של לינוקס התעדכנה
+                time.sleep(2) 
+            
+            # 2. הרצה ברקע - שימוש בנתיב המלא כדי למנוע FileNotFoundError
+            # ב-Colab, Ollama תמיד מותקן בנתיב הזה:
+            ollama_path = "/usr/local/bin/ollama"
+            
+            try:
+                # הוספת preexec_fn=os.setsid עוזרת לתהליך לשרוד ברקע ב-Colab
+                subprocess.Popen(
+                    [ollama_path, "serve"], 
+                    stdout=subprocess.DEVNULL, 
+                    stderr=subprocess.DEVNULL,
+                    preexec_fn=os.setsid
+                )
+            except FileNotFoundError:
+                # fallback למקרה שהנתיב שונה (למשל בהרצה מקומית)
+                subprocess.Popen(
+                    ["ollama", "serve"], 
+                    stdout=subprocess.DEVNULL, 
+                    stderr=subprocess.DEVNULL,
+                    preexec_fn=os.setsid
+                )
+            
+            # 3. המתנה לעלייה (עד 20 שניות)
+            print("Waiting for Ollama server to respond...")
+            for i in range(10):
+                if self._is_server_running():
+                    print("✅ Ollama is ready!")
+                    return
+                time.sleep(2)
+            
+            print("❌ Timeout: Ollama server failed to start.")
 
     def ask(self, prompt):
 
