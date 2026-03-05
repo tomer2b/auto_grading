@@ -177,7 +177,7 @@ class CheckAssignment:
                 return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}'
             else:
               if (return_values == list(result)):
-                answer= ai_manager.ask('whats wrong in this python command: x=+5')
+                answer= ai_manager.ask(f' {student_functions[func]}')
                 return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT} \n{answer}'
               else:
                 return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
@@ -311,6 +311,7 @@ class AIManager:
     def ask(self, prompt):
         """שליחת שאלה ל-AI (שימוש פנימי בחבילה)"""
         import requests
+        prompt = f'explain in hebrew in simple words what is the problem in this function  {prompt}'
         payload = {"model": self.model, "prompt": prompt, "stream": False}
         try:
             res = requests.post(self.url, json=payload, timeout=60)
