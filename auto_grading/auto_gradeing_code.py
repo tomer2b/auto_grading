@@ -275,46 +275,52 @@ class AIManager:
             return s.connect_ex(('localhost', 11434)) == 0
 
     def _install_and_run(self):
-            # 1. התקנה אם חסר
-            if os.system("command -v ollama > /dev/null") != 0:
-                print("Installing Ollama engine...")
-                # אנחנו מוסיפים אימות שההתקנה הצליחה
-                install_cmd = "curl -fsSL https://ollama.com/install.sh | sh"
-                os.system(install_cmd)
-                # המתנה קטנה כדי לוודא שמערכת הקבצים של לינוקס התעדכנה
-                time.sleep(2) 
-            
-            # 2. הרצה ברקע - שימוש בנתיב המלא כדי למנוע FileNotFoundError
-            # ב-Colab, Ollama תמיד מותקן בנתיב הזה:
             ollama_path = "/usr/local/bin/ollama"
             
+            # 1. בדיקה אם ollama חסר - התקנה יסודית
+            if not os.path.exists(ollama_path):
+                print("📦 Ollama not found. Starting deep installation...")
+                # שימוש ב-shell=True וב-wait כדי לוודא שההתקנה מסתיימת
+                install_command = "curl -fsSL https://ollama.com/install.sh | sh"
+                process = subprocess.run(install_command, shell=True, capture_output=True, text=True)
+                
+                if process.returncode != 0:
+                    print(f"❌ Installation failed: {process.stderr}")
+                    return False
+                
+                # המתנה אקטיבית עד שהקובץ נוצר על הדיסק
+                for _ in range(10):
+                    if os.path.exists(ollama_path):
+                        os.chmod(ollama_path, 0o755) # וידוא הרשאות הרצה
+                        break
+                    time.sleep(2)
+
+            # 2. בדיקה אחרונה - אם הקובץ עדיין לא שם, יש בעיה חמורה
+            if not os.path.exists(ollama_path):
+                print(f"❌ Error: {ollama_path} still missing after installation.")
+                return False
+
+            # 3. הרצה ברקע עם טיפול בשגיאות
+            print("🚀 Launching Ollama server...")
             try:
-                # הוספת preexec_fn=os.setsid עוזרת לתהליך לשרוד ברקע ב-Colab
                 subprocess.Popen(
-                    [ollama_path, "serve"], 
-                    stdout=subprocess.DEVNULL, 
+                    [ollama_path, "serve"],
+                    stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                     preexec_fn=os.setsid
                 )
-            except FileNotFoundError:
-                # fallback למקרה שהנתיב שונה (למשל בהרצה מקומית)
-                subprocess.Popen(
-                    ["ollama", "serve"], 
-                    stdout=subprocess.DEVNULL, 
-                    stderr=subprocess.DEVNULL,
-                    preexec_fn=os.setsid
-                )
-            
-            # 3. המתנה לעלייה (עד 20 שניות)
-            print("Waiting for Ollama server to respond...")
+            except Exception as e:
+                print(f"❌ Failed to spawn process: {e}")
+                return False
+
+            # 4. המתנה לעלייה
             for i in range(10):
                 if self._is_server_running():
-                    print("✅ Ollama is ready!")
-                    return
+                    print("✅ AI Server is Online!")
+                    return True
                 time.sleep(2)
             
-            print("❌ Timeout: Ollama server failed to start.")
-
+            return False
     def ask(self, prompt):
 
         """שליחת שאלה למודל וקבלת תשובה נקייה"""
