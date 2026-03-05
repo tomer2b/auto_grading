@@ -289,7 +289,7 @@ class AIManager:
             time.sleep(2)
 
     def ask(self, prompt):
-        self.ensure_ready()
+
         """שליחת שאלה למודל וקבלת תשובה נקייה"""
         payload = {
             "model": self.model,
@@ -303,25 +303,10 @@ class AIManager:
         except Exception as e:
             return f"❌ Error: {e}"
 
-    def ensure_ready(self):
-        if self._is_server_running():
-            return True
-        
-        # התקנה והפעלה
-        if os.system("command -v ollama > /dev/null") != 0:
-            os.system("curl -fsSL https://ollama.com/install.sh | sh > /dev/null 2>&1")
-        
-        subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        
-        # המתנה לחיבור (פותר את ה-Connection Refused)
-        for _ in range(15):
-            if self._is_server_running():
-                os.system(f"ollama pull {self.model} > /dev/null 2>&1")
-                return True
-            time.sleep(3)
-        return False
+    
 
 
 def run_ai_manager():
     global ai_manager
     ai_manager= AIManager()
+    ai_manager.setup()
