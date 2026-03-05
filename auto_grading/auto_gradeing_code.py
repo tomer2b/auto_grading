@@ -7,6 +7,14 @@ import queue
 import builtins as __builtin__
 import inspect
 
+# in order to use AI ollama
+# add these rows to the start cell to run in user colab notebook
+# 1. התקנת zstd (הנחוץ לפריסת Ollama)
+# !apt-get update -qq && apt-get install -y -qq zstd
+
+# # 2. התקנת Ollama (רק אם לא קיים)
+# ![ -f /usr/local/bin/ollama ] && echo "✅ Ollama already installed" || (curl -fsSL https://ollama.com/install.sh | sh)
+
 
 test_weight=0.2
 question_weight=0.8
@@ -177,8 +185,8 @@ class CheckAssignment:
                 return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}'
             else:
               if (return_values == list(result)):
-                answer=ai_manager.ask(f' {inspect.getsource(student_functions[func])}') # ai_manager.ask(f' {student_functions[func]}')
-                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT} \n{answer}'
+                answer='' # ai_manager.ask(f' {inspect.getsource(student_functions[func])}') 
+                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}{answer}'
               else:
                 return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
           
