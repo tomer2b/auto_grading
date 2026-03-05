@@ -246,7 +246,24 @@ import subprocess
 import time
 import requests
 import os
+import json
 
+def ask_ollama(prompt, model="llama3.2:1b"):
+    url = "http://localhost:11434/api/generate"
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False  # חשוב! כדי לקבל תשובה אחת מלאה ולא זרם של תווים
+    }
+    
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status() # בדיקה שהבקשה הצליחה
+        return response.json()['response']
+    except Exception as e:
+        return f"שגיאה בתקשורת עם Ollama: {e}"
+    
+    
 def start_ollama_server():
     # 1. בדיקה אם ollama כבר מותקן, אם לא - התקנה
     if os.system("command -v ollama > /dev/null") != 0:
