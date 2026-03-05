@@ -10,6 +10,7 @@ import builtins as __builtin__
 
 test_weight=0.2
 question_weight=0.8
+ai_manager=''
 
 RED_TEXT='\033[91m'
 REGULAR_TEXT='\033[0m'
@@ -206,7 +207,7 @@ def run_test(tasks,student_functions):
     ex_count = 0
     global run
     run=CheckAssignment()
-
+    run_ai_manager()
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
     for i in range(len(tasks)):
         run.test_mode = True
@@ -301,4 +302,7 @@ class AIManager:
         except Exception as e:
             return f"❌ Error: {e}"
 
-ai_manager= AIManager()
+
+def run_ai_manager():
+    global ai_manager
+    ai_manager= AIManager()
