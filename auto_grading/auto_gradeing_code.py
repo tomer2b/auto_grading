@@ -176,7 +176,8 @@ class CheckAssignment:
                 return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}'
             else:
               if (return_values == list(result)):
-                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
+                answer=ai_manager.ask('whats wrong in this python command: x=+5')
+                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT} \n{answer}'
               else:
                 return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
           
@@ -205,6 +206,7 @@ def run_test(tasks,student_functions):
     ex_count = 0
     global run
     run=CheckAssignment()
+
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
     for i in range(len(tasks)):
         run.test_mode = True
@@ -298,3 +300,5 @@ class AIManager:
             return response.json().get('response', 'No response received.')
         except Exception as e:
             return f"❌ Error: {e}"
+
+ai_manager= AIManager()
