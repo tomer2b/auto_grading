@@ -232,7 +232,7 @@ def run_test(tasks,student_functions):
             output += '\n'
         else:
             if student_functions.get(tasks[i][0]) :
-                answer= '\n' + ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
+                answer= '' #  '\n' + ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
             else:
                 answer=''
             error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
