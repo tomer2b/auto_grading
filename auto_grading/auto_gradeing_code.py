@@ -231,7 +231,7 @@ def run_test(tasks,student_functions):
             # print(output)
             output += '\n'
         else:
-            if student_functions.get([tasks[i][0]]) :
+            if student_functions.get(tasks[i][0]) :
                 answer= '\n' + ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
             else:
                 answer=''
