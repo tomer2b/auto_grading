@@ -185,8 +185,8 @@ class CheckAssignment:
                 return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}'
             else:
               if (return_values == list(result)):
-                answer='' # ai_manager.ask(f' {inspect.getsource(student_functions[func])}') 
-                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}{answer}'
+                
+                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
               else:
                 return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
           
@@ -231,9 +231,9 @@ def run_test(tasks,student_functions):
             # print(output)
             output += '\n'
         else:
-
+            answer= ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
             error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {error_msg}'
+            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {error_msg}\n{answer}'
             # print(output)
             output += '\n'
 
@@ -317,10 +317,16 @@ class AIManager:
         os.system(f"ollama pull {self.model} > /dev/null 2>&1")
 
     def ask(self, prompt):
-        """שליחת שאלה ל-AI (שימוש פנימי בחבילה)"""
+        system_instructions = (
+        "אתה מורה למדעי המחשב בחטיבת ביניים. הסבר בשפה פשוטה ובעברית "
+        "מה הבעיה בקוד הבא, בלי לתת את הפתרון המלא מיד. תן רק רמזים."
+        )
+        
+        # שילוב ההנחיות עם הקוד של התלמיד
+        full_prompt = f"{system_instructions}\n\nקוד התלמיד:\n{prompt}"
         import requests
-        prompt = f'explain in hebrew in simple words what is the problem in this function  {prompt}'
-        payload = {"model": self.model, "prompt": prompt, "stream": False}
+        full_prompt = f'explain in hebrew in simple words what is the problem in this function  {full_prompt}'
+        payload = {"model": self.model, "prompt": full_prompt, "stream": False}
         try:
             res = requests.post(self.url, json=payload, timeout=60)
             return res.json().get('response', 'לא התקבלה תשובה')
