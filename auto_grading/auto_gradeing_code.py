@@ -231,9 +231,12 @@ def run_test(tasks,student_functions):
             # print(output)
             output += '\n'
         else:
-            answer= ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
+            if student_functions.get([tasks[i][0]]) :
+                answer= '\n' + ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
+            else:
+                answer=''
             error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {error_msg}\n{answer}'
+            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {error_msg}{answer}'
             # print(output)
             output += '\n'
 
