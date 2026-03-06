@@ -328,7 +328,7 @@ class AIManager:
         # שילוב ההנחיות עם הקוד של התלמיד
         full_prompt = f"{system_instructions}\n\nקוד התלמיד:\n{prompt}"
         import requests
-        full_prompt = f'explain in hebrew in simple words what is the problem in this function  {full_prompt}'
+        # full_prompt = f'explain in hebrew in simple words what is the problem in this function  {full_prompt}'
         payload = {"model": self.model, "prompt": full_prompt, "stream": False}
         try:
             res = requests.post(self.url, json=payload, timeout=60)
