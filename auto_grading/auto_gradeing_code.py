@@ -157,45 +157,45 @@ class CheckAssignment:
         # self.runs = tests
 
     # is saved for backup to go to text format of the output
-    def run_task_text_output_format(self,func, parms, in_list, expected_result, return_values,student_functions):
+    # def run_task_text_output_format(self,func, parms, in_list, expected_result, return_values,student_functions):
 
-        try:
+    #     try:
 
-            self.input_lst=in_list
-            self.input_counter = 0
-            self.output_lst = []
-            if 'create_queue' in parms and func in student_functions:
-                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
-            else:
-                result = eval(func + '(' + str(parms)[1:-1] + ')')
+    #         self.input_lst=in_list
+    #         self.input_counter = 0
+    #         self.output_lst = []
+    #         if 'create_queue' in parms and func in student_functions:
+    #             result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
+    #         else:
+    #             result = eval(func + '(' + str(parms)[1:-1] + ')')
                 
-            if type(result) == tuple:
-                result = list(result)
-            elif isinstance(result, queue.Queue) :
-                result = list(result.queue)
-            else:
-                result = [result]
+    #         if type(result) == tuple:
+    #             result = list(result)
+    #         elif isinstance(result, queue.Queue) :
+    #             result = list(result.queue)
+    #         else:
+    #             result = [result]
 
-            func_call = func + '(' + str(parms)[1:-1] + ')'
-            expected_result = [str(x) for x in expected_result]
-            result_run =list(result)
-            # check if the output is the same           
-            if self.output_lst == expected_result:
-              if (return_values == result_run):
-                return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}',self.output_lst,result_run
-              else:
-                return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}',self.output_lst,result_run
-            else:
-              if (return_values == list(result)):
+    #         func_call = func + '(' + str(parms)[1:-1] + ')'
+    #         expected_result = [str(x) for x in expected_result]
+    #         result_run =list(result)
+    #         # check if the output is the same           
+    #         if self.output_lst == expected_result:
+    #           if (return_values == result_run):
+    #             return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}',self.output_lst,result_run
+    #           else:
+    #             return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}',self.output_lst,result_run
+    #         else:
+    #           if (return_values == list(result)):
                 
-                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
-              else:
-                return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
+    #             return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
+    #           else:
+    #             return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
           
 
-        except Exception as e:
-            func_call = func + '(' + str(parms)[1:-1] + ')'
-            return False, func_call, e,[],[]
+    #     except Exception as e:
+    #         func_call = func + '(' + str(parms)[1:-1] + ')'
+    #         return False, func_call, e,[],[]
 
     def run_task(self,func, parms, in_list, expected_result, return_values,student_functions):
 
@@ -218,19 +218,19 @@ class CheckAssignment:
 
             func_call = func + '(' + str(parms)[1:-1] + ')'
             expected_result = [str(x) for x in expected_result]
-            result_run =list(result)
+            # result_run =list(result)
             # check if the output is the same           
             if self.output_lst == expected_result:
-              if (return_values == result_run):
-                return True,func_call,f'',self.output_lst,result_run
+              if (return_values == list(result)):
+                return True,func_call,f'',self.output_lst, list(result)
               else:
-                return False,func_call,f'',self.output_lst,result_run
+                return False,func_call,f'',self.output_lst, list(result)
             else:
               if (return_values == list(result)):
                 
-                return False,func_call,f'',self.output_lst,result_run
+                return False,func_call,f'',self.output_lst, list(result)
               else:
-                return False,func_call,f'',self.output_lst,result_run
+                return False,func_call,f'',self.output_lst, list(result)
           
 
         except Exception as e:
@@ -363,8 +363,8 @@ def display_all_results(tasks, results):
         print_match = (actual_prints_str == expected_prints_str)
         
         # טיפול השוואתי ב-return values (למקרה שהמצופה נשמר כרשימה בעלת איבר בודד)
-        exp_ret_val = expected_return[0] if (isinstance(expected_return, list) and len(expected_return) == 1) else expected_return
-        return_match = (actual_return == exp_ret_val)
+        # exp_ret_val = expected_return[0] if (isinstance(expected_return, list) and len(expected_return) == 1) else expected_return
+        return_match = (actual_return == expected_return)
         
         # זיהוי הצלחה: לפי run_status (תמיכה ב-'Ok', 'OK', True)
         is_success = str(run_status).strip().lower() in ['ok', 'true', 'v', '1']
