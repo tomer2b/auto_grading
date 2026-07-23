@@ -156,8 +156,8 @@ class CheckAssignment:
         self.run_result = {}
         # self.runs = tests
 
-
-    def run_task(self,func, parms, in_list, expected_result, return_values,student_functions):
+    # is saved for backup to go to text format of the output
+    def run_task_text_output_format(self,func, parms, in_list, expected_result, return_values,student_functions):
 
         try:
 
@@ -191,6 +191,46 @@ class CheckAssignment:
                 return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
               else:
                 return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
+          
+
+        except Exception as e:
+            func_call = func + '(' + str(parms)[1:-1] + ')'
+            return False, func_call, e,[],[]
+
+    def run_task(self,func, parms, in_list, expected_result, return_values,student_functions):
+
+        try:
+
+            self.input_lst=in_list
+            self.input_counter = 0
+            self.output_lst = []
+            if 'create_queue' in parms and func in student_functions:
+                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
+            else:
+                result = eval(func + '(' + str(parms)[1:-1] + ')')
+                
+            if type(result) == tuple:
+                result = list(result)
+            elif isinstance(result, queue.Queue) :
+                result = list(result.queue)
+            else:
+                result = [result]
+
+            func_call = func + '(' + str(parms)[1:-1] + ')'
+            expected_result = [str(x) for x in expected_result]
+            result_run =list(result)
+            # check if the output is the same           
+            if self.output_lst == expected_result:
+              if (return_values == result_run):
+                return True,func_call,f'',self.output_lst,result_run
+              else:
+                return False,func_call,f'',self.output_lst,result_run
+            else:
+              if (return_values == list(result)):
+                
+                return False,func_call,f'',self.output_lst,result_run
+              else:
+                return False,func_call,f'',self.output_lst,result_run
           
 
         except Exception as e:
