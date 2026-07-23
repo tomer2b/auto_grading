@@ -414,7 +414,8 @@ def display_all_results(tasks, results):
                     <span>{status_html} | <span style="font-size: 16px;">בדיקת פעולה:</span> <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code></span>
                 </h3>
             </div>
-            <div style="padding: 15px; background-color: #fafafa;">
+            {
+            f"""<div style="padding: 15px; background-color: #fafafa;">
                 <table style="width: 100%; border-collapse: collapse; text-align: right; margin-bottom: 15px; font-size: 14px;">
                     <tr style="background-color: #f5f5f5;">
                         <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">פרמטרים שהועברו (Arguments)</th>
@@ -429,7 +430,7 @@ def display_all_results(tasks, results):
                 <div style="background-color: #fff; padding: 15px; border: 1px solid #eee; border-radius: 6px;">
                     {details_html}
                 </div>
-            </div>
+            </div>""" if not is_success else ''}
         </div>
         """
         html_elements.append(html_block)
