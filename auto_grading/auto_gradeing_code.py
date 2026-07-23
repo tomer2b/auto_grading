@@ -331,10 +331,10 @@ def display_all_results(tasks, results,final_grade):
     """
     html_elements = []
     grade_row =  f"""
-    <div style="font-family: Arial, sans-serif; direction: rtl; text-align: center; background-color: #e3f2fd; color: #0d47a1; padding: 15px; border: 1px solid #90caf9; border-radius: 8px; margin-bottom: 25px; font-size: 24px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        ציון סופי במשימה: {final_grade}
+    <div style="font-family: Arial, sans-serif; direction: rtl; text-align: center; background-color: #e3f2fd; color: #0d47a1; padding: 15px; border: 1px solid #90caf9; border-radius: 8px; margin-bottom: 25px; font-size: 24px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
+    ציון סופי במשימה: {final_grade}
     </div>
-    """    
+    """
     html_elements.append(grade_row)
     # מעבר על כל משימות הבדיקה
     for i in range(len(tasks)):
