@@ -330,7 +330,12 @@ def display_all_results(tasks, results,final_grade):
     ומציגה את כל הפלטים בפורמט קריא, ידידותי וברור ב-Colab.
     """
     html_elements = []
-    
+    grade_row =  f"""
+    <div style="font-family: Arial, sans-serif; direction: rtl; text-align: center; background-color: #e3f2fd; color: #0d47a1; padding: 15px; border: 1px solid #90caf9; border-radius: 8px; margin-bottom: 25px; font-size: 24px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        ציון סופי במשימה: {final_grade}
+    </div>
+    """    
+    html_elements.append(grade_row)
     # מעבר על כל משימות הבדיקה
     for i in range(len(tasks)):
         task = tasks[i]
@@ -370,11 +375,7 @@ def display_all_results(tasks, results,final_grade):
         is_success = str(run_status).strip().lower() in ['ok', 'true', 'v', '1']
         
         # 4. עיצוב המרכיבים הויזואליים
-        grade_row =  f"""
-<div style="font-family: Arial, sans-serif; direction: rtl; text-align: center; background-color: #e3f2fd; color: #0d47a1; padding: 15px; border: 1px solid #90caf9; border-radius: 8px; margin-bottom: 25px; font-size: 24px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-    ציון סופי במשימה: {final_grade}
-</div>
-"""
+
         status_html = "<span style='color: green; font-weight: bold;'>✅ עבר</span>" if is_success else "<span style='color: red; font-weight: bold;'>❌ נכשל</span>"
         bg_color = "#e8f5e9" if is_success else "#ffebee"
         
@@ -414,11 +415,7 @@ def display_all_results(tasks, results,final_grade):
         # 5. יצירת בלוק ה-HTML עבור הבדיקה הספציפית הזו
         html_block = f"""
         <div style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <div style="background-color: {bg_color}; padding: 10px 15px; border-bottom: 1px solid #ccc;">
-                <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: center;">
-                    <span>{grade_row} | <span style="font-size: 16px;">בדיקת פעולה:</span> <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code></span>
-                </h3>
-            </div>
+
             <div style="background-color: {bg_color}; padding: 10px 15px; border-bottom: 1px solid #ccc;">
                 <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: center;">
                     <span>{status_html} | <span style="font-size: 16px;">בדיקת פעולה:</span> <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code></span>
