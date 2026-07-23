@@ -7,6 +7,7 @@ import queue
 import builtins as __builtin__
 import inspect
 from IPython.display import display, HTML
+import traceback
 
 # in order to use AI ollama
 # add these rows to the start cell to run in user colab notebook
@@ -234,8 +235,10 @@ class CheckAssignment:
           
 
         except Exception as e:
+            tb_info = traceback.extract_tb(e.__traceback__)[-1]
+            error_type = type(e).__name__
             func_call = func + '(' + str(parms)[1:-1] + ')'
-            return False, func_call, e,[],[]
+            return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[]
 
 def grade_student_functions(req_functions,student_functions):
     count = 0
