@@ -6,6 +6,7 @@ import time
 import queue
 import builtins as __builtin__
 import inspect
+from IPython.display import display, HTML
 
 # in order to use AI ollama
 # add these rows to the start cell to run in user colab notebook
@@ -177,23 +178,24 @@ class CheckAssignment:
 
             func_call = func + '(' + str(parms)[1:-1] + ')'
             expected_result = [str(x) for x in expected_result]
+            result_run =list(result)
             # check if the output is the same           
             if self.output_lst == expected_result:
-              if (return_values == list(result)):
-                return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}'
+              if (return_values == result_run):
+                return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}',self.output_lst,result_run
               else:
-                return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}'
+                return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}',self.output_lst,result_run
             else:
               if (return_values == list(result)):
                 
-                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
+                return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
               else:
-                return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}'
+                return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
           
 
         except Exception as e:
             func_call = func + '(' + str(parms)[1:-1] + ')'
-            return False, func_call, e
+            return False, func_call, e,[],[]
 
 def grade_student_functions(req_functions,student_functions):
     count = 0
@@ -205,6 +207,7 @@ def grade_student_functions(req_functions,student_functions):
     else:
        grade = 100* count/len(req_functions)
     return grade
+
 
 def run_test(tasks,student_functions):
     output = ''
@@ -235,8 +238,9 @@ def run_test(tasks,student_functions):
                 answer= '' #  '\n' + ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
             else:
                 answer=''
-            error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {error_msg}{answer}'
+            #error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
+            run_results[ex_count][2]=run_results[ex_count][2] if run_time<2 else 'run time too long... '
+            output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {run_results[ex_count][2]}{answer}'
             # print(output)
             output += '\n'
 
@@ -253,7 +257,146 @@ def run_test(tasks,student_functions):
       tests_score = 0
       question_grade=0
     final_grade=test_weight*tests_score + question_weight*question_grade
+    display_all_results(tasks,run_results)
     return round(tests_score),output,round(question_grade),round(final_grade)
+
+
+
+def create_terminal_window(text):
+    """פונקציית עזר ליצירת חלון טרמינל"""
+    if not text:
+        return "<i style='color: #777;'>אין פלט</i>"
+    return f"""
+    <div style="
+        background-color: #1e1e1e;
+        color: #4af626;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 14px;
+        padding: 10px;
+        border-radius: 6px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        white-space: pre-wrap;
+        direction: ltr;
+        text-align: left;
+        border: 1px solid #444;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+    ">{text}</div>
+    """
+
+def display_all_results(tasks, results):
+    """
+    מקבלת את רשימת המשימות ואת תוצאות ההרצה (כרשימה או כמילון התואם באינדקסים),
+    ומציגה את כל הפלטים בפורמט קריא, ידידותי וברור ב-Colab.
+    """
+    html_elements = []
+    
+    # מעבר על כל משימות הבדיקה
+    for i in range(len(tasks)):
+        task = tasks[i]
+        
+        # תמיכה גם אם results הועבר כמילון (שמפתחותיו הם מספרי האינדקס) וגם כרשימה
+        res = results[i] if isinstance(results, (list, tuple, dict)) else None
+        
+        if not task or not res:
+            continue
+            
+        # 1. חילוץ נתוני המשימה (tasks)
+        # task[0] הוא הרפרנס לפונקציה, לא חובה להציג אותו כי יש לנו את func_call
+        func_arg_list = task[1]
+        in_list = task[2]
+        exp_out_list = task[3]
+        expected_return = task[4]
+        
+        # 2. חילוץ נתוני תוצאות ההרצה (results)
+        run_status = res[0]
+        func_call = res[1]
+        error_message = res[2]
+        out_list = res[3]
+        actual_return = res[4]
+        
+        # 3. המרת רשימות ההדפסה למחרוזות (כדי שיוצגו נכון בטרמינל)
+        expected_prints_str = "".join(exp_out_list) if exp_out_list else ""
+        actual_prints_str = "".join(out_list) if out_list else ""
+        
+        # בדיקה אם ההדפסה תקינה
+        print_match = (actual_prints_str == expected_prints_str)
+        
+        # טיפול השוואתי ב-return values (למקרה שהמצופה נשמר כרשימה בעלת איבר בודד)
+        exp_ret_val = expected_return[0] if (isinstance(expected_return, list) and len(expected_return) == 1) else expected_return
+        return_match = (actual_return == exp_ret_val)
+        
+        # זיהוי הצלחה: לפי run_status (תמיכה ב-'Ok', 'OK', True)
+        is_success = str(run_status).strip().lower() in ['ok', 'true', 'v', '1']
+        
+        # 4. עיצוב המרכיבים הויזואליים
+        status_html = "<span style='color: green; font-weight: bold;'>✅ עבר</span>" if is_success else "<span style='color: red; font-weight: bold;'>❌ נכשל</span>"
+        bg_color = "#e8f5e9" if is_success else "#ffebee"
+        
+        details_html = ""
+        if not is_success:
+            # אם יש שגיאת קומפילציה/קריסה (error_message קיים)
+            if error_message:
+                details_html += f"<div style='color: #d32f2f; margin-bottom: 10px; font-size: 15px;'><b>שגיאת מערכת / קריסה (Error):</b> <br><code style='color: #d32f2f;'>{error_message}</code></div>"
+            
+            else:
+                # אם הפער הוא בהדפסה
+                if not print_match:
+                    details_html += f"""
+                    <div style='margin-bottom: 15px;'>
+                        <b style='color: #d32f2f;'>שגיאה בהדפסה (Print):</b><br>
+                        <span style='font-size: 13px;'>פלט התלמיד:</span>
+                        {create_terminal_window(actual_prints_str)}
+                        <span style='font-size: 13px;'>פלט מצופה:</span>
+                        {create_terminal_window(expected_prints_str)}
+                    </div>
+                    """
+                
+                # אם הפער הוא בערך המוחזר
+                if not return_match:
+                    details_html += f"""
+                    <div>
+                        <b style='color: #d32f2f;'>שגיאה בערך המוחזר (Return):</b><br>
+                        <ul style='margin-top: 5px; direction: ltr; text-align: left; background-color: #f8f9fa; padding: 10px 30px; border-radius: 5px; border: 1px solid #ddd;'>
+                            <li><b>Actual (הוחזר בפועל):</b> <code>{repr(actual_return)}</code></li>
+                            <li><b>Expected (מצופה):</b> <code>{repr(exp_ret_val)}</code></li>
+                        </ul>
+                    </div>
+                    """
+        else:
+            details_html = "<div style='color: #2e7d32; font-weight: bold; padding: 5px 0;'>כל הכבוד! ההדפסות והערך המוחזר תואמים למצופה.</div>"
+
+        # 5. יצירת בלוק ה-HTML עבור הבדיקה הספציפית הזו
+        html_block = f"""
+        <div style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="background-color: {bg_color}; padding: 10px 15px; border-bottom: 1px solid #ccc;">
+                <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: center;">
+                    <span>{status_html} | <span style="font-size: 16px;">בדיקת פעולה:</span> <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code></span>
+                </h3>
+            </div>
+            <div style="padding: 15px; background-color: #fafafa;">
+                <table style="width: 100%; border-collapse: collapse; text-align: right; margin-bottom: 15px; font-size: 14px;">
+                    <tr style="background-color: #f5f5f5;">
+                        <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">פרמטרים שהועברו (Arguments)</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">קלטים מהמשתמש (Inputs)</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(func_arg_list)}</code></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(in_list)}</code></td>
+                    </tr>
+                </table>
+                
+                <div style="background-color: #fff; padding: 15px; border: 1px solid #eee; border-radius: 6px;">
+                    {details_html}
+                </div>
+            </div>
+        </div>
+        """
+        html_elements.append(html_block)
+    final_html = f"<div style='max-width: 900px; margin: 0 auto;'>{''.join(html_elements)}</div>"
+    return final_html
+
+
 
 
 import subprocess

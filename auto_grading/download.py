@@ -1,8 +1,6 @@
 import requests
 
 
-
-
 def download_code(url,target_name):
   response = requests.get(url, headers={'Cache-Control': 'no-cache'}) # open(url.split('/')[-1], 'w')
   with open(target_name,'w')  as file:
