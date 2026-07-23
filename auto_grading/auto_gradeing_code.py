@@ -257,7 +257,7 @@ def run_test(tasks,student_functions):
       tests_score = 0
       question_grade=0
     final_grade=test_weight*tests_score + question_weight*question_grade
-    display_all_results(tasks,run_results)
+    output=display_all_results(tasks,run_results)
     return round(tests_score),output,round(question_grade),round(final_grade)
 
 
