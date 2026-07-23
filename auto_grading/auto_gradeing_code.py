@@ -413,33 +413,46 @@ def display_all_results(tasks, results,final_grade):
             details_html = "<div style='color: #2e7d32; font-weight: bold; padding: 5px 0;'>כל הכבוד! ההדפסות והערך המוחזר תואמים למצופה.</div>"
 
         # 5. יצירת בלוק ה-HTML עבור הבדיקה הספציפית הזו
-        html_block = f"""
-        <div style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-
-            <div style="background-color: {bg_color}; padding: 10px 15px; border-bottom: 1px solid #ccc;">
-                <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: center;">
-                    <span>{status_html} | <span style="font-size: 16px;">בדיקת פעולה:</span> <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code></span>
+        if is_success:
+            # תצוגה קומפקטית לבדיקות שעברו בהצלחה (ללא אקורדיון)
+            html_block = f"""
+            <div style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #e8f5e9; padding: 10px 15px;">
+                <h3 style="margin: 0; font-size: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <span><span style='color: green; font-weight: bold;'>✅ עבר</span> | בדיקת פעולה: <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code></span>
                 </h3>
             </div>
-            {
-            f"""<div style="padding: 15px; background-color: #fafafa;">
-                <table style="width: 100%; border-collapse: collapse; text-align: right; margin-bottom: 15px; font-size: 14px;">
-                    <tr style="background-color: #f5f5f5;">
-                        <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">פרמטרים שהועברו (Arguments)</th>
-                        <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">קלטים מהמשתמש (Inputs)</th>
-                    </tr>
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(func_arg_list)}</code></td>
-                        <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(in_list)}</code></td>
-                    </tr>
-                </table>
+            """
+        else:
+            # תצוגת אקורדיון נפתחת לבדיקות שנכשלו
+            html_block = f"""
+            <details style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #fff;">
+                <summary style="background-color: #ffebee; padding: 10px 15px; border-bottom: 1px solid #ccc; cursor: pointer; outline: none;">
+                    <div style="display: inline-flex; justify-content: space-between; align-items: center; width: 95%;">
+                        <h3 style="margin: 0; font-size: 16px;">
+                            <span style='color: red; font-weight: bold;'>❌ נכשל</span> | בדיקת פעולה: <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code>
+                        </h3>
+                        <span style="font-size: 13px; color: #d32f2f; font-weight: bold;">(לחץ לפירוט ▼)</span>
+                    </div>
+                </summary>
                 
-                <div style="background-color: #fff; padding: 15px; border: 1px solid #eee; border-radius: 6px;">
-                    {details_html}
+                <div style="padding: 15px; background-color: #fafafa;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: right; margin-bottom: 15px; font-size: 14px;">
+                        <tr style="background-color: #f5f5f5;">
+                            <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">פרמטרים שהועברו (Arguments)</th>
+                            <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">קלטים מהמשתמש (Inputs)</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(func_arg_list)}</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(in_list)}</code></td>
+                        </tr>
+                    </table>
+                    
+                    <div style="background-color: #fff; padding: 15px; border: 1px solid #eee; border-radius: 6px;">
+                        {details_html}
+                    </div>
                 </div>
-            </div>""" if not is_success else ''}
-        </div>
-        """
+            </details>
+            """
         html_elements.append(html_block)
     final_html = f"<div style='max-width: 900px; margin: 0 auto;'>{''.join(html_elements)}</div>"
     return final_html
