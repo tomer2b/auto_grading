@@ -145,7 +145,75 @@ def input(prompt=None):
 #     global run
 #     run=new_val
 
+import html
+import linecache
+from IPython import get_ipython
+from IPython.display import display, HTML
 
+def custom_syntax_error_handler(shell, etype, evalue, tb, tb_offset=None):
+    """
+    תופס שגיאות תחביר ומציג אותן בתיבת HTML מעוצבת מימין לשמאל, 
+    כולל הצגת השורה הקודמת להקשר נוסף.
+    """
+    line_num = evalue.lineno
+    line_text = evalue.text
+    offset = evalue.offset
+    file_name = evalue.filename # השם הווירטואלי של התא ב-Colab
+    
+    line_code_html = ""
+    
+    if line_num and line_text:
+        # 1. שליפת השורה הקודמת מהזיכרון של Colab
+        prev_line_html = ""
+        if line_num > 1:
+            prev_line_text = linecache.getline(file_name, line_num - 1)
+            if prev_line_text:
+                safe_prev = html.escape(prev_line_text.rstrip("\n\r"))
+                # הצגת השורה הקודמת בצבע אפור מעומעם
+                prev_line_html = f"<div style='color: #9e9e9e; margin-bottom: 3px;'><code>{line_num - 1:2d} | {safe_prev}</code></div>"
+        
+        # 2. הכנת השורה שקרסה
+        safe_curr = html.escape(line_text.rstrip("\n\r"))
+        curr_line_html = f"<div style='color: #eeffff; background-color: #333; padding: 2px 0;'><code>{line_num:2d} | {safe_curr}</code></div>"
+        
+        # 3. חישוב מיקום החץ (כולל קיזוז של מספר השורה והקו המפריד שהוספנו)
+        arrow_html = ""
+        if offset:
+            # מספר התווים שנוספו בתחילת השורה (מספר השורה + רווח + קו מפריד + רווח)
+            prefix_len = len(str(line_num)) + 3 
+            spaces = "&nbsp;" * (offset - 1 + prefix_len)
+            arrow_html = f"<div style='margin-top: 2px;'><code style='color: #ef5350; font-size: 16px;'>{spaces}⬆️</code></div>"
+            
+        # 4. הרכבת הבלוק השחור של הקוד
+        line_code_html = f"""
+        <div style="direction: ltr; text-align: left; background-color: #212121; padding: 10px; border-radius: 5px; margin: 10px 0; font-family: 'Consolas', monospace; font-size: 14px;">
+            {prev_line_html}
+            {curr_line_html}
+            {arrow_html}
+        </div>
+        """
+        
+    # 5. הרכבת ה-HTML הסופי
+    html_content = f"""
+    <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right; border: 2px solid #ef5350; border-radius: 8px; padding: 15px; background-color: #ffebee; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="color: #c62828; margin-top: 0; display: flex; align-items: center;">
+            <span style="font-size: 24px; margin-left: 10px;">🚨</span> שגיאת תחביר (SyntaxError)
+        </h3>
+        <p style="font-size: 15px; color: #333; margin-bottom: 10px;">נראה שיש בעיה בצורת הכתיבה של הקוד (חסר תו כלשהו, או שיש רווחים לא נכונים).</p>
+        
+        {line_code_html}
+        
+        <h4 style="color: #c62828; margin-bottom: 8px; margin-top: 15px;">💡 טיפים לתיקון:</h4>
+        <ul style="margin-top: 0; color: #444; line-height: 1.6;">
+            <li>אם החץ מצביע על תחילת שורה, בדוק אם <b>בשורה שמעליה</b> שכחת לסגור סוגריים או שצריך טאב במקום של החץ.</li>
+            <li>בדוק אם חסרים נקודתיים (<b>:</b>) בסוף משפט <code>def</code>, <code>if</code>, <code>for</code>, או <code>while</code>.</li>
+            <li>ודא שלא חסרים גרשיים (<b>"</b> או <b>'</b>) סביב מחרוזות.</li>
+        </ul>
+    </div>
+    """
+    
+    display(HTML(html_content))
+    return None
 
 class CheckAssignment:
 
