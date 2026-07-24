@@ -453,7 +453,7 @@ def create_terminal_window(text):
     ">{text}</div>
     """
 
-def display_all_results(tasks, results,final_grade,ai_help_text):
+def display_all_results(tasks, results,final_grade):
     """
     מקבלת את רשימת המשימות ואת תוצאות ההרצה (כרשימה או כמילון התואם באינדקסים),
     ומציגה את כל הפלטים בפורמט קריא, ידידותי וברור ב-Colab.
