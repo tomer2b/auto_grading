@@ -548,12 +548,9 @@ def display_all_results(tasks, results,final_grade):
                     """
                 if ai_tip!='':
                                         details_html += f"""
-                    <div>
+                    <div dir=rtl>
                         <b style='color: #d32f2f;'>הנחיות הבינה מלאכותית:</b><br>
-                        <ul dir="rtl" style='margin-top: 5px; direction: ltr; text-align: left; background-color: #f8f9fa; padding: 10px 30px; border-radius: 5px; border: 1px solid #ddd;'>
-                            <li><b>Actual (הוחזר בפועל):</b> <code>{ai_tip}</code></li>
-                            
-                        </ul>
+                            <code>{ai_tip}</code>
                     </div>
                     """
 
