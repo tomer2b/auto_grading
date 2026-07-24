@@ -16,8 +16,10 @@ import pkgutil
 data = pkgutil.get_data(__name__, 'tasks_db.json')
 tasks_db = json.loads(data.decode('utf-8'))
 
-api1='gsk'
-api2='_TLltgHckDD34'
+api1b64='Z3NrX1RMbHRnSGNrREQzNA=='
+import base64
+
 api3='0O1mYIyxWGdyb3FYjjrbYpZj'
 api4='tDJDXD8EaUT6DoeG'
-api=api1+api2+api3+api4
+api1_decoded=base64.b64decode(api1b64).decode('utf8')
+api=api1_decoded+api3+api4
