@@ -549,7 +549,7 @@ def display_all_results(tasks, results,final_grade):
                 if ai_tip!='':
                                         details_html += f"""
                     <div dir=rtl>
-                        <b style='color: #d32f2f;'>הנחיות הבינה מלאכותית:</b><br>
+                        <b style='color: #d32f2f;font-size: 12px;'>הנחיות הבינה מלאכותית:</b><br>
                             <code>{ai_tip}</code>
                     </div>
                     """
