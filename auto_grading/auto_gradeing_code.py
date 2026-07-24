@@ -297,16 +297,16 @@ class CheckAssignment:
               if (return_values == list(result)):
                 return True,func_call,f'',self.output_lst, list(result),''
               else:
-                ai_help_text=get_student_ai_hint (student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 return False,func_call,f'',self.output_lst, list(result),ai_help_text
             else:
               if (return_values == list(result)):
-                ai_help_text=get_student_ai_hint (student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 ai_help_text=(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 # ai_help_text=(func,str(question_set))
                 return False,func_call,f'',self.output_lst, list(result),ai_help_text
               else:
-                ai_help_text=get_student_ai_hint (student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 ai_help_text=(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 # ai_help_text=(func,str(question_set))
                 return False,func_call,f'',self.output_lst, list(result),ai_help_text
