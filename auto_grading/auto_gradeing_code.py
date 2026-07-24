@@ -6,6 +6,7 @@ import time
 import queue
 import builtins as __builtin__
 import inspect
+from . import tasks_db
 from IPython.display import display, HTML
 import traceback
 
@@ -266,7 +267,7 @@ class CheckAssignment:
     #         func_call = func + '(' + str(parms)[1:-1] + ')'
     #         return False, func_call, e,[],[]
 
-    def run_task(self,func, parms, in_list, expected_result, return_values,student_functions):
+    def run_task(self,func, parms, in_list, expected_result, return_values,student_functions,question_set):
 
         try:
 
@@ -291,15 +292,17 @@ class CheckAssignment:
             # check if the output is the same           
             if self.output_lst == expected_result:
               if (return_values == list(result)):
-                return True,func_call,f'',self.output_lst, list(result)
+                return True,func_call,f'',self.output_lst, list(result),''
               else:
-                return False,func_call,f'',self.output_lst, list(result)
+                ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                return False,func_call,f'',self.output_lst, list(result),ai_help_text
             else:
               if (return_values == list(result)):
-                
-                return False,func_call,f'',self.output_lst, list(result)
+                ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                return False,func_call,f'',self.output_lst, list(result),ai_help_text
               else:
-                return False,func_call,f'',self.output_lst, list(result)
+                ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                return False,func_call,f'',self.output_lst, list(result),ai_help_text
           
 
         except Exception as e:
@@ -320,7 +323,7 @@ def grade_student_functions(req_functions,student_functions):
     return grade
 
 
-def run_test(tasks,student_functions):
+def run_test(tasks,student_functions,question_set):
     output = ''
     correct_answer = 0
     run_results = {}
@@ -334,7 +337,7 @@ def run_test(tasks,student_functions):
     for i in range(len(tasks)):
         run.test_mode = True
         start = time.time()
-        run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4],student_functions)
+        run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4],student_functions,question_set)
         end = time.time()
         
         run.test_mode = False
@@ -350,7 +353,7 @@ def run_test(tasks,student_functions):
             else:
                 answer=''
             #error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            run_results[ex_count] =(run_results[ex_count][0],run_results[ex_count][1], run_results[ex_count][2] if run_time<2 else 'run time too long... ',run_results[ex_count][3],run_results[ex_count][4])
+            run_results[ex_count] =(run_results[ex_count][0],run_results[ex_count][1], run_results[ex_count][2] if run_time<2 else 'run time too long... ',run_results[ex_count][3],run_results[ex_count][4],run_results[ex_count][5])
             output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {run_results[ex_count][2]}{answer}'
             # print(output)
             output += '\n'
@@ -368,9 +371,64 @@ def run_test(tasks,student_functions):
       tests_score = 0
       question_grade=0
     final_grade=test_weight*tests_score + question_weight*question_grade
+    
     output=display_all_results(tasks,run_results,final_grade)
     return round(tests_score),output,round(question_grade),round(final_grade)
 
+
+from groq import Groq
+
+def get_student_ai_hint(
+    question_text: str, 
+    student_code: str, 
+    expected_output: list, 
+    actual_output: list, 
+    expected_return: list, 
+    actual_return: list, 
+    api_key: str
+) -> str:
+    """
+    מקבלת את השאלה, הקוד של התלמיד, תוצאות וערכי החזרה צפויים מול בפועל,
+    ומחזירה הכוונה קצרה וקולעת בעברית ללא פתרון מלא.
+    """
+    client = Groq(api_key=api_key)
+    
+    # הנחיות מערכת מעודכנות הכוללות התייחסות לפלט וערכי החזרה
+    system_prompt = (
+        "אתה מורה פרטני ומנוסה למדעי המחשב. "
+        "התלמיד יציג בפניך שאלה בפייתון, את הקוד שכתב, וכן השוואה בין מה שהקוד אמור להפיק/להחזיר לבין מה שהוא בפועל הפיק/החזיר. "
+        "תפקידך לתת לו הכוונה או רמז קצרצר בלבד (מקסימום 3-4 שורות) המבוסס ישירות על הפערים שנוצרו בפלט או בערך ההחזרה. "
+        "חוקי ברזל: "
+        "1. אסור לכתוב את הקוד המלא או לתת את הפתרון בשום אופן! "
+        "2. מותר לתת שורת קוד אחת כדוגמה כללית (לא של השאלה עצמה) רק כדי להסביר תחביר. "
+        "3. השב תמיד בעברית ברורה, ידידותית וקצרה מאוד."
+    )
+    
+    user_content = (
+        f"תוכן השאלה:\n{question_text}\n\n"
+        f"הקוד שהתלמיד כתב:\n```python\n{student_code}\n```\n\n"
+        f"נתוני ההרצה:\n"
+        f"- פלט צפוי (Expected Output): {expected_output}\n"
+        f"- פלט בפועל (Actual Output): {actual_output}\n"
+        f"- ערך החזרה צפוי (Expected Return): {expected_return}\n"
+        f"- ערך החזרה בפועל (Actual Return): {actual_return}"
+    )
+
+    try:
+        chat_completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content}
+            ],
+            temperature=0.3, 
+            max_tokens=300   
+        )
+        
+        return chat_completion.choices[0].message.content.strip()
+        
+    except Exception as e:
+        return f"שגיאה בפנייה למערכת העזר: {str(e)}"
 
 
 def create_terminal_window(text):
@@ -395,7 +453,7 @@ def create_terminal_window(text):
     ">{text}</div>
     """
 
-def display_all_results(tasks, results,final_grade):
+def display_all_results(tasks, results,final_grade,ai_help_text):
     """
     מקבלת את רשימת המשימות ואת תוצאות ההרצה (כרשימה או כמילון התואם באינדקסים),
     ומציגה את כל הפלטים בפורמט קריא, ידידותי וברור ב-Colab.
@@ -430,6 +488,7 @@ def display_all_results(tasks, results,final_grade):
         error_message = res[2]
         out_list = res[3]
         actual_return = res[4]
+        ai_tip = res[5]
         
         # 3. המרת רשימות ההדפסה למחרוזות (כדי שיוצגו נכון בטרמינל)
         expected_prints_str = "".join(exp_out_list) if exp_out_list else ""
@@ -480,6 +539,17 @@ def display_all_results(tasks, results,final_grade):
                         </ul>
                     </div>
                     """
+                if ai_tip!='':
+                                        details_html += f"""
+                    <div>
+                        <b style='color: #d32f2f;'>הנחיות הבינה מלאכותית:</b><br>
+                        <ul dir="rtl" style='margin-top: 5px; direction: ltr; text-align: left; background-color: #f8f9fa; padding: 10px 30px; border-radius: 5px; border: 1px solid #ddd;'>
+                            <li><b>Actual (הוחזר בפועל):</b> <code>{ai_tip}</code></li>
+                            
+                        </ul>
+                    </div>
+                    """
+
         else:
             details_html = "<div style='color: #2e7d32; font-weight: bold; padding: 5px 0;'>כל הכבוד! ההדפסות והערך המוחזר תואמים למצופה.</div>"
 

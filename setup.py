@@ -2,9 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name="auto_grading",
-    version="0.3218",
+    version="0.325",
     packages=find_packages(),
-    install_requires=[],
+    install_requires=[
+        'groq',
+        
+    ],
     include_package_data=True,
     package_data={
         'auto_grading': ['tasks.csv'],  # Specify the path relative to the package
