@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="auto_grading",
-    version="0.3251",
+    version="0.3252",
     packages=find_packages(),
     install_requires=[
         'groq',
@@ -10,7 +10,7 @@ setup(
     ],
     include_package_data=True,
     package_data={
-        'auto_grading': ['tasks.csv'],  # Specify the path relative to the package
+        'auto_grading': ['tasks.csv','tasks_db.json'],  # Specify the path relative to the package
 
     },    
     description="A module for automatic grading python assignments for students",
