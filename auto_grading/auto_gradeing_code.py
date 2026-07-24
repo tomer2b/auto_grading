@@ -310,7 +310,7 @@ class CheckAssignment:
             tb_info = traceback.extract_tb(e.__traceback__)[-1]
             error_type = type(e).__name__
             func_call = func + '(' + str(parms)[1:-1] + ')'
-            return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[]
+            return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[],''
 
 def grade_student_functions(req_functions,student_functions):
     count = 0
