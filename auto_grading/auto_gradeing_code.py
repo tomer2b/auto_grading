@@ -10,6 +10,7 @@ from . import tasks_db
 from IPython.display import display, HTML
 import traceback
 
+
 # in order to use AI ollama
 # add these rows to the start cell to run in user colab notebook
 # 1. התקנת zstd (הנחוץ לפריסת Ollama)
@@ -385,13 +386,12 @@ def get_student_ai_hint(
     actual_output: list, 
     expected_return: list, 
     actual_return: list, 
-    api_key: str
 ) -> str:
     """
     מקבלת את השאלה, הקוד של התלמיד, תוצאות וערכי החזרה צפויים מול בפועל,
     ומחזירה הכוונה קצרה וקולעת בעברית ללא פתרון מלא.
     """
-    client = Groq(api_key=api_key)
+    client = Groq(api_key=api)
     
     # הנחיות מערכת מעודכנות הכוללות התייחסות לפלט וערכי החזרה
     system_prompt = (

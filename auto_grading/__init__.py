@@ -15,3 +15,9 @@ import pkgutil
 # טעינת הנתונים מהקובץ שנמצא באותה תיקייה
 data = pkgutil.get_data(__name__, 'tasks_db.json')
 tasks_db = json.loads(data.decode('utf-8'))
+
+api1='gsk'
+api2='_TLltgHckDD34'
+api3='0O1mYIyxWGdyb3FYjjrbYpZj'
+api4='tDJDXD8EaUT6DoeG'
+api=api1+api2+api3+api4
