@@ -7,7 +7,7 @@ import queue
 import builtins as __builtin__
 import inspect
 
-from . import tasks_db
+from .constants import tasks_db
 
 from IPython.display import display, HTML
 import traceback
@@ -380,7 +380,7 @@ def run_test(tasks,student_functions,question_set):
 
 
 from groq import Groq
-from .api import api
+from .constants import api
 
 def get_student_ai_hint(
     question_text: str, 
