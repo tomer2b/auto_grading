@@ -28,7 +28,7 @@ def parse_markdown_files_to_json(directory_path, output_json_path):
     for filename in os.listdir(directory_path):
         match = filename_pattern.match(filename)
         if match:
-            task_key = match.group(1)
+            task_key = match.group(1).lower()
             file_path = os.path.join(directory_path, filename)
             
             with open(file_path, 'r', encoding='utf-8') as file:
