@@ -6,7 +6,7 @@ import time
 import queue
 import builtins as __builtin__
 import inspect
-from . import api
+
 from . import tasks_db
 
 from IPython.display import display, HTML
@@ -380,6 +380,7 @@ def run_test(tasks,student_functions,question_set):
 
 
 from groq import Groq
+from .api import api
 
 def get_student_ai_hint(
     question_text: str, 
