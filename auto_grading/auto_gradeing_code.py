@@ -324,7 +324,7 @@ class CheckAssignment:
             func_call = func + '(' + str(parms)[1:-1] + ')'
             
             ai_help=error_explanations.get(error_type) if error_explanations.get(error_type)!=None else ''
-            
+            print(ai_help)
             return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[],ai_help
 
 def grade_student_functions(req_functions,student_functions):
