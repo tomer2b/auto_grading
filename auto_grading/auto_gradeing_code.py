@@ -561,7 +561,26 @@ def display_all_results(tasks, results,final_grade):
                 if ai_tip!='':
                     ai_tip = markdown.markdown(ai_tip, extensions=['fenced_code', 'nl2br'])
                     details_html += f"""
-                    <div dir=rtl>
+                                <style>
+                    /* כופה על הקוד להיות מיושר לשמאל גם בתוך סביבת ימין-לשמאל */
+                    .ai-hint-box pre {{
+                        direction: ltr !important;
+                        text-align: left !important;
+                        background-color: #272822; /* צבע רקע כהה כמו בעורך קוד אמיתי */
+                        color: #f8f8f2;
+                        padding: 10px;
+                        border-radius: 5px;
+                        overflow-x: auto; /* מאפשר גלילה ימינה-שמאלה אם השורה ארוכה מדי */
+                        margin-top: 10px;
+                    }}
+                    .ai-hint-box code {{
+                        direction: ltr !important;
+                        font-family: monospace;
+                        font-size: 14px;
+                    }}
+                </style>
+                
+                <div dir="rtl" class="ai-hint-box">
                         <b style='color: #d32f2f;font-size: 15px;'>הנחיות הבינה מלאכותית:</b><br>
                            
                             
