@@ -556,7 +556,12 @@ def display_all_results(tasks, results,final_grade):
                                         details_html += f"""
                     <div dir=rtl>
                         <b style='color: #d32f2f;font-size: 15px;'>הנחיות הבינה מלאכותית:</b><br>
-                            <code>{ai_tip}</code>
+                            <code>
+                            
+                            
+                            {ai_tip}
+                            
+                            </code>
                     </div>
                     """
 
