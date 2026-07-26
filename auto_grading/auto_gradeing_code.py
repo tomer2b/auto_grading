@@ -513,7 +513,7 @@ def display_all_results(tasks, results,final_grade):
         out_list = res[3]
         actual_return = res[4]
         ai_tip = res[5]
-        print(res[5])
+ 
         
         # 3. המרת רשימות ההדפסה למחרוזות (כדי שיוצגו נכון בטרמינל)
         expected_prints_str = "".join(exp_out_list) if exp_out_list else ""
