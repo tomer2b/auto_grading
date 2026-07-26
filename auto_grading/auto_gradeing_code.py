@@ -11,6 +11,7 @@ from .constants import tasks_db
 
 from IPython.display import display, HTML
 import traceback
+import markdown
 
 
 # in order to use AI ollama
@@ -554,7 +555,8 @@ def display_all_results(tasks, results,final_grade):
                     </div>
                     """
                 if ai_tip!='':
-                                        details_html += f"""
+                    ai_tip_as_html = markdown.markdown(ai_tip, extensions=['fenced_code', 'nl2br'])
+                    details_html += f"""
                     <div dir=rtl>
                         <b style='color: #d32f2f;font-size: 15px;'>הנחיות הבינה מלאכותית:</b><br>
                            
