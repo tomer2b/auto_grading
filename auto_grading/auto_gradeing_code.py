@@ -292,8 +292,9 @@ class CheckAssignment:
 
             func_call = func + '(' + str(parms)[1:-1] + ')'
             expected_result = [str(x) for x in expected_result]
-            function_code=inspect.getsource(student_functions[func])
-            print(function_code)
+            func_obj = student_functions.get(func)
+            function_code=inspect.getsource(func_obj)
+            
             # result_run =list(result)
             # check if the output is the same           
             if self.output_lst == expected_result:
@@ -307,12 +308,13 @@ class CheckAssignment:
                 ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 # ai_help_text=(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 # ai_help_text=(func,str(question_set))
-                return False,func_call,f'',self.output_lst, list(result),ai_help_text
               else:
                 ai_help_text=get_student_ai_hint(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 # ai_help_text=(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 # ai_help_text=(func,str(question_set))
-                return False,func_call,f'',self.output_lst, list(result),ai_help_text
+              
+              return  False,func_call,f'',self.output_lst, list(result),function_code
+              
           
 
         except Exception as e:
