@@ -9,7 +9,7 @@ import inspect
 
 from .constants import tasks_db
 
-# from .constants import error_explanations
+from .constants import error_explanations
 
 from IPython.display import display, HTML
 import traceback
@@ -322,10 +322,10 @@ class CheckAssignment:
             tb_info = traceback.extract_tb(e.__traceback__)[-1]
             error_type = type(e).__name__
             func_call = func + '(' + str(parms)[1:-1] + ')'
-            # error_explanation={"NameError":"first error"}
-            # ai_help=error_explanation.get(error_type) if error_explanation.get(error_type)!=None else ''
             
-            return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[],'tomer'
+            ai_help=error_explanations.get(error_type) if error_explanations.get(error_type)!=None else ''
+            
+            return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[],ai_help
 
 def grade_student_functions(req_functions,student_functions):
     count = 0
@@ -389,7 +389,6 @@ def run_test(tasks,student_functions,question_set):
     final_grade=test_weight*tests_score + question_weight*question_grade
     
     output=display_all_results(tasks,run_results,final_grade)
-    output=run_results
     return round(tests_score),output,round(question_grade),round(final_grade)
 
 
