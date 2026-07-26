@@ -292,6 +292,8 @@ class CheckAssignment:
 
             func_call = func + '(' + str(parms)[1:-1] + ')'
             expected_result = [str(x) for x in expected_result]
+            function_code=inspect.getsource(student_functions[func])
+            print(function_code)
             # result_run =list(result)
             # check if the output is the same           
             if self.output_lst == expected_result:
