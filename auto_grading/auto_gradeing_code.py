@@ -562,35 +562,52 @@ def display_all_results(tasks, results,final_grade):
                 if ai_tip!='':
                     ai_tip = markdown.markdown(ai_tip, extensions=['fenced_code', 'nl2br'])
                     details_html += f"""
-                                <style>
-                    /* כופה על הקוד להיות מיושר לשמאל גם בתוך סביבת ימין-לשמאל */
-                    .ai-hint-box pre {{
-                        direction: ltr !important;
-                        text-align: left !important;
-                        background-color: #272822; /* צבע רקע כהה כמו בעורך קוד אמיתי */
-                        color: #f8f8f2;
-                        padding: 10px;
-                        border-radius: 5px;
-                        overflow-x: auto; /* מאפשר גלילה ימינה-שמאלה אם השורה ארוכה מדי */
-                        margin-top: 10px;
-                    }}
-                    .ai-hint-box code {{
-                        direction: ltr !important;
-                        font-family: monospace;
-                        font-size: 14px;
-                    }}
-                </style>
-                
-                <div dir="rtl" class="ai-hint-box">
-                        <b style='color: #d32f2f;font-size: 15px;'>הנחיות הבינה מלאכותית:</b><br>
-                           
+                    <style>
+                            /* כופה על הקוד להיות מיושר לשמאל גם בתוך סביבת ימין-לשמאל */
+                            .ai-hint-box pre {{
+                                direction: ltr !important;
+                                text-align: left !important;
+                                background-color: #272822;
+                                color: #f8f8f2;
+                                padding: 10px;
+                                border-radius: 5px;
+                                overflow-x: auto;
+                                margin-top: 10px;
+                            }}
+                            .ai-hint-box code {{
+                                direction: ltr !important;
+                                font-family: monospace;
+                                font-size: 14px;
+                            }}
+                            /* עיצוב כפתור האקורדיון */
+                            .ai-hint-box summary {{
+                                cursor: pointer;
+                                color: #d32f2f;
+                                font-size: 15px;
+                                font-weight: bold;
+                                outline: none;
+                                user-select: none;
+                                padding: 5px;
+                            }}
+                            .ai-hint-box summary:hover {{
+                                color: #b71c1c;
+                                text-decoration: underline;
+                            }}
+                        </style>
+                        
+                        <!-- עטיפת הכל באקורדיון (details) -->
+                        <details dir="rtl" class="ai-hint-box" style="margin-top: 15px; border: 1px solid #f5c6cb; border-radius: 5px; padding: 10px; background-color: #fffafb;">
                             
+                            <!-- הכותרת הלחיצה -->
+                            <summary>💡 צריך רמז? לחץ כאן</summary>
                             
-                            {ai_tip}
+                            <!-- התוכן שיוצג לאחר הלחיצה -->
+                            <div style="background-color: #ffffff; padding: 15px; border: 1px solid #eee; border-radius: 5px; margin-top: 10px; line-height: 1.6; color: #333;">
+                                {ai_tip}
+                            </div>
                             
-                           
-                    </div>
-                    """
+                        </details>
+                        """
 
         else:
             details_html = "<div style='color: #2e7d32; font-weight: bold; padding: 5px 0;'>כל הכבוד! ההדפסות והערך המוחזר תואמים למצופה.</div>"
