@@ -13,7 +13,7 @@ error_explanations = {
         <pre dir="ltr" style="text-align: left; background-color: #272822; color: #f8f8f2; padding: 10px; border-radius: 5px; font-family: monospace;"><code># ❌ קוד שגוי (חסרות מירכאות ולכן פייתון מחפשת משתנה בשם hello):
 print(hello)
 
-# ✅ קוד מתוקן:
+#  קוד מתוקן:
 print("hello")</code></pre>
     </div>
     """,
@@ -25,7 +25,7 @@ print("hello")</code></pre>
 age = 16
 print("You are " + age)
 
-# ✅ קוד מתוקן (המרה למחרוזת):
+#  קוד מתוקן (המרה למחרוזת):
 print("You are " + str(age))</code></pre>
     </div>
     """,
@@ -37,7 +37,7 @@ print("You are " + str(age))</code></pre>
 if x > 5
     print(x)
 
-# ✅ קוד מתוקן:
+#  קוד מתוקן:
 if x > 5:
     print(x)</code></pre>
     </div>
@@ -50,7 +50,7 @@ if x > 5:
 lst = [10, 20, 30]
 print(lst[3])
 
-# ✅ קוד מתוקן (הגישה לאיבר האחרון היא באינדקס 2):
+#  קוד מתוקן (הגישה לאיבר האחרון היא באינדקס 2):
 print(lst[2])</code></pre>
     </div>
     """,
@@ -61,7 +61,7 @@ print(lst[2])</code></pre>
         <pre dir="ltr" style="text-align: left; background-color: #272822; color: #f8f8f2; padding: 10px; border-radius: 5px; font-family: monospace;"><code># ❌ קוד שגוי (אי אפשר להמיר מילה כזו למספר מתמטי):
 num = int("apple")
 
-# ✅ קוד מתוקן:
+#  קוד מתוקן:
 num = int("42")</code></pre>
     </div>
     """,
@@ -73,7 +73,7 @@ num = int("42")</code></pre>
 text = "hello"
 text.append("!")
 
-# ✅ קוד מתוקן (שרשור מחרוזות פשוט):
+#  קוד מתוקן (שרשור מחרוזות פשוט):
 text = text + "!"</code></pre>
     </div>
     """,
@@ -85,7 +85,7 @@ text = text + "!"</code></pre>
 student = {"name": "Ron"}
 print(student["age"])
 
-# ✅ קוד מתוקן (שימוש בפעולת get המונעת שגיאה אם המפתח חסר):
+#  קוד מתוקן (שימוש בפעולת get המונעת שגיאה אם המפתח חסר):
 print(student.get("age", "הנתון חסר"))</code></pre>
     </div>
     """,
@@ -97,7 +97,7 @@ print(student.get("age", "הנתון חסר"))</code></pre>
 def say_hi():
 print("Hi!")
 
-# ✅ קוד מתוקן (הוספת טאב/רווחים):
+#  קוד מתוקן (הוספת טאב/רווחים):
 def say_hi():
     print("Hi!")</code></pre>
     </div>
