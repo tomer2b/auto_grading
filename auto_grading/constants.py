@@ -8,15 +8,15 @@ api='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'
 
 error_explanations = {
     "NameError": """
-    <div dir="rtl">
-        <p><strong>NameError (שגיאת שם):</strong> מתרחשת כשפייתון אינה מכירה את השם שניסית להשתמש בו. לרוב מדובר בשגיאת כתיב בשם המשתנה, ניסיון להשתמש במשתנה שטרם הוגדר, או ששכחת לשים מירכאות סביב מחרוזת טקסט.</p>
-        <pre dir="ltr" style="text-align: left; background-color: #272822; color: #f8f8f2; padding: 10px; border-radius: 5px; font-family: monospace;"><code>#  קוד שגוי (חסרות מירכאות ולכן פייתון מחפשת משתנה בשם hello):
+<div dir="rtl">
+<p><strong>NameError (שגיאת שם):</strong> מתרחשת כשפייתון אינה מכירה את השם שניסית להשתמש בו. לרוב מדובר בשגיאת כתיב בשם המשתנה, ניסיון להשתמש במשתנה שטרם הוגדר, או ששכחת לשים מירכאות סביב מחרוזת טקסט.</p>
+<pre dir="ltr" style="text-align: left; background-color: #272822; color: #f8f8f2; padding: 10px; border-radius: 5px; font-family: monospace;"><code>#  קוד שגוי (חסרות מירכאות ולכן פייתון מחפשת משתנה בשם hello):
 print(hello)
 
 #  קוד מתוקן:
 print("hello")</code></pre>
-    </div>
-    """,
+</div>
+""",
 
     "TypeError": """
     <div dir="rtl">
