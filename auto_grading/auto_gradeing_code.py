@@ -436,7 +436,7 @@ def get_student_ai_hint(
                 {"role": "user", "content": user_content}
             ],
             temperature=0.3, 
-            max_tokens=300   
+            max_tokens=1000   
         )
         
         return chat_completion.choices[0].message.content.strip()
