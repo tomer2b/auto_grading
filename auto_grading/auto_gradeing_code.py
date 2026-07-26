@@ -9,7 +9,7 @@ import inspect
 
 from .constants import tasks_db
 
-from .constants import error_explanations
+# from .constants import error_explanations
 
 from IPython.display import display, HTML
 import traceback
@@ -322,8 +322,8 @@ class CheckAssignment:
             tb_info = traceback.extract_tb(e.__traceback__)[-1]
             error_type = type(e).__name__
             func_call = func + '(' + str(parms)[1:-1] + ')'
-            error_explanation={"NameError":"first error"}
-            ai_help=error_explanation.get(error_type) if error_explanation.get(error_type)!=None else ''
+            # error_explanation={"NameError":"first error"}
+            # ai_help=error_explanation.get(error_type) if error_explanation.get(error_type)!=None else ''
             
             return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[],'tomer'
 
