@@ -360,7 +360,7 @@ def run_test(tasks,student_functions,question_set):
             else:
                 answer=''
             #error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            run_results[ex_count] =(run_results[ex_count][0],run_results[ex_count][1], run_results[ex_count][2] if run_time<2 else 'run time too long... ',run_results[ex_count][3],run_results[ex_count][4],run_results[ex_count][5])
+            run_results[ex_count] =(run_results[ex_count][0],run_results[ex_count][1], run_results[ex_count][2] if run_time<5 else 'run time too long... ',run_results[ex_count][3],run_results[ex_count][4],run_results[ex_count][5])
             output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {run_results[ex_count][2]}{answer}'
             # print(output)
             output += '\n'
