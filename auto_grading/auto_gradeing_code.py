@@ -9,6 +9,8 @@ import inspect
 
 from .constants import tasks_db
 
+from .constants import error_explanations
+
 from IPython.display import display, HTML
 import traceback
 import markdown
@@ -155,6 +157,7 @@ import linecache
 from IPython import get_ipython
 from IPython.display import display, HTML
 
+# בשימוש מתוך המחברת עצמה
 def custom_syntax_error_handler(shell, etype, evalue, tb, tb_offset=None):
     """
     תופס שגיאות תחביר ומציג אותן בתיבת HTML מעוצבת מימין לשמאל, 
@@ -306,12 +309,10 @@ class CheckAssignment:
             else:
               if (return_values == list(result)):
                 ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-                # ai_help_text=(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-                # ai_help_text=(func,str(question_set))
+
               else:
                 ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-                # ai_help_text=(student_functions[func],tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-                # ai_help_text=(func,str(question_set))
+
               
               return  False,func_call,f'',self.output_lst, list(result),ai_help_text
               
@@ -321,7 +322,9 @@ class CheckAssignment:
             tb_info = traceback.extract_tb(e.__traceback__)[-1]
             error_type = type(e).__name__
             func_call = func + '(' + str(parms)[1:-1] + ')'
-            return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[],''
+            ai_help=error_explanations.get(error_type) if error_explanations.get(error_type)!=None else ''
+            
+            return False, func_call, f"שגיאת {error_type} בשורה {tb_info.lineno}:\n{tb_info.line}",[],[],ai_help
 
 def grade_student_functions(req_functions,student_functions):
     count = 0
