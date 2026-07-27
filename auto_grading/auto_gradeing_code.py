@@ -307,7 +307,7 @@ class CheckAssignment:
             else:
                 error_msg = f"""
             <div dir="rtl">
-                <span style="color: #333;">שגיאת {error_type} בשורה {current_line_num} הטקסט הבא <span style="font-size:13px"><b> {missing_name} </b></span> אינו מוכר  :</span>
+                <span style="color: #333;">שגיאת {error_type} בשורה {current_line_num} הטקסט הבא <span style="font-size:16px; font-weight: bold; text-decoration: underline;"> {missing_name} </span> אינו מוכר  :</span>
                 <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">[{current_line_num}] {current_line_text}</pre>
             </div>
             """
