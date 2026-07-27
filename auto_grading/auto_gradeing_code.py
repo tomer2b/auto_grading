@@ -273,18 +273,18 @@ class CheckAssignment:
             func_obj = student_functions.get(func)
             function_code=inspect.getsource(func_obj)
             
-            short_message=self.get_one_row_user_output(self.output_lst , expected_result ,    list(result),return_values)
+            short_run_summary=self.get_one_row_user_output(self.output_lst , expected_result ,    list(result),return_values)
             # result_run =list(result)
             # check if the output is the same           
             if self.output_lst == expected_result and  (return_values == list(result)):
               
-                return True,func_call,short_message,self.output_lst, list(result),''
+                return True,func_call,short_run_summary,self.output_lst, list(result),'',''
             else:
                 # if use_ai:
                 ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 # else:
                 #     ai_help_text=''
-                return False,func_call,short_message,self.output_lst, list(result),ai_help_text
+                return False,func_call,short_run_summary,self.output_lst, list(result),ai_help_text,''
               
           
 
@@ -310,7 +310,7 @@ class CheckAssignment:
             </div>
             """
             
-            return False, func_call,error_msg,[],[],ai_help
+            return False, func_call,'',[],[],ai_help,error_msg
 
 def grade_student_functions(req_functions,student_functions):
     count = 0
@@ -596,10 +596,11 @@ def display_all_results(tasks, results,final_grade):
         # 2. חילוץ נתוני תוצאות ההרצה (results)
         run_status = res[0]
         func_call = res[1]
-        error_message = res[2]
+        short_summary = res[2]
         out_list = res[3]
         actual_return = res[4]
         ai_tip = res[5]
+        err_text=res[6]
  
         
         # 3. המרת רשימות ההדפסה למחרוזות (כדי שיוצגו נכון בטרמינל)
@@ -624,64 +625,15 @@ def display_all_results(tasks, results,final_grade):
         details_html = ""
         if not is_success:
             # אם יש שגיאת קומפילציה/קריסה (error_message קיים)
-            if error_message:
+            if err_text:
                 details_html += f"""<div style='color: #d32f2f; 
                                         margin-bottom: 10px; 
                                         font-size: 15px;'>
                                         <b>שגיאת מערכת / קריסה (Error):</b> 
                                         <br>
-                                        <code style='color: #d32f2f;'>{error_message}</code></div>
+                                        <code style='color: #d32f2f;'>{err_text}</code></div>
                                         """
-                # if ai_tip!='':
-                #     ai_tip = markdown.markdown(ai_tip, extensions=['fenced_code', 'nl2br'])
-                #     details_html += f"""
-                #     <style>
-                #             /* כופה על הקוד להיות מיושר לשמאל גם בתוך סביבת ימין-לשמאל */
-                #             .ai-hint-box pre {{
-                #                 direction: ltr !important;
-                #                 text-align: left !important;
-                #                 background-color: #272822;
-                #                 color: #f8f8f2;
-                #                 padding: 10px;
-                #                 border-radius: 5px;
-                #                 overflow-x: auto;
-                #                 margin-top: 10px;
-                #             }}
-                #             .ai-hint-box code {{
-                #                 direction: ltr !important;
-                #                 font-family: monospace;
-                #                 font-size: 14px;
-                #             }}
-                #             /* עיצוב כפתור האקורדיון */
-                #             .ai-hint-box summary {{
-                #                 cursor: pointer;
-                #                 color: #d32f2f;
-                #                 font-size: 15px;
-                #                 font-weight: bold;
-                #                 outline: none;
-                #                 user-select: none;
-                #                 padding: 5px;
-                #             }}
-                #             .ai-hint-box summary:hover {{
-                #                 color: #b71c1c;
-                #                 text-decoration: underline;
-                #             }}
-                #         </style>
-                        
-                #         <!-- עטיפת הכל באקורדיון (details) -->
-                #         <details dir="rtl" class="ai-hint-box" style="margin-top: 15px; border: 1px solid #f5c6cb; border-radius: 5px; padding: 10px; background-color: #fffafb;">
-                            
-                #             <!-- הכותרת הלחיצה -->
-                #             <summary>💡 צריך רמז? לחץ כאן</summary>
-                            
-                #             <!-- התוכן שיוצג לאחר הלחיצה -->
-                #             <div style="background-color: #ffffff; padding: 15px; border: 1px solid #eee; border-radius: 5px; margin-top: 10px; line-height: 1.6; color: #333;">
-                #                 {ai_tip}
-                #             </div>
-                            
-                #         </details>
-                #         """
-            
+
             else:
                 # אם הפער הוא בהדפסה
                 if not print_match:
