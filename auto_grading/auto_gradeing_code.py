@@ -379,7 +379,7 @@ def run_test(tasks,student_functions,question_set):
             else:
                 answer=''
             #error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
-            run_results[ex_count] =(run_results[ex_count][0],run_results[ex_count][1], run_results[ex_count][2] if run_time<2 else 'run time too long... ',run_results[ex_count][3],run_results[ex_count][4],run_results[ex_count][5])
+            run_results[ex_count] =(run_results[ex_count][0],run_results[ex_count][1], run_results[ex_count][2] if run_time<4 else 'run time too long... ',run_results[ex_count][3],run_results[ex_count][4],run_results[ex_count][5])
             output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {run_results[ex_count][2]}{answer}'
             # print(output)
             output += '\n'
@@ -524,7 +524,7 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     # פתיחת חלונית הטרמינל 
     terminal_html = """
     <div dir="ltr" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; border-radius: 6px; border: 1px solid #333; text-align: left; margin-bottom: 15px; font-size: 14px; line-height: 1.2; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-        <div style="color: #569cd6; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 5px;">>_ Terminal Simulation</div>
+        <div style="color: #569cd6; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 5px;">>_ דוגמת הרצה</div>
     """
     
     # שלב 1: יצירת הקלטים המדומים
@@ -549,12 +549,12 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     # שלב 2: יצירת הפלטים בהשוואה של שתי עמודות
     terminal_html += """
     <div style="margin-top: 15px; border-top: 1px dashed #555; padding-top: 8px; margin-bottom: 5px;">
-        <div style="color: #808080; margin-bottom: 8px;">--- Program Output ---</div>
+        <div style="color: #808080; margin-bottom: 8px;">--- פלט התכנית ---</div>
         
         <!-- כותרות העמודות -->
         <div style="display: flex; font-weight: bold; font-size: 13px; margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 4px;">
-            <div style="flex: 1; color: #4CAF50; border-right: 1px solid #555; padding-right: 10px;">Expected Output:</div>
-            <div style="flex: 1; color: #2196F3; padding-left: 10px;">Student Output:</div>
+            <div style="flex: 1; color: #4CAF50; border-right: 1px solid #555; padding-right: 10px;">פלט רצוי:</div>
+            <div style="flex: 1; color: #2196F3; padding-left: 10px;">פלט התכנית:</div>
         </div>
     </div>
     """
