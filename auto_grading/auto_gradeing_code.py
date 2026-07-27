@@ -513,45 +513,75 @@ def get_current_output_for_item(in_list,out_list,current_input_index):
     
 
 
-def generate_terminal_simulation(in_list, out_list):
-    # פתיחת חלונית הטרמינל עם עיצוב כהה שמזכיר עורך קוד
+def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
+    # וידוא שהפלטים הם רשימות כדי שנוכל לרוץ עליהם גם אם הועבר ערך בודד
+    if not isinstance(expected_out_list, list):
+        expected_out_list = [expected_out_list]
+    if not isinstance(student_out_list, list):
+        student_out_list = [student_out_list]
+        
+    # פתיחת חלונית הטרמינל 
     terminal_html = """
-<div dir="ltr" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; border-radius: 6px; border: 1px solid #333; text-align: left; margin-bottom: 15px; font-size: 14px; line-height: 1.2; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-<div style="color: #569cd6; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 5px;">>_ Terminal Simulation</div>
+    <div dir="ltr" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; border-radius: 6px; border: 1px solid #333; text-align: left; margin-bottom: 15px; font-size: 14px; line-height: 1.2; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+        <div style="color: #569cd6; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 5px;">>_ Terminal Simulation</div>
     """
     
     # שלב 1: יצירת הקלטים המדומים
-    for item in in_list:
-        # זיהוי סוג המשתנה כדי להתאים את הודעת הקלט
-        if isinstance(item, int):
-            prompt = "Enter integer number:"
-        elif isinstance(item, float):
-            prompt = "Enter float number:"
-        elif isinstance(item, str):
-            prompt = "Enter text:"
+    if in_list:
+        for item in in_list:
+            if isinstance(item, int):
+                prompt = "Enter integer number:"
+            elif isinstance(item, float):
+                prompt = "Enter float number:"
+            elif isinstance(item, str):
+                prompt = "Enter text:"
+            else:
+                prompt = "Enter value:"
+                
+            terminal_html += f"""
+            <div style="margin-bottom: 2px;">
+                <span style="color: #9cdcfe;">{prompt}</span>
+                <span style="color: #ce9178; padding-left: 5px;">{item}</span>
+            </div>
+            """
+        
+    # שלב 2: יצירת הפלטים בהשוואה של שתי עמודות
+    terminal_html += """
+    <div style="margin-top: 15px; border-top: 1px dashed #555; padding-top: 8px; margin-bottom: 5px;">
+        <div style="color: #808080; margin-bottom: 8px;">--- Program Output ---</div>
+        
+        <!-- כותרות העמודות -->
+        <div style="display: flex; font-weight: bold; font-size: 13px; margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 4px;">
+            <div style="flex: 1; color: #4CAF50; border-right: 1px solid #555; padding-right: 10px;">Expected Output:</div>
+            <div style="flex: 1; color: #2196F3; padding-left: 10px;">Student Output:</div>
+        </div>
+    </div>
+    """
+    
+    # מציאת האורך המקסימלי כדי לכסות מצב שבו התלמיד הדפיס יותר או פחות שורות מהנדרש
+    max_len = max(len(expected_out_list), len(student_out_list))
+    
+    for i in range(max_len):
+        # שליפת הערך או סימון חסר אם הגענו לסוף אחת הרשימות
+        expected_val = expected_out_list[i] if i < len(expected_out_list) else ""
+        student_val = student_out_list[i] if i < len(student_out_list) else ""
+        
+        expected_display = expected_val if i < len(expected_out_list) else "<i style='color: #666;'>(No output)</i>"
+        student_display = student_val if i < len(student_out_list) else "<i style='color: #666;'>(No output)</i>"
+        
+        # השוואת הערכים (כהמרה למחרוזת כדי למנוע הבדלי טיפוסים) וקביעת צבע לתלמיד
+        if str(expected_val) == str(student_val):
+            student_color = "#dcdcaa" # צבע צהבהב רגיל של הטרמינל (תקין)
         else:
-            prompt = "Enter value:"
+            student_color = "#f44336" # צבע אדום בולט (שגיאה)
             
-        # הדפסת הודעת הבקשה (בצבע תכלת) והקלט עצמו בשורה חדשה (בצבע ירוק-צהבהב כמו הדפסה של משתמש)
+        # הוספת השורה שמפוצלת לשתי העמודות
         terminal_html += f"""
-        <div style="margin-bottom: 2px;">
-            <span style="color: #9cdcfe;">{prompt}</span>
-            <span style="color: #ce9178; padding-left: 5px;">{item}</span>
+        <div style="display: flex; margin-bottom: 2px;">
+            <div style="flex: 1; color: #dcdcaa; border-right: 1px solid #555; padding-right: 10px; word-break: break-all;">{expected_display}</div>
+            <div style="flex: 1; color: {student_color}; padding-left: 10px; word-break: break-all;">{student_display}</div>
         </div>
         """
-        
-    # שלב 2: יצירת הפלטים (אם קיימים)
-    if out_list:
-        terminal_html += """
-        <div style="color: #808080; margin-top: 15px; border-top: 1px dashed #555; padding-top: 10px; margin-bottom: 5px;">--- Program Output ---</div>
-        """
-        
-        # בודקים אם הפלט הוא רשימה של הדפסות או ערך בודד
-        if isinstance(out_list, list):
-            for out_item in out_list:
-                terminal_html += f'<div style="color: #dcdcaa;">{out_item}</div>'
-        else:
-            terminal_html += f'<div style="color: #dcdcaa;">{out_list}</div>'
             
     # סגירת תגית הטרמינל
     terminal_html += "</div>"
@@ -777,7 +807,7 @@ def display_all_results(tasks, results,final_grade):
                 </summary>
                 
                 <div style="padding: 15px; background-color: #fafafa;">
-                    {generate_terminal_simulation(in_list,exp_out_list)}
+                    {generate_terminal_simulation(in_list,exp_out_list,out_list)}
                     
                     <div style="background-color: #fff; padding: 15px; border: 1px solid #eee; border-radius: 6px;">
                         {details_html}
