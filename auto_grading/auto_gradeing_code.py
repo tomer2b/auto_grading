@@ -577,10 +577,10 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
             
         # הוספת השורה שמפוצלת לשתי העמודות
         terminal_html += f"""
-        <div style="display: flex; margin-bottom: 2px;">
-            <div style="flex: 1; color: #dcdcaa; border-right: 1px solid #555; padding-right: 10px; word-break: break-all;">{expected_display}</div>
-            <div style="flex: 1; color: {student_color}; padding-left: 10px; word-break: break-all;">{student_display}</div>
-        </div>
+<div style="display: flex; margin-bottom: 2px;">
+<div style="flex: 1; color: #dcdcaa; border-right: 1px solid #555; padding-right: 10px; word-break: break-all; white-space: pre-wrap;">{expected_display}</div>
+<div style="flex: 1; color: {student_color}; padding-left: 10px; word-break: break-all; white-space: pre-wrap;">{student_display}</div>
+</div>
         """
             
     # סגירת תגית הטרמינל
