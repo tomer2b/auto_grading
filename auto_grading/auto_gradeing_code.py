@@ -534,8 +534,7 @@ def generate_terminal_simulation(in_list, out_list):
             
         # הדפסת הודעת הבקשה (בצבע תכלת) והקלט עצמו בשורה חדשה (בצבע ירוק-צהבהב כמו הדפסה של משתמש)
         terminal_html += f"""
-        <div style="color: #9cdcfe;">{prompt}</div>
-        <div style="color: #ce9178; padding-left: 10px; margin-bottom: 8px;">{item}</div>
+        <div style="color: #9cdcfe;">{prompt}</div><div style="color: #ce9178; padding-left: 5px; margin-bottom: 8px;">{item}</div>
         """
         
     # שלב 2: יצירת הפלטים (אם קיימים)
