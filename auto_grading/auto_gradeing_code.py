@@ -297,15 +297,17 @@ class CheckAssignment:
             # שליפת מספר השורה שבה קרתה השגיאה והטקסט שלה
             current_line_num = tb_info.lineno
             current_line_text = tb_info.line
+            if error_type == "NameError":
+                
+                missing_name = getattr(e, 'name', '')
             
-            # בניית הודעת השגיאה המעוצבת - רק עם השורה הנוכחית
 
             if question_set=="0":
                 error_msg=e
             else:
                 error_msg = f"""
             <div dir="rtl">
-                <span style="color: #d32f2f; font-weight: bold;">שגיאת {error_type} בשורה {current_line_num}:</span>
+                <span style="color: #d32f2f; font-weight: bold;">שגיאת {error_type} בשורה {current_line_num} הטקסט הבא אינו מוכר  {missing_name}:</span>
                 <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">[{current_line_num}] {current_line_text}</pre>
             </div>
             """
