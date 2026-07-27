@@ -160,7 +160,9 @@ from IPython import get_ipython
 from IPython.display import display, HTML
 
 
-
+ipython = get_ipython()
+if ipython:
+    ipython.set_custom_exc((SyntaxError,), custom_syntax_error_handler)
 
 # בשימוש מתוך המחברת עצמה
 def custom_syntax_error_handler(shell, etype, evalue, tb, tb_offset=None):
