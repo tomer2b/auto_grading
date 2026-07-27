@@ -233,48 +233,23 @@ class CheckAssignment:
         self.run_result = {}
         # self.runs = tests
 
-    # is saved for backup to go to text format of the output
-    # def run_task_text_output_format(self,func, parms, in_list, expected_result, return_values,student_functions):
 
-    #     try:
-
-    #         self.input_lst=in_list
-    #         self.input_counter = 0
-    #         self.output_lst = []
-    #         if 'create_queue' in parms and func in student_functions:
-    #             result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
-    #         else:
-    #             result = eval(func + '(' + str(parms)[1:-1] + ')')
+    def get_one_row_user_output(self,output_lst , expected_out , actual_return, expected_return  ):
+            if output_lst == expected_out:
+              if (expected_return == actual_return):
+                return f'{GREEN_TEXT}Excellent{REGULAR_TEXT}'
+              else:
+                return f'Returned: {RED_TEXT}{str(actual_return)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(expected_return)}{REGULAR_TEXT}'
+            else:
+              if (expected_return == actual_return):
                 
-    #         if type(result) == tuple:
-    #             result = list(result)
-    #         elif isinstance(result, queue.Queue) :
-    #             result = list(result.queue)
-    #         else:
-    #             result = [result]
-
-    #         func_call = func + '(' + str(parms)[1:-1] + ')'
-    #         expected_result = [str(x) for x in expected_result]
-    #         result_run =list(result)
-    #         # check if the output is the same           
-    #         if self.output_lst == expected_result:
-    #           if (return_values == result_run):
-    #             return True,func_call,f'{GREEN_TEXT}Excellent{REGULAR_TEXT}',self.output_lst,result_run
-    #           else:
-    #             return False,func_call,f'Returned: {RED_TEXT}{str(result)}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT}',self.output_lst,result_run
-    #         else:
-    #           if (return_values == list(result)):
-                
-    #             return False,func_call,f'Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
-    #           else:
-    #             return False,func_call,f'Returned: {RED_TEXT}{result}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(return_values)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(self.output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_result)}{REGULAR_TEXT}',self.output_lst,result_run
+                return f'Printed: {RED_TEXT}{str(output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_out)}{REGULAR_TEXT}'
+              else:
+                return f'Returned: {RED_TEXT}{actual_return}{REGULAR_TEXT} != Expected return: {GREEN_TEXT}{str(expected_return)}{REGULAR_TEXT} and Printed: {RED_TEXT}{str(output_lst)}{REGULAR_TEXT} != Expected print: {GREEN_TEXT}{str(expected_out)}{REGULAR_TEXT}'
           
 
-    #     except Exception as e:
-    #         func_call = func + '(' + str(parms)[1:-1] + ')'
-    #         return False, func_call, e,[],[]
 
-    def run_task(self,func, parms, in_list, expected_result, return_values,student_functions,question_set):
+    def run_task(self,func, parms, in_list, expected_result, return_values,student_functions,question_set = "0",use_ai = False):
 
         try:
 
@@ -300,21 +275,16 @@ class CheckAssignment:
             
             # result_run =list(result)
             # check if the output is the same           
-            if self.output_lst == expected_result:
-              if (return_values == list(result)):
-                return True,func_call,f'',self.output_lst, list(result),''
-              else:
-                ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-                return False,func_call,f'',self.output_lst, list(result),ai_help_text
-            else:
-              if (return_values == list(result)):
-                ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-
-              else:
-                ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-
+            short_message=self.get_one_row_user_output(self.output_lst , expected_result ,    list(result),return_values)
+            if self.output_lst == expected_result and  (return_values == list(result)):
               
-              return  False,func_call,f'',self.output_lst, list(result),ai_help_text
+                return True,func_call,short_message,self.output_lst, list(result),''
+            else:
+                if use_ai:
+                    ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                else:
+                    ai_help_text=''
+                return False,func_call,short_message,self.output_lst, list(result),ai_help_text
               
           
 
@@ -349,7 +319,7 @@ def grade_student_functions(req_functions,student_functions):
     return grade
 
 
-def run_test(tasks,student_functions,question_set):
+def run_test(tasks,student_functions,question_set="0"):
     output = ''
     correct_answer = 0
     run_results = {}
@@ -378,7 +348,7 @@ def run_test(tasks,student_functions,question_set):
                 answer= '' #  '\n' + ai_manager.ask(f' {inspect.getsource(student_functions[tasks[i][0]])}') 
             else:
                 answer=''
-            #error_msg=run_results[ex_count][2] if run_time<2 else 'run time too long... '
+            
             run_results[ex_count] =(run_results[ex_count][0],run_results[ex_count][1], run_results[ex_count][2] if run_time<4 else 'run time too long... ',run_results[ex_count][3],run_results[ex_count][4],run_results[ex_count][5])
             output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {run_results[ex_count][2]}{answer}'
             # print(output)
@@ -397,8 +367,8 @@ def run_test(tasks,student_functions,question_set):
       tests_score = 0
       question_grade=0
     final_grade=test_weight*tests_score + question_weight*question_grade
-    
-    output=display_all_results(tasks,run_results,final_grade)
+    if question_set!="0":
+        output=display_all_results(tasks,run_results,final_grade)
     return round(tests_score),output,round(question_grade),round(final_grade)
 
 
