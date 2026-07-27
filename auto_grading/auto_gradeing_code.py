@@ -273,6 +273,7 @@ class CheckAssignment:
             func_obj = student_functions.get(func)
             function_code=inspect.getsource(func_obj)
             
+            short_message=self.get_one_row_user_output(self.output_lst , expected_result ,    list(result),return_values)
             # result_run =list(result)
             # check if the output is the same           
             if self.output_lst == expected_result and  (return_values == list(result)):
@@ -283,7 +284,6 @@ class CheckAssignment:
                     ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                 else:
                     ai_help_text=''
-                    short_message=self.get_one_row_user_output(self.output_lst , expected_result ,    list(result),return_values)
                 return False,func_call,short_message,self.output_lst, list(result),ai_help_text
               
           
