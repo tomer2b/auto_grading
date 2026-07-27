@@ -305,6 +305,8 @@ class CheckAssignment:
                 <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">[{current_line_num}] {current_line_text}</pre>
             </div>
             """
+            if question_set=="0":
+                ai_help=''
             return False, func_call,error_msg,[],[],ai_help
 
 def grade_student_functions(req_functions,student_functions):
