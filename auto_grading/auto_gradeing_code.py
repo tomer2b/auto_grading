@@ -517,7 +517,7 @@ def generate_terminal_simulation(in_list, out_list):
     # פתיחת חלונית הטרמינל עם עיצוב כהה שמזכיר עורך קוד
     terminal_html = """
     <div dir="ltr" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; border-radius: 6px; border: 1px solid #333; text-align: left; margin-bottom: 15px; font-size: 14px; line-height: 1.5; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-        <div style="color: #569cd6; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">>_ Terminal Simulation</div>
+        <div style="color: #569cd6; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">>_ Running Example</div>
     """
     
     # שלב 1: יצירת הקלטים המדומים
@@ -534,7 +534,10 @@ def generate_terminal_simulation(in_list, out_list):
             
         # הדפסת הודעת הבקשה (בצבע תכלת) והקלט עצמו בשורה חדשה (בצבע ירוק-צהבהב כמו הדפסה של משתמש)
         terminal_html += f"""
-        <div style="color: #9cdcfe;">{prompt}</div><div style="color: #ce9178; padding-left: 5px; margin-bottom: 8px;">{item}</div>
+        <div style="margin-bottom: 8px;">
+            <span style="color: #9cdcfe;">{prompt}</span>
+            <span style="color: #ce9178; padding-left: 5px;">{item}</span>
+        </div>
         """
         
     # שלב 2: יצירת הפלטים (אם קיימים)
