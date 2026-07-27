@@ -487,6 +487,75 @@ def create_terminal_window(text):
     ">{text}</div>
     """
 
+def has_mixed_types(lst):
+    # רשימה ריקה או בעלת איבר אחד לא יכולה להכיל סוגים שונים
+    if len(lst) < 2:
+        return False
+    
+    first_type = type(lst[0])
+    
+    # בודק אם קיים לפחות איבר אחד שהסוג שלו שונה מהאיבר הראשון
+    return any(type(x) != first_type for x in lst)
+
+def get_current_output_for_item(in_list,out_list,current_input_index):
+    if  len(in_list)<=1 :
+        return ''
+    # בדיקה האם יש זקיף ברשימת הקלט
+    elif len(in_list)==(len(out_list)+1):
+        if current_input_index==(len(in_list)-1):
+            return ''
+        return out_list[current_input_index]
+    # במידה ויש לנו מספר קלטים לאותו פריט  נדפיס את הפלט המתאים אחרי הקליטה של הקלט האחרון לפריט
+    elif len(in_list) % 2==0 and has_mixed_types(in_list):
+        return out_list[current_input_index//2+1] if current_input_index%2==1 else ''
+    elif len(in_list) % 3==0 and has_mixed_types(in_list):
+        return out_list[current_input_index//3+2] if current_input_index%3==2 else ''
+    
+
+
+def generate_terminal_simulation(in_list, out_list):
+    # פתיחת חלונית הטרמינל עם עיצוב כהה שמזכיר עורך קוד
+    terminal_html = """
+    <div dir="ltr" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; border-radius: 6px; border: 1px solid #333; text-align: left; margin-bottom: 15px; font-size: 14px; line-height: 1.5; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+        <div style="color: #569cd6; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">>_ Terminal Simulation</div>
+    """
+    
+    # שלב 1: יצירת הקלטים המדומים
+    for item in in_list:
+        # זיהוי סוג המשתנה כדי להתאים את הודעת הקלט
+        if isinstance(item, int):
+            prompt = "Enter integer number:"
+        elif isinstance(item, float):
+            prompt = "Enter float number:"
+        elif isinstance(item, str):
+            prompt = "Enter text:"
+        else:
+            prompt = "Enter value:"
+            
+        # הדפסת הודעת הבקשה (בצבע תכלת) והקלט עצמו בשורה חדשה (בצבע ירוק-צהבהב כמו הדפסה של משתמש)
+        terminal_html += f"""
+        <div style="color: #9cdcfe;">{prompt}</div>
+        <div style="color: #ce9178; padding-left: 10px; margin-bottom: 8px;">{item}</div>
+        """
+        
+    # שלב 2: יצירת הפלטים (אם קיימים)
+    if out_list:
+        terminal_html += """
+        <div style="color: #808080; margin-top: 15px; border-top: 1px dashed #555; padding-top: 10px; margin-bottom: 5px;">--- Program Output ---</div>
+        """
+        
+        # בודקים אם הפלט הוא רשימה של הדפסות או ערך בודד
+        if isinstance(out_list, list):
+            for out_item in out_list:
+                terminal_html += f'<div style="color: #dcdcaa;">{out_item}</div>'
+        else:
+            terminal_html += f'<div style="color: #dcdcaa;">{out_list}</div>'
+            
+    # סגירת תגית הטרמינל
+    terminal_html += "</div>"
+    
+    return terminal_html
+
 def display_all_results(tasks, results,final_grade):
     """
     מקבלת את רשימת המשימות ואת תוצאות ההרצה (כרשימה או כמילון התואם באינדקסים),
@@ -706,16 +775,7 @@ def display_all_results(tasks, results,final_grade):
                 </summary>
                 
                 <div style="padding: 15px; background-color: #fafafa;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: right; margin-bottom: 15px; font-size: 14px;">
-                        <tr style="background-color: #f5f5f5;">
-                            <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">פרמטרים שהועברו (Arguments)</th>
-                            <th style="padding: 8px; border: 1px solid #ddd; width: 50%;">קלטים מהמשתמש (Inputs)</th>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(func_arg_list)}</code></td>
-                            <td style="padding: 8px; border: 1px solid #ddd; direction: ltr; text-align: left;"><code>{repr(in_list)}</code></td>
-                        </tr>
-                    </table>
+                    {generate_terminal_simulation(in_list,exp_out_list)}
                     
                     <div style="background-color: #fff; padding: 15px; border: 1px solid #eee; border-radius: 6px;">
                         {details_html}
