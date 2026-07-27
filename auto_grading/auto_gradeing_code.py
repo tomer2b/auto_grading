@@ -1,5 +1,7 @@
 # Copyright (C) 2024 Tomer Tubi - All Rights Reserved
 
+import base64
+
 import pandas as pd
 import importlib.resources as pkg_resource
 import time
@@ -8,7 +10,7 @@ import builtins as __builtin__
 import inspect
 
 from .constants import tasks_db
-
+from .constants import kapi
 from .constants import error_explanations
 
 from IPython.display import display, HTML
@@ -380,7 +382,13 @@ def run_test(tasks,student_functions,question_set="0"):
 
 
 from groq import Groq
-from .constants import api
+
+
+def get_kapi_key(k):
+    # פענוח חזרה למחרוזת
+    decoded_reversed = base64.b64decode(k).decode('utf-8')
+    # היפוך חזרה למפתח המקורי
+    return decoded_reversed[::-1]
 
 def get_student_ai_hint(
     question_text: str, 
@@ -394,7 +402,8 @@ def get_student_ai_hint(
     מקבלת את השאלה, הקוד של התלמיד, תוצאות וערכי החזרה צפויים מול בפועל,
     ומחזירה הכוונה קצרה וקולעת בעברית ללא פתרון מלא.
     """
-    client = Groq(api_key=api)
+
+    client = Groq(api_key=get_kapi_key(kapi))
     
     # הנחיות מערכת מעודכנות הכוללות התייחסות לפלט וערכי החזרה
     system_prompt = (
