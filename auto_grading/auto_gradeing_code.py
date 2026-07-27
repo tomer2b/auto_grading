@@ -307,7 +307,7 @@ class CheckAssignment:
             else:
                 error_msg = f"""
             <div dir="rtl">
-                <span style="color: #d32f2f; font-weight: bold;">שגיאת {error_type} בשורה {current_line_num} הטקסט הבא אינו מוכר  {missing_name}:</span>
+                <span style="color: #333; font-weight: bold;">שגיאת {error_type} בשורה {current_line_num} הטקסט הבא <u><b> {missing_name} </b></u> אינו מוכר  :</span>
                 <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">[{current_line_num}] {current_line_text}</pre>
             </div>
             """
@@ -700,7 +700,7 @@ def display_all_results(tasks, results,final_grade):
                     <details dir="rtl" class="ai-hint-box" style="margin-top: 15px; border: 1px solid #f5c6cb; border-radius: 5px; padding: 10px; background-color: #fffafb;">
                         
                         <!-- הכותרת הלחיצה -->
-                        <summary>💡 צריך רמז? לחץ כאן</summary>
+                        <summary>💡 צריכים רמז? לחצו כאן</summary>
                         
                         <!-- התוכן שיוצג לאחר הלחיצה -->
                         <div style="background-color: #ffffff; padding: 15px; border: 1px solid #eee; border-radius: 5px; margin-top: 10px; line-height: 1.6; color: #333;">
