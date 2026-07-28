@@ -29,8 +29,8 @@ import requests
 
 # 2. הכתובת שהעתקת משלב 3:
 # כתובת להכנסת נתונים על כל הרצה לגוגל שיט
-SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxtjf46sN0Ak0suxINFSfaZkJcf70AyfwUweahDNpY2X7tEiEzl8T8JGQhTk7mdCAsm/exec"
-
+SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxiSIj5baThkmI8iy7HhsQED_an-EUU-l5c6ViVe__7aZHd_u2Fdh8ijbjw8o4KF2CA/exec"
+                     
 # in order to use AI ollama
 # add these rows to the start cell to run in user colab notebook
 # 1. התקנת zstd (הנחוץ לפריסת Ollama)
@@ -491,7 +491,8 @@ def get_student_ai_hint(
         "1. אסור לכתוב את הקוד המלא או לתת את הפתרון בשום אופן! "
         "2. מותר לתת שורת קוד אחת כדוגמה כללית (לא של השאלה עצמה) רק כדי להסביר תחביר. "
         "3. השב תמיד בעברית ברורה, ידידותית וקצרה מאוד."
-        "4. התשובה צריכה לחזור בפורמט HTML וחייבית לכלול דוגמאות קוד כלליות"
+        "4. התשובה צריכה לחזור בפורמט HTML וחייבת לכלול דוגמת קוד כללית"
+        "5. צריכה להיות דוגמת קוד אחת בלבד רק כדי לסייע לתקן את הבעיה הנוכחית שהתלמיד מתמודד איתה"
         "5. בתשובה חובה להתייחס למה שהתלמיד כתב ולמה שמבקשים בשאלה וגם בפלט והקלט הנדרש , והקלט והפלט שהתקבל"
         "6. בסוף  התשובה תמיד תוסיף את המילה END כדי שאדע שהתקבלה תשובה מלאה"
         "7. תזכור שהתכנית לא קולטת נתונים אקראים אלא רק את הקלט שצורף לפרומפט זה"
