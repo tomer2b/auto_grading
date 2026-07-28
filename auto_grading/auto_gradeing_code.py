@@ -1,6 +1,7 @@
 # Copyright (C) 2024 Tomer Tubi - All Rights Reserved
 
 import base64
+import json
 
 import pandas as pd
 import importlib.resources as pkg_resource
@@ -8,6 +9,8 @@ import time
 import queue
 import builtins as __builtin__
 import inspect
+
+import urllib
 
 from .constants import tasks_db
 from .constants import kapi
@@ -353,10 +356,27 @@ def get_academic_year():
         return str(today.year - 1)
 
 def get_notebook_filename():
-    # סורקים את תיקיית העבודה של המחברת כדי למצוא את הקובץ
-    for file in os.listdir('.'):
-        if file.endswith('.ipynb'):
-            return file
+    # שרת ה-Jupyter הפנימי של Colab רץ על אחד מהכתובות המקומיות האלו בפורט 9000
+    possible_ips = ['172.28.0.2', '172.28.0.12', '127.0.0.1']
+    
+    for ip in possible_ips:
+        try:
+            # פנייה ל-API הפנימי של Colab שמחזיק את פרטי ה"סשן" הנוכחי
+            url = f"http://{ip}:9000/api/sessions"
+            response = urllib.request.urlopen(url, timeout=1)
+            
+            # פענוח התשובה שחוזרת מהשרת
+            sessions = json.loads(response.read().decode('utf-8'))
+            
+            # אם יש סשן פעיל ויש לו שם, נשלוף אותו
+            if len(sessions) > 0 and 'name' in sessions[0]:
+                file_name = sessions[0]['name']
+                return file_name
+                
+        except Exception:
+            # אם הכתובת הזו לא עבדה, נמשיך לכתובת הבאה ברשימה
+            continue
+            
     return "מחברת_ללא_שם"
 
 def register_run(question_set):
