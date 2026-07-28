@@ -355,26 +355,25 @@ def get_academic_year():
     else:
         return str(today.year - 1)
 
+
 def get_notebook_filename():
-    # שרת ה-Jupyter הפנימי של Colab רץ על אחד מהכתובות המקומיות האלו בפורט 9000
     possible_ips = ['172.28.0.2', '172.28.0.12', '127.0.0.1']
     
     for ip in possible_ips:
         try:
-            # פנייה ל-API הפנימי של Colab שמחזיק את פרטי ה"סשן" הנוכחי
             url = f"http://{ip}:9000/api/sessions"
             response = urllib.request.urlopen(url, timeout=1)
-            
-            # פענוח התשובה שחוזרת מהשרת
             sessions = json.loads(response.read().decode('utf-8'))
             
-            # אם יש סשן פעיל ויש לו שם, נשלוף אותו
             if len(sessions) > 0 and 'name' in sessions[0]:
-                file_name = sessions[0]['name']
-                return file_name
+                raw_file_name = sessions[0]['name']
+                
+                # תרגום הקודים המקודדים (כמו %20 ו-%D7) בחזרה לאותיות בעברית
+                decoded_file_name = urllib.parse.unquote(raw_file_name)
+                
+                return decoded_file_name
                 
         except Exception:
-            # אם הכתובת הזו לא עבדה, נמשיך לכתובת הבאה ברשימה
             continue
             
     return "מחברת_ללא_שם"
