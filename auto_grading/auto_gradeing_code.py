@@ -459,8 +459,8 @@ def get_kapi_key(k):
     return decoded_reversed[::-1]
 
 def get_student_ai_hint(
-    question_text: str, 
     student_code: str, 
+    question_text: str, 
     expected_output: list, 
     actual_output: list, 
     expected_return: list, 
