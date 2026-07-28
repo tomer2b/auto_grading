@@ -470,7 +470,7 @@ def get_student_ai_hint(
     מקבלת את השאלה, הקוד של התלמיד, תוצאות וערכי החזרה צפויים מול בפועל,
     ומחזירה הכוונה קצרה וקולעת בעברית ללא פתרון מלא.
     """
-
+    print(student_code.split('\n'))
     if len(student_code.split('\n'))<=2:
         return 'בינה מסייעת רק משתי שורות ומעלה , עשו עוד מאמץ..'
     client = Groq(api_key=get_kapi_key(kapi))
