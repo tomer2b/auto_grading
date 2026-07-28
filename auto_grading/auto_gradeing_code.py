@@ -17,6 +17,16 @@ from IPython.display import display, HTML
 import traceback
 import markdown
 
+import datetime
+import os
+import requests
+
+# 1. משתנה גלובלי: קוד המשימה
+
+
+# 2. הכתובת שהעתקת משלב 3:
+# כתובת להכנסת נתונים על כל הרצה לגוגל שיט
+SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxtjf46sN0Ak0suxINFSfaZkJcf70AyfwUweahDNpY2X7tEiEzl8T8JGQhTk7mdCAsm/exec"
 
 # in order to use AI ollama
 # add these rows to the start cell to run in user colab notebook
@@ -218,9 +228,9 @@ def custom_syntax_error_handler(shell, etype, evalue, tb, tb_offset=None):
         
         <h4 style="color: #c62828; margin-bottom: 8px; margin-top: 15px;">💡 טיפים לתיקון:</h4>
         <ul style="margin-top: 0; color: #444; line-height: 1.6;">
-            <li>אם החץ מצביע על תחילת שורה, בדוק אם <b>בשורה שמעליה</b> שכחת לסגור סוגריים או שצריך טאב במקום של החץ.</li>
             <li>בדוק אם חסרים נקודתיים (<b>:</b>) בסוף משפט <code>def</code>, <code>if</code>, <code>for</code>, או <code>while</code>.</li>
             <li>ודא שלא חסרים גרשיים (<b>"</b> או <b>'</b>) סביב מחרוזות.</li>
+            <li>אם החץ מצביע על תחילת שורה, בדוק אם <b>בשורה שמעליה</b> שכחת לסגור סוגריים או שצריך טאב במקום של החץ.</li>
         </ul>
     </div>
     """
@@ -333,6 +343,37 @@ def grade_student_functions(req_functions,student_functions):
        grade = 100* count/len(req_functions)
     return grade
 
+def get_academic_year():
+    today = datetime.datetime.now()
+    # לפי ההגדרה שלך: חודשים 9 (ספטמבר) עד 12 שייכים לשנה הנוכחית
+    # חודשים 1 עד 8 שייכים לשנה הקודמת של תחילת שנת הלימודים
+    if today.month >= 9:
+        return str(today.year)
+    else:
+        return str(today.year - 1)
+
+def get_notebook_filename():
+    # סורקים את תיקיית העבודה של המחברת כדי למצוא את הקובץ
+    for file in os.listdir('.'):
+        if file.endswith('.ipynb'):
+            return file
+    return "מחברת_ללא_שם"
+
+def register_run(question_set):
+    payload = {
+        "task_code": question_set,
+        "academic_year": get_academic_year(),
+        "filename": get_notebook_filename()
+    }
+    
+    try:
+        # שולחים את הבקשה לגוגל. הגבלנו ל-2 שניות כדי שגם במקרה
+        # של בעיית רשת, המחברת של התלמיד לא "תיתקע"
+        requests.post(SHEET_WEB_APP_URL, json=payload, timeout=2)
+    except Exception:
+        # אם יש שגיאת אינטרנט או שגוגל חסום בבית הספר,
+        # פשוט ממשיכים הלאה בשקט מבלי להפריע לתלמיד
+        pass
 
 def run_test(tasks,student_functions,question_set="0"):
     output = ''
@@ -344,6 +385,8 @@ def run_test(tasks,student_functions,question_set="0"):
     global run
     run=CheckAssignment()
     run_ai_manager()
+    if question_set!="0":
+        register_run(question_set)
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
     for i in range(len(tasks)):
         run.test_mode = True
