@@ -5,8 +5,8 @@ import pkgutil
 data = pkgutil.get_data(__name__, 'tasks_db.json')
 tasks_db = json.loads(data.decode('utf-8'))
 
-ACTIVE_ENGINE='gemini'
-ACTIVE_MODEL='gemini-2.5-flash'   # "llama-3.1-8b-instant"
+ACTIVE_ENGINE='groq'  # gemini
+ACTIVE_MODEL="llama-3.1-8b-instant" # 'gemini-2.5-flash'   # "llama-3.1-8b-instant"
 # tomer2b
 kapi={'groq':[('tomer2b','ZFBYN2pvbVA5QzR3MUNXTFQyNDNrbnB6WUYzYnlkR1dnaXdmQ1BOVmpTa3lQT0xQVUMyeV9rc2c='),
       ('edu','SjRESU9weXZBNjlaVnBXS3ZGMjNDaWphWUYzYnlkR1dJQ2dmMVlEa2NWdUJZRldZZjhja19rc2c=')],
