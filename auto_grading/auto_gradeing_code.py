@@ -431,6 +431,7 @@ def load_settings():
         print(active_engine,active_model)
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         raw_tuples = data.get("extra_field", "[]")
+        print(raw_tuples)
         try:
             # ast.literal_eval בטוח יותר מ-eval והופך מחרוזת מפורמטת לקוד פייתון אמיתי
             parsed_tuples = ast.literal_eval(raw_tuples)
