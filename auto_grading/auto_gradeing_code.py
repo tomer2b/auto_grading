@@ -274,7 +274,7 @@ class CheckAssignment:
     def run_task(self,func, parms, in_list, expected_result, return_values,student_functions,question_set = "0",use_ai = False):
 
         try:
-
+            global  ai_calls_used
             self.input_lst=in_list
             self.input_counter = 0
             self.output_lst = []
@@ -305,7 +305,6 @@ class CheckAssignment:
                 # if use_ai:
                 if ai_calls_used<=3:
                     ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-                    global ai_calls_used
                     ai_calls_used = ai_calls_used + 1
                 else:
                     ai_help_text=f'יש להשתמש ברמזים קודמים ! תקן את ההערות הקודמות כדי לקבל עוד רמזים'
