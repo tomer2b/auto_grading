@@ -327,7 +327,7 @@ class CheckAssignment:
                     error_msg=f"""
             <div dir="rtl">
                 <span style="color: #333;">{"חסר פתרון לשאלה , הפתרון צריך להתחיל בפקודה הבאה :"}</span>
-                <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">def {func}({str(parms)[1:-1]}): {f'\n\t print() // some command'}</pre>
+                <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">def {func}({str(parms)[1:-1]}): {f'\n print() # פקודה כלשהי'}</pre>
             </div>
             """
                 else:
@@ -725,17 +725,17 @@ def display_all_results(tasks, results,final_grade):
                                         """
 
             else:
-                # אם הפער הוא בהדפסה
-                if not print_match:
-                    details_html += f"""
-                    <div style='margin-bottom: 15px;'>
-                        <b style='color: #d32f2f;'>שגיאה בהדפסה (Print):</b><br>
-                        <span style='font-size: 13px;'>פלט התלמיד:</span>
-                        {create_terminal_window(actual_prints_str)}
-                        <span style='font-size: 13px;'>פלט מצופה:</span>
-                        {create_terminal_window(expected_prints_str)}
-                    </div>
-                    """
+                # # אם הפער הוא בהדפסה
+                # if not print_match:
+                #     details_html += f"""
+                #     <div style='margin-bottom: 15px;'>
+                #         <b style='color: #d32f2f;'>שגיאה בהדפסה (Print):</b><br>
+                #         <span style='font-size: 13px;'>פלט התלמיד:</span>
+                #         {create_terminal_window(actual_prints_str)}
+                #         <span style='font-size: 13px;'>פלט מצופה:</span>
+                #         {create_terminal_window(expected_prints_str)}
+                #     </div>
+                #     """
                 
                 # אם הפער הוא בערך המוחזר
                 if not return_match:
