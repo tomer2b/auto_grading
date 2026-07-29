@@ -303,8 +303,8 @@ class CheckAssignment:
                 return True,func_call,short_run_summary,self.output_lst, list(result),'',''
             else:
                 # if use_ai:
-                print(ai_calls_used)
-                if ai_calls_used<=1:
+                
+                if ai_calls_used<=3:
                     ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                     ai_calls_used = ai_calls_used + 1
                 else:
