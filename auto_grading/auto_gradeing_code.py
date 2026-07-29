@@ -428,7 +428,7 @@ def load_settings():
         active_engine = data.get("engine", "")
         active_model = data.get("model", "")
         system_prompt = data.get("system_prompt", "")
-        
+        print(active_engine,active_model)
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         raw_tuples = data.get("extra_field", "[]")
         try:
