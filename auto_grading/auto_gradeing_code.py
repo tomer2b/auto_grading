@@ -423,7 +423,7 @@ def load_settings():
         response = requests.get(SHEET_WEB_APP_URL)
         response.raise_for_status() # בדיקה שאין שגיאת רשת
         data = response.json()
-        print(data)
+        
         # שאיבת המשתנים
         active_engine = data.get("engine", "")
         active_model = data.get("model", "")
@@ -431,7 +431,7 @@ def load_settings():
         print(active_engine,active_model)
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         raw_tuples = data.get("extra_field", "[]")
-        print(raw_tuples)
+        
         try:
             # ast.literal_eval בטוח יותר מ-eval והופך מחרוזת מפורמטת לקוד פייתון אמיתי
             parsed_tuples = ast.literal_eval(raw_tuples)
@@ -448,7 +448,7 @@ def load_settings():
             print(f"Model: {active_model}")
             print(f"System Prompt: {system_prompt}")
             print(f"kapi Dictionary: {kapi}")
-        # return ACTIVE_ENGINE, ACTIVE_MODEL, system_prompt, kapi
+        return active_engine, active_model, system_prompt, kapi
         
     except Exception as e:
         print(f"שגיאה בהבאת הנתונים: {e}")
