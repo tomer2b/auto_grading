@@ -423,7 +423,7 @@ def load_settings():
         response = requests.get(SHEET_WEB_APP_URL)
         response.raise_for_status() # בדיקה שאין שגיאת רשת
         data = response.json()
-        
+        print(data)
         # שאיבת המשתנים
         active_engine = data.get("engine", "")
         active_model = data.get("model", "")
