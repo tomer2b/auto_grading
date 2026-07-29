@@ -458,10 +458,10 @@ def run_test(tasks,student_functions,question_set="0"):
 from groq import Groq
 
 
-def get_kapi_key(keys):
-    k = datetime.datetime.now().second % len(keys)
+def get_kapi_key(keys_lst):
+    tp_key = datetime.datetime.now().second % len(keys_lst)
     # פענוח חזרה למחרוזת
-    decoded_reversed = base64.b64decode(k).decode('utf-8')
+    decoded_reversed = base64.b64decode(tp_key[1]).decode('utf-8')
     # היפוך חזרה למפתח המקורי
     return decoded_reversed[::-1]
 
