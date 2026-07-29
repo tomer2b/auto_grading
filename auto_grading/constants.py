@@ -4,9 +4,14 @@ import pkgutil
 # טעינת הנתונים מהקובץ שנמצא באותה תיקייה
 data = pkgutil.get_data(__name__, 'tasks_db.json')
 tasks_db = json.loads(data.decode('utf-8'))
+
+ACTIVE_ENGINE='gemini'
+ACTIVE_MODEL='gemini-1.5-flash'   # "llama-3.1-8b-instant"
 # tomer2b
-kapi=[('tomer2b','ZFBYN2pvbVA5QzR3MUNXTFQyNDNrbnB6WUYzYnlkR1dnaXdmQ1BOVmpTa3lQT0xQVUMyeV9rc2c='),
-      ('edu','SjRESU9weXZBNjlaVnBXS3ZGMjNDaWphWUYzYnlkR1dJQ2dmMVlEa2NWdUJZRldZZjhja19rc2c=')]
+kapi={'groq':[('tomer2b','ZFBYN2pvbVA5QzR3MUNXTFQyNDNrbnB6WUYzYnlkR1dnaXdmQ1BOVmpTa3lQT0xQVUMyeV9rc2c='),
+      ('edu','SjRESU9weXZBNjlaVnBXS3ZGMjNDaWphWUYzYnlkR1dJQ2dmMVlEa2NWdUJZRldZZjhja19rc2c=')],
+      'gemini':[('tomer2b','Z3AzRXcxeUhxZll1YmlndzdfSk5zdUFOcXhMSHRibWRKQ1NUX1R0YjRxeEw2TlI4YkEuUUE=')]
+      }
 
 error_explanations = {
     "NameError": """

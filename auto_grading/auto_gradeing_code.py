@@ -4,6 +4,7 @@ import base64
 import json
 import datetime
 
+from google import genai
 import pandas as pd
 import importlib.resources as pkg_resource
 import time
@@ -13,8 +14,9 @@ import inspect
 
 import urllib
 
-from .constants import tasks_db
+from .constants import ACTIVE_MODEL, tasks_db
 from .constants import kapi
+from .constants import ACTIVE_ENGINE
 from .constants import error_explanations
 
 from IPython.display import display, HTML
@@ -458,10 +460,20 @@ def run_test(tasks,student_functions,question_set="0"):
 from groq import Groq
 
 
-def get_kapi_key(keys_lst):
+def get_kapi_key(engine_dic,engine):
+
+
+    keys_lst=engine_dic[engine]
     randon_pos = datetime.datetime.now().second % len(keys_lst)
     decoded_reversed = base64.b64decode(keys_lst[randon_pos][1]).decode('utf-8')
     return decoded_reversed[::-1]
+
+def get_ai_engine(engine):
+    if engine=='gemini':
+        return genai.Client(api_key=get_kapi_key(kapi,engine))
+    elif engine=='groq':
+        return Groq(api_key=get_kapi_key(kapi,engine))
+
 
 def get_student_ai_hint(
     student_code: str, 
@@ -469,7 +481,8 @@ def get_student_ai_hint(
     expected_output: list, 
     actual_output: list, 
     expected_return: list, 
-    actual_return: list, 
+    actual_return: list
+
 ) -> str:
     """
     מקבלת את השאלה, הקוד של התלמיד, תוצאות וערכי החזרה צפויים מול בפועל,
@@ -479,7 +492,7 @@ def get_student_ai_hint(
     lines=[line for line in student_code.strip().split('\n') if line.strip()]
     if len(lines)<=2:
         return 'בינה מסייעת רק משתי שורות ומעלה , עשו עוד מאמץ..'
-    client = Groq(api_key=get_kapi_key(kapi))
+    client=get_ai_engine(ACTIVE_ENGINE)
     
     # הנחיות מערכת מעודכנות הכוללות התייחסות לפלט וערכי החזרה
     system_prompt = (
@@ -505,18 +518,25 @@ def get_student_ai_hint(
     )
 
     try:
-        chat_completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_content}
-            ],
-            temperature=0.3, 
-            max_tokens=1000   
-        )
-        
-        return chat_completion.choices[0].message.content.strip()
-        
+        if ACTIVE_ENGINE=='groq':
+            chat_completion = client.chat.completions.create(
+                model=ACTIVE_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_content}
+                ],
+                temperature=0.3, 
+                max_tokens=1000   
+            )
+            
+            return chat_completion.choices[0].message.content.strip()
+        else:
+            response = client.models.generate_content(
+            model=ACTIVE_MODEL,
+            contents=[system_prompt, user_content], # אפשר לשלב את ההנחיות והתוכן יחד
+            )
+            return response.text.strip()
+                
     except Exception as e:
         return f"שגיאה בפנייה למערכת העזר: {str(e)}"
 
