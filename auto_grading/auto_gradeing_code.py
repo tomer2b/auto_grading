@@ -440,11 +440,11 @@ def load_settings():
             
         # הכנסת הנתונים למילון kapi עם ACTIVE_ENGINE כמפתח
         kapi = {
-            ACTIVE_ENGINE: parsed_tuples
+            active_engine: parsed_tuples
         }
-        if ACTIVE_ENGINE:
-            print(f"Engine: {ACTIVE_ENGINE}")
-            print(f"Model: {ACTIVE_MODEL}")
+        if active_engine:
+            print(f"Engine: {active_engine}")
+            print(f"Model: {active_model}")
             print(f"System Prompt: {system_prompt}")
             print(f"kapi Dictionary: {kapi}")
         # return ACTIVE_ENGINE, ACTIVE_MODEL, system_prompt, kapi
@@ -454,7 +454,7 @@ def load_settings():
         return None, None, None, None
 
 # --- הפעלת הקוד בחבילה ---
-ACTIVE_ENGINE, ACTIVE_MODEL, system_prompt, kapi = load_settings()
+
 
 def run_test(tasks,student_functions,question_set="0"):
     global ai_calls_used,active_engine,active_model,system_prompt,kapi
