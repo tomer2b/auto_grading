@@ -16,12 +16,15 @@ kapi={'groq':[('tomer2b','ZFBYN2pvbVA5QzR3MUNXTFQyNDNrbnB6WUYzYnlkR1dnaXdmQ1BOVm
 error_explanations = {
     "NameError": """
 <div dir="rtl">
-<p><strong>NameError (שגיאת שם):</strong> מתרחשת כשפייתון אינה מכירה את השם שניסית להשתמש בו. לרוב מדובר בשגיאת כתיב בשם המשתנה, ניסיון להשתמש במשתנה שטרם הוגדר, או ששכחת לשים מירכאות סביב מחרוזת טקסט.</p>
-<pre dir="ltr" style="text-align: left; background-color: #272822; color: #f8f8f2; padding: 10px; border-radius: 5px; font-family: monospace;"><code>#  קוד שגוי (חסרות מירכאות ולכן פייתון מחפשת משתנה בשם hello):
-print(hello)
+<p><strong>NameError ושגיאות נפוצות:</strong> להלן דוגמאות לשגיאות שכיחות והתיקון שלהן באותה השורה:</p>
+<pre dir="ltr" style="text-align: left; background-color: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-family: monospace;"><code># 1. שם משתנה לא קיים / לא הוגדר (NameError):
+print(x)          -->   יש לבצע השמה למשתנה לפני שורה זו
 
-#  קוד מתוקן:
-print("hello")</code></pre>
+# 2. שימוש במחרוזת שגויה / ללא מרכאות (NameError):
+print(hello)      -->   print("hello")
+
+# 3. חסר סוגריים או תחביר בשורת def (SyntaxError):
+def ex10:       -->   def ex10():</code></pre>
 </div>
 """,
 
