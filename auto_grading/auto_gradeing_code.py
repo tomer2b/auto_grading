@@ -533,7 +533,7 @@ def get_student_ai_hint(
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_content}
                 ],
-                temperature=0.3, 
+                temperature=0, 
                 max_tokens=1000   
             )
             
