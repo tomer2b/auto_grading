@@ -551,7 +551,7 @@ def get_student_ai_hint(
     lines=[line for line in student_code.strip().split('\n') if line.strip()]
     if len(lines)<=2:
         return 'בינה מסייעת רק משתי שורות ומעלה , עשו עוד מאמץ..'
-    client=get_ai_engine(ACTIVE_ENGINE)
+    client=get_ai_engine(active_engine)
     
     # הנחיות מערכת מעודכנות הכוללות התייחסות לפלט וערכי החזרה
     system_prompt = (
@@ -578,9 +578,9 @@ def get_student_ai_hint(
     )
 
     try:
-        if ACTIVE_ENGINE=='groq':
+        if active_engine=='groq':
             chat_completion = client.chat.completions.create(
-                model=ACTIVE_MODEL,
+                model=active_model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_content}
@@ -592,7 +592,7 @@ def get_student_ai_hint(
             return chat_completion.choices[0].message.content.strip()
         else:
             response = client.models.generate_content(
-            model=ACTIVE_MODEL,
+            model=active_model,
             max_output_tokens=600,
             contents=[system_prompt, user_content], # אפשר לשלב את ההנחיות והתוכן יחד
             config={
