@@ -461,6 +461,7 @@ from groq import Groq
 def get_kapi_key(keys_lst):
     tp_key = datetime.datetime.now().second % len(keys_lst)
     # פענוח חזרה למחרוזת
+    print(tp_key,tp_key[1])
     decoded_reversed = base64.b64decode(tp_key[1]).decode('utf-8')
     # היפוך חזרה למפתח המקורי
     return decoded_reversed[::-1]
