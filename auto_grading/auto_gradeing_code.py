@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Tomer Tubi - All Rights Reserved
 
+import ast
 import base64
 import json
 import datetime
@@ -15,8 +16,7 @@ import inspect
 import urllib
 
 from .constants import ACTIVE_MODEL, tasks_db
-from .constants import kapi
-from .constants import ACTIVE_ENGINE
+
 from .constants import error_explanations
 
 from IPython.display import display, HTML
@@ -33,7 +33,14 @@ import requests
 # 2. הכתובת שהעתקת משלב 3:
 # כתובת להכנסת נתונים על כל הרצה לגוגל שיט
 SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxiSIj5baThkmI8iy7HhsQED_an-EUU-l5c6ViVe__7aZHd_u2Fdh8ijbjw8o4KF2CA/exec"
-                     
+
+# # כתובת לקריאת נתונים מגוגל שיט                     
+# SHEET_WEB_APP_URL_GET = "https://script.google.com/macros/s/AKfycbxiSIj5baThkmI8iy7HhsQED_an-EUU-l5c6ViVe__7aZHd_u2Fdh8ijbjw8o4KF2CA/exec"
+
+active_engine=''  # gemini
+active_model='' # "llama-3.1-8b-instant" # 'gemini-2.5-flash'   # "llama-3.1-8b-instant"
+system_prompt=''
+kapi={}
 # in order to use AI ollama
 # add these rows to the start cell to run in user colab notebook
 # 1. התקנת zstd (הנחוץ לפריסת Ollama)
@@ -408,8 +415,48 @@ def register_run(question_set):
         # פשוט ממשיכים הלאה בשקט מבלי להפריע לתלמיד
         pass
 
+
+def load_settings():
+    try:
+        # שליחת בקשה לגיליון
+        response = requests.get(SHEET_WEB_APP_URL)
+        response.raise_for_status() # בדיקה שאין שגיאת רשת
+        data = response.json()
+        
+        # שאיבת המשתנים
+        ACTIVE_ENGINE = data.get("engine", "")
+        ACTIVE_MODEL = data.get("model", "")
+        system_prompt = data.get("system_prompt", "")
+        
+        # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
+        raw_tuples = data.get("extra_field", "[]")
+        try:
+            # ast.literal_eval בטוח יותר מ-eval והופך מחרוזת מפורמטת לקוד פייתון אמיתי
+            parsed_tuples = ast.literal_eval(raw_tuples)
+        except (ValueError, SyntaxError):
+            print("שגיאה בפענוח הטאפלים, מגדיר רשימה ריקה.")
+            parsed_tuples = []
+            
+        # הכנסת הנתונים למילון kapi עם ACTIVE_ENGINE כמפתח
+        kapi = {
+            ACTIVE_ENGINE: parsed_tuples
+        }
+        if ACTIVE_ENGINE:
+            print(f"Engine: {ACTIVE_ENGINE}")
+            print(f"Model: {ACTIVE_MODEL}")
+            print(f"System Prompt: {system_prompt}")
+            print(f"kapi Dictionary: {kapi}")
+        # return ACTIVE_ENGINE, ACTIVE_MODEL, system_prompt, kapi
+        
+    except Exception as e:
+        print(f"שגיאה בהבאת הנתונים: {e}")
+        return None, None, None, None
+
+# --- הפעלת הקוד בחבילה ---
+ACTIVE_ENGINE, ACTIVE_MODEL, system_prompt, kapi = load_settings()
+
 def run_test(tasks,student_functions,question_set="0"):
-    global ai_calls_used
+    global ai_calls_used,active_engine,active_model,system_prompt,kapi
     ai_calls_used=0
 
     output = ''
@@ -422,7 +469,8 @@ def run_test(tasks,student_functions,question_set="0"):
     run=CheckAssignment()
     run_ai_manager()
     if question_set!="0":
-        register_run(question_set)
+       register_run(question_set)
+       active_engine,active_model,system_prompt,kapi = load_settings()
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
     for i in range(len(tasks)):
         run.test_mode = True
