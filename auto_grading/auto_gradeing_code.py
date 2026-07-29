@@ -511,6 +511,7 @@ def get_student_ai_hint(
     "2. You may quote ONLY 1 or 2 specific lines from the student's code to point out an error, NEVER the whole code.\n"
     "3. Missing code? Guide to the immediate next step.\n"
     "4. Max 1 syntax example using unrelated variables.\n"
+    "4. python code should be in ```python preceding new line "
     "5. Format: HTML. <div dir='rtl'> for text, <pre dir='ltr'><code> for code.\n"
     "6. Language: Ultra-short Hebrew.\n"
     "7. Append 'END' at the finish."
