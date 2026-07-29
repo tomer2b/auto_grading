@@ -320,13 +320,18 @@ class CheckAssignment:
                 missing_name = getattr(e, 'name', '')
             else:
                 missing_name=''
-            
-            
-
             if question_set=="0":
                 error_msg=e
             else:
-                error_msg = f"""
+                if error_type == "NameError" and missing_name==func:
+                    error_msg=f"""
+            <div dir="rtl">
+                <span style="color: #333;">{"חסר פתרון לשאלה , הפתרון צריך להתחיל בפקודה הבאה :"}</span>
+                <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">def {func}({str(parms)[1:-1]}): {f'\n\t print() // some command'}</pre>
+            </div>
+            """
+                else:
+                    error_msg = f"""
             <div dir="rtl">
                 <span style="color: #333;">שגיאת {error_type} בשורה {current_line_num} <span style="font-size:16px; font-weight: bold; text-decoration: underline;"> {f' הטקסט הבא  {missing_name} אינו מוכר' if missing_name!='' else ''} </span> :</span>
                 <pre dir="ltr" style="text-align: left; background-color: #f8f9fa; border: 1px solid #ccc; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 5px; color: #333;">[{current_line_num}] {current_line_text}</pre>
