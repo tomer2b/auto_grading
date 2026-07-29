@@ -4,7 +4,9 @@ import pkgutil
 # טעינת הנתונים מהקובץ שנמצא באותה תיקייה
 data = pkgutil.get_data(__name__, 'tasks_db.json')
 tasks_db = json.loads(data.decode('utf-8'))
-kapi='ZFBYN2pvbVA5QzR3MUNXTFQyNDNrbnB6WUYzYnlkR1dnaXdmQ1BOVmpTa3lQT0xQVUMyeV9rc2c='
+# tomer2b
+kapi=[('tomer2b','ZFBYN2pvbVA5QzR3MUNXTFQyNDNrbnB6WUYzYnlkR1dnaXdmQ1BOVmpTa3lQT0xQVUMyeV9rc2c='),
+      ('edu','SjRESU9weXZBNjlaVnBXS3ZGMjNDaWphWUYzYnlkR1dJQ2dmMVlEa2NWdUJZRldZZjhja19rc2c=')]
 
 error_explanations = {
     "NameError": """

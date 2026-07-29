@@ -2,6 +2,7 @@
 
 import base64
 import json
+import datetime
 
 import pandas as pd
 import importlib.resources as pkg_resource
@@ -457,7 +458,8 @@ def run_test(tasks,student_functions,question_set="0"):
 from groq import Groq
 
 
-def get_kapi_key(k):
+def get_kapi_key(keys):
+    k = datetime.datetime.now().second % len(keys)
     # פענוח חזרה למחרוזת
     decoded_reversed = base64.b64decode(k).decode('utf-8')
     # היפוך חזרה למפתח המקורי
