@@ -15,7 +15,7 @@ import inspect
 
 import urllib
 
-from .constants import ACTIVE_MODEL, tasks_db
+from .constants import tasks_db
 
 from .constants import error_explanations
 
