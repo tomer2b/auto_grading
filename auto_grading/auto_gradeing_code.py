@@ -815,7 +815,7 @@ def display_all_results(tasks, results,final_grade):
             # תצוגת אקורדיון נפתחת לבדיקות שנכשלו
             html_block = f"""
             <details style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #fff;">
-                <summary style="background-color: #ffebee; padding: 10px 15px; border-bottom: 1px solid #ccc; cursor: pointer; outline: none;">
+                <summary style="background-color: #ffebee; padding: 5px 8px; border-bottom: 1px solid #ccc; cursor: pointer; outline: none;">
                     <div style="display: inline-flex; justify-content: space-between; align-items: center; width: 95%;">
                         <h3 style="margin: 0; font-size: 16px;">
                             <span style='color: red; font-weight: bold;'>❌ נכשל</span> | בדיקת פעולה: <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code>
