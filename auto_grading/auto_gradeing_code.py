@@ -304,7 +304,7 @@ class CheckAssignment:
             else:
                 # if use_ai:
                 print(ai_calls_used)
-                if ai_calls_used<=2:
+                if ai_calls_used<=1:
                     ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                     ai_calls_used = ai_calls_used + 1
                 else:
@@ -535,14 +535,18 @@ def get_student_ai_hint(
                     {"role": "user", "content": user_content}
                 ],
                 temperature=0, 
-                max_tokens=400   
+                max_tokens=800   
             )
             
             return chat_completion.choices[0].message.content.strip()
         else:
             response = client.models.generate_content(
             model=ACTIVE_MODEL,
+            max_output_tokens=600,
             contents=[system_prompt, user_content], # אפשר לשלב את ההנחיות והתוכן יחד
+            config={
+                "temperature": 0.0,  # ערכים נעים לרוב בין 0.0 (דטרמיניסטי ומדויק) ל-1.0 או 2.0 (יצירתי ומגוון)
+            }       
             )
             return response.text.strip()
                 
