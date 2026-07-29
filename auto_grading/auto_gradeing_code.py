@@ -805,7 +805,7 @@ def display_all_results(tasks, results,final_grade):
         if is_success:
             # תצוגה קומפקטית לבדיקות שעברו בהצלחה (ללא אקורדיון)
             html_block = f"""
-            <div style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #e8f5e9; padding: 10px 15px;">
+            <div style="font-family: Arial, sans-serif; direction: rtl; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #e8f5e9; padding: 5px 8px;">
                 <h3 style="margin: 0; font-size: 16px; display: flex; justify-content: space-between; align-items: center;">
                     <span><span style='color: green; font-weight: bold;'>✅ עבר</span> | בדיקת פעולה: <code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; direction: ltr; display: inline-block;">{func_call}</code></span>
                 </h3>
