@@ -516,7 +516,7 @@ def get_student_ai_hint(
 
     try:
         chat_completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.1-8b-instant",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content}
@@ -662,7 +662,7 @@ def display_all_results(tasks, results,final_grade):
     html_elements = []
     grade_row =  f"""
     <div style="font-family: Arial, sans-serif; direction: rtl; text-align: center; background-color: #e3f2fd; color: #0d47a1; padding: 15px; border: 1px solid #90caf9; border-radius: 8px; margin-bottom: 25px; font-size: 24px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
-    ציון סופי במשימה: {round(final_grade,1)}
+    ציון סופי במשימה: {round(final_grade,0)}
     </div>
     """
     html_elements.append(grade_row)
