@@ -46,6 +46,7 @@ SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxiSIj5baThkmI8iy7H
 test_weight=0.2
 question_weight=0.8
 ai_manager=''
+ai_calls_used=0
 
 RED_TEXT='\033[91m'
 REGULAR_TEXT='\033[0m'
@@ -302,7 +303,12 @@ class CheckAssignment:
                 return True,func_call,short_run_summary,self.output_lst, list(result),'',''
             else:
                 # if use_ai:
-                ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                if ai_calls_used<=3:
+                    ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                    global ai_calls_used
+                    ai_calls_used = ai_calls_used + 1
+                else:
+                    ai_help_text=f'יש להשתמש ברמזים קודמים ! תקן את ההערות הקודמות כדי לקבל עוד רמזים'
                 # else:
                 #     ai_help_text=''
                 return False,func_call,short_run_summary,self.output_lst, list(result),ai_help_text,'',''
@@ -403,6 +409,9 @@ def register_run(question_set):
         pass
 
 def run_test(tasks,student_functions,question_set="0"):
+    global ai_calls_used
+    ai_calls_used=0
+
     output = ''
     correct_answer = 0
     run_results = {}
