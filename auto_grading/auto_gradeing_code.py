@@ -443,11 +443,11 @@ def load_settings():
         kapi = {
             active_engine: parsed_tuples
         }
-        if active_engine:
-            print(f"Engine: {active_engine}")
-            print(f"Model: {active_model}")
-            print(f"System Prompt: {system_prompt}")
-            print(f"kapi Dictionary: {kapi}")
+        # if active_engine:
+        #     print(f"Engine: {active_engine}")
+        #     print(f"Model: {active_model}")
+        #     print(f"System Prompt: {system_prompt}")
+        #     print(f"kapi Dictionary: {kapi}")
         return active_engine, active_model, system_prompt, kapi
         
     except Exception as e:
