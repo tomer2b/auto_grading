@@ -417,6 +417,7 @@ def register_run(question_set):
 
 
 def load_settings():
+    global system_prompt,active_engine,active_model,kapi
     try:
         # שליחת בקשה לגיליון
         response = requests.get(SHEET_WEB_APP_URL)
@@ -424,8 +425,8 @@ def load_settings():
         data = response.json()
         
         # שאיבת המשתנים
-        ACTIVE_ENGINE = data.get("engine", "")
-        ACTIVE_MODEL = data.get("model", "")
+        active_engine = data.get("engine", "")
+        active_model = data.get("model", "")
         system_prompt = data.get("system_prompt", "")
         
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
