@@ -597,8 +597,9 @@ def get_student_ai_hint(
         else:
             response = client.models.generate_content(
             model=active_model,
-            contents=[system_prompt, user_content], # אפשר לשלב את ההנחיות והתוכן יחד
+            contents= user_content, # אפשר לשלב את ההנחיות והתוכן יחד
             config={
+                "system_instruction": system_prompt,
                 "max_output_tokens": 600,  # <--- השם הנכון והמיקום הנכון
                 "temperature": 0.0
             }    
