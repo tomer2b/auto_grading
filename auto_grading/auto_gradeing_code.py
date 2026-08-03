@@ -12,6 +12,7 @@ import time
 import queue
 import builtins as __builtin__
 import inspect
+import difflib
 
 import urllib
 
@@ -704,49 +705,69 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     """
     
 # מציאת האורך המקסימלי כדי לכסות מצב שבו התלמיד הדפיס יותר או פחות שורות מהנדרש
+
+
+    # --- הקוד שלך לפני כן ---
+    # terminal_html += """ <div style="margin-top: ..."""
+    
+    # מציאת האורך המקסימלי כדי לכסות מצב שבו התלמיד הדפיס יותר או פחות שורות מהנדרש
     max_len = max(len(expected_out_list), len(student_out_list))
     
     for i in range(max_len):
-        # שליפת הערך כטקסט, או מחרוזת ריקה אם הגענו לסוף אחת הרשימות
-        expected_val = str(expected_out_list[i]) if i < len(expected_out_list) else ""
-        student_val = str(student_out_list[i]) if i < len(student_out_list) else ""
+        # שליפת הערך וניקוי ירידות שורה נסתרות שעושות בלגן בתצוגה (\n או \r)
+        expected_val = str(expected_out_list[i]).rstrip('\r\n') if i < len(expected_out_list) else ""
+        student_val = str(student_out_list[i]).rstrip('\r\n') if i < len(student_out_list) else ""
         
-        # --- בניית התצוגה לעמודת הפלט המצופה ---
-        if i < len(expected_out_list):
-            expected_display = expected_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        else:
+        expected_display = ""
+        student_display = ""
+        
+        if i >= len(expected_out_list):
             expected_display = "<i style='color: #666;'>(No output)</i>"
+            # כל מה שהתלמיד כתב פה זה מיותר
+            safe_student = student_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            student_display = f"<span style='background-color: #8b0000; color: #fff;'>{safe_student}</span>"
             
-        # --- בניית התצוגה לעמודת התלמיד (השוואה תו-אחר-תו) ---
-        if i < len(student_out_list):
-            student_display = ""
-            # מוצאים את אורך השורה המקסימלי כדי למצוא תווים חסרים או עודפים
-            max_chars = max(len(expected_val), len(student_val))
-            
-            for j in range(max_chars):
-                e_char = expected_val[j] if j < len(expected_val) else None
-                s_char = student_val[j] if j < len(student_val) else None
-                
-                if s_char is None:
-                    # התלמיד החסיר תווים בשורה זו - נוסיף סימון קטן כדי שיידע
-                    student_display += "<span style='background-color: #444; padding: 0 3px; margin: 0 1px;' title='חסר תו'>&nbsp;</span>"
-                else:
-                    # המרת התו לפורמט בטוח ל-HTML
-                    safe_char = s_char.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                    if safe_char == " ":
-                        safe_char = "&nbsp;" # הופך רווח לבלוק נראה לעין במקרה של שגיאה
-                        
-                    if e_char == s_char:
-                        # התו זהה - מדפיסים אותו רגיל (יקבל את צבע ברירת המחדל)
-                        student_display += safe_char
-                    else:
-                        # התו שונה או מיותר - נצבע את הרקע שלו באדום כהה
-                        student_display += f"<span style='background-color: #8b0000; color: #ffffff; border-radius: 2px;' title='תו שגוי או מיותר'>{safe_char}</span>"
-        else:
+        elif i >= len(student_out_list):
             student_display = "<i style='color: #666;'>(No output)</i>"
+            # חסרה לתלמיד שורה שלמה, נדגיש אותה בפלט המצופה
+            safe_expected = expected_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            expected_display = f"<span style='background-color: #444; color: #fff; padding: 0 4px;' title='חסרה שורה זו'>{safe_expected}</span>"
             
-        # הוספת השורה שמפוצלת לשתי העמודות
-        # שים לב: עכשיו צבע הטקסט הראשי של התלמיד הוגדר קבוע ל- #dcdcaa כמו בפלט המצופה
+        else:
+            # שימוש במנוע ה-Diff של פייתון להשוואה חכמה של השורה
+            matcher = difflib.SequenceMatcher(None, expected_val, student_val)
+            
+            for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+                # חיתוך החלקים הרלוונטיים והמרה בטוחה ל-HTML
+                e_chunk = expected_val[i1:i2].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                s_chunk = student_val[j1:j2].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                
+                # הפיכת רווחים לתו נראה כדי שצבע הרקע יתפוס גם עליהם
+                e_chunk_vis = e_chunk.replace(" ", "&nbsp;")
+                s_chunk_vis = s_chunk.replace(" ", "&nbsp;")
+                
+                if tag == 'equal':
+                    # הכל תקין - טקסט צהבהב רגיל
+                    expected_display += e_chunk
+                    student_display += s_chunk
+                    
+                elif tag == 'delete':
+                    # התלמיד "מחק" (החסיר) טקסט שקיים בפלט המצופה (כמו המילה final)
+                    # נצבע את הטקסט החסר בצד של הפלט המצופה כדי שיבלוט לו!
+                    expected_display += f"<span style='background-color: #444; color: #fff; border-radius: 2px; padding: 0 2px;' title='טקסט שחסר אצלך'>{e_chunk_vis}</span>"
+                    # בצד התלמיד נוסיף סמן קטנטן שיראה לו שפה חסר משהו
+                    student_display += "<span style='background-color: #555; padding: 0 2px; margin: 0 1px;' title='חסר טקסט כאן'>&nbsp;</span>"
+                    
+                elif tag == 'insert':
+                    # התלמיד הכניס טקסט מיותר שאין בפלט המצופה
+                    student_display += f"<span style='background-color: #8b0000; color: #fff; border-radius: 2px;' title='טקסט מיותר'>{s_chunk_vis}</span>"
+                    
+                elif tag == 'replace':
+                    # התלמיד כתב משהו אחר לגמרי (למשל כתב a במקום b)
+                    expected_display += f"<span style='background-color: #444; color: #fff; border-radius: 2px;' title='היה אמור להיות'>{e_chunk_vis}</span>"
+                    student_display += f"<span style='background-color: #8b0000; color: #fff; border-radius: 2px;' title='טקסט שגוי'>{s_chunk_vis}</span>"
+
+        # הוספת השורה המעוצבת
         terminal_html += f"""
 <div style="display: flex; margin-bottom: 2px;">
 <div style="flex: 1; color: #dcdcaa; border-right: 1px solid #555; padding-right: 10px; word-break: break-all; white-space: pre-wrap;">{expected_display}</div>
@@ -756,7 +777,7 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
             
     # סגירת תגית הטרמינל
     terminal_html += "</div>"
-    
+
     return terminal_html
 
 def display_all_results(tasks, results,final_grade):
