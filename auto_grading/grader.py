@@ -2,7 +2,7 @@
 import ipywidgets as widgets
 from IPython.display import display, clear_output
 
-def show_ai_helper_button(run_summary_func, log_usage_func):
+def show_ai_helper_button():
     """
     פונקציה זו מציירת את לחצן ה-AI במחברת ומנהלת את הלוגיקה שלו.
     
@@ -31,8 +31,8 @@ def show_ai_helper_button(run_summary_func, log_usage_func):
                 b.button_style = 'warning'
                 
                 # מפעילים את הפונקציות שהועברו מבחוץ
-                log_usage_func()
-                run_summary_func(ai_requested=True)
+                # log_usage_func()
+                # run_summary_func(ai_requested=True)
                 
                 b.description = 'הסתר עזרת AI ❌'
                 b.button_style = 'danger'
