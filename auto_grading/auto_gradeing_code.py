@@ -32,7 +32,7 @@ import requests
 
 # 2. הכתובת שהעתקת משלב 3:
 # כתובת להכנסת נתונים על כל הרצה לגוגל שיט
-SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx5YwFj2JHlBkgSorDOo2C806vUQp6iY6GiWZMES5czGXwkNUy13d7X33u8KueNDHul/exec"
+SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAONezZwntSDVy0vyzSsyFsEZSHgr3cU_wA06mn45_Z7n3Fl3ubn_V0hnmX8GFbZRK/exec"
                      
 
 # # כתובת לקריאת נתונים מגוגל שיט                     
