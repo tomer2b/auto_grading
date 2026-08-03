@@ -1,5 +1,8 @@
 # Copyright (C) 2024 Tomer Tubi - All Rights Reserved
 
+from .grader import show_ai_helper_button
+
+
 import ast
 import base64
 import json
@@ -916,6 +919,8 @@ def display_all_results(tasks, results,final_grade):
         html_elements.append(html_block)
     final_html = f"<div style='max-width: 900px; margin: 0 auto;'>{''.join(html_elements)}</div>"
     return final_html
+
+
 
 
 
