@@ -436,7 +436,7 @@ def load_settings():
         active_model = data.get("model", "")
         system_prompt = data.get("system_prompt", "")
         allowed_ai_per_run=data.get("allowed_ai_per_run", "")
-        print(active_engine,active_model)
+        # print(active_engine,active_model)
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         raw_tuples = data.get("extra_field", "[]")
         
@@ -786,9 +786,15 @@ def show_ai_helper_button():
                 b.ai_is_on = False
 
     ai_button.on_click(on_ai_button_clicked)
+    centered_layout = widgets.HBox(
+        [ai_button], 
+        layout=widgets.Layout(justify_content='center')
+    )
     
-    # מציירים את הכפתור בתא שבו הפונקציה זומנה
-    display(ai_button, out)
+    # מציגים את הקופסה הממורכזת (שמכילה את הלחצן), ואת אזור הפלט מתחתיה
+    
+    
+    display(centered_layout, out)
 
 
 
