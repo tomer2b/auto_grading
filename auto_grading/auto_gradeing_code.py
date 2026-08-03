@@ -593,11 +593,11 @@ def get_student_ai_hint(
         else:
             response = client.models.generate_content(
             model=active_model,
-            max_tokens=600,
             contents=[system_prompt, user_content], # אפשר לשלב את ההנחיות והתוכן יחד
             config={
-                "temperature": 0.0,  # ערכים נעים לרוב בין 0.0 (דטרמיניסטי ומדויק) ל-1.0 או 2.0 (יצירתי ומגוון)
-            }       
+                "max_output_tokens": 600,  # <--- השם הנכון והמיקום הנכון
+                "temperature": 0.0
+            }    
             )
             return response.text.strip()
                 
