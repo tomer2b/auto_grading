@@ -703,28 +703,54 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     </div>
     """
     
-    # מציאת האורך המקסימלי כדי לכסות מצב שבו התלמיד הדפיס יותר או פחות שורות מהנדרש
+# מציאת האורך המקסימלי כדי לכסות מצב שבו התלמיד הדפיס יותר או פחות שורות מהנדרש
     max_len = max(len(expected_out_list), len(student_out_list))
     
     for i in range(max_len):
-        # שליפת הערך או סימון חסר אם הגענו לסוף אחת הרשימות
-        expected_val = expected_out_list[i] if i < len(expected_out_list) else ""
-        student_val = student_out_list[i] if i < len(student_out_list) else ""
+        # שליפת הערך כטקסט, או מחרוזת ריקה אם הגענו לסוף אחת הרשימות
+        expected_val = str(expected_out_list[i]) if i < len(expected_out_list) else ""
+        student_val = str(student_out_list[i]) if i < len(student_out_list) else ""
         
-        expected_display = expected_val if i < len(expected_out_list) else "<i style='color: #666;'>(No output)</i>"
-        student_display = student_val if i < len(student_out_list) else "<i style='color: #666;'>(No output)</i>"
-        
-        # השוואת הערכים (כהמרה למחרוזת כדי למנוע הבדלי טיפוסים) וקביעת צבע לתלמיד
-        if str(expected_val) == str(student_val):
-            student_color = "#dcdcaa" # צבע צהבהב רגיל של הטרמינל (תקין)
+        # --- בניית התצוגה לעמודת הפלט המצופה ---
+        if i < len(expected_out_list):
+            expected_display = expected_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         else:
-            student_color = "#f44336" # צבע אדום בולט (שגיאה)
+            expected_display = "<i style='color: #666;'>(No output)</i>"
+            
+        # --- בניית התצוגה לעמודת התלמיד (השוואה תו-אחר-תו) ---
+        if i < len(student_out_list):
+            student_display = ""
+            # מוצאים את אורך השורה המקסימלי כדי למצוא תווים חסרים או עודפים
+            max_chars = max(len(expected_val), len(student_val))
+            
+            for j in range(max_chars):
+                e_char = expected_val[j] if j < len(expected_val) else None
+                s_char = student_val[j] if j < len(student_val) else None
+                
+                if s_char is None:
+                    # התלמיד החסיר תווים בשורה זו - נוסיף סימון קטן כדי שיידע
+                    student_display += "<span style='background-color: #444; padding: 0 3px; margin: 0 1px;' title='חסר תו'>&nbsp;</span>"
+                else:
+                    # המרת התו לפורמט בטוח ל-HTML
+                    safe_char = s_char.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                    if safe_char == " ":
+                        safe_char = "&nbsp;" # הופך רווח לבלוק נראה לעין במקרה של שגיאה
+                        
+                    if e_char == s_char:
+                        # התו זהה - מדפיסים אותו רגיל (יקבל את צבע ברירת המחדל)
+                        student_display += safe_char
+                    else:
+                        # התו שונה או מיותר - נצבע את הרקע שלו באדום כהה
+                        student_display += f"<span style='background-color: #8b0000; color: #ffffff; border-radius: 2px;' title='תו שגוי או מיותר'>{safe_char}</span>"
+        else:
+            student_display = "<i style='color: #666;'>(No output)</i>"
             
         # הוספת השורה שמפוצלת לשתי העמודות
+        # שים לב: עכשיו צבע הטקסט הראשי של התלמיד הוגדר קבוע ל- #dcdcaa כמו בפלט המצופה
         terminal_html += f"""
 <div style="display: flex; margin-bottom: 2px;">
 <div style="flex: 1; color: #dcdcaa; border-right: 1px solid #555; padding-right: 10px; word-break: break-all; white-space: pre-wrap;">{expected_display}</div>
-<div style="flex: 1; color: {student_color}; padding-left: 10px; word-break: break-all; white-space: pre-wrap;">{student_display}</div>
+<div style="flex: 1; color: #dcdcaa; padding-left: 10px; word-break: break-all; white-space: pre-wrap;">{student_display}</div>
 </div>
         """
             
