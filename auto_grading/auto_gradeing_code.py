@@ -714,7 +714,7 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     max_len = max(len(expected_out_list), len(student_out_list))
     
     for i in range(max_len):
-        # שליפת הערך וניקוי ירידות שורה נסתרות שעושות בלגן בתצוגה (\n או \r)
+        # ניקוי ירידות שורה נסתרות מבלי לגעת בשאר התווים
         expected_val = str(expected_out_list[i]).rstrip('\r\n') if i < len(expected_out_list) else ""
         student_val = str(student_out_list[i]).rstrip('\r\n') if i < len(student_out_list) else ""
         
@@ -722,52 +722,47 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
         student_display = ""
         
         if i >= len(expected_out_list):
-            expected_display = "<i style='color: #666;'>(No output)</i>"
-            # כל מה שהתלמיד כתב פה זה מיותר
+            # התלמיד הדפיס שורה מיותרת לגמרי - נצבע את כולה באדום אצלו
+            expected_display = ""
             safe_student = student_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             student_display = f"<span style='background-color: #8b0000; color: #fff;'>{safe_student}</span>"
             
         elif i >= len(student_out_list):
-            student_display = "<i style='color: #666;'>(No output)</i>"
-            # חסרה לתלמיד שורה שלמה, נדגיש אותה בפלט המצופה
+            # התלמיד החסיר שורה שלמה - נצבע אותה באפור בצד המצופה כדי שישים לב
+            student_display = ""
             safe_expected = expected_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            expected_display = f"<span style='background-color: #444; color: #fff; padding: 0 4px;' title='חסרה שורה זו'>{safe_expected}</span>"
+            expected_display = f"<span style='background-color: #444; color: #fff;'>{safe_expected}</span>"
             
         else:
-            # שימוש במנוע ה-Diff של פייתון להשוואה חכמה של השורה
+            # השוואה חכמה של השורה הקיימת בשני הצדדים
             matcher = difflib.SequenceMatcher(None, expected_val, student_val)
             
             for tag, i1, i2, j1, j2 in matcher.get_opcodes():
-                # חיתוך החלקים הרלוונטיים והמרה בטוחה ל-HTML
+                # חיתוך התווים המקוריים בלבד (עם המרה בטוחה ל-HTML כדי שהדפדפן לא יישבר מסימני < >)
                 e_chunk = expected_val[i1:i2].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
                 s_chunk = student_val[j1:j2].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
                 
-                # הפיכת רווחים לתו נראה כדי שצבע הרקע יתפוס גם עליהם
-                e_chunk_vis = e_chunk.replace(" ", "&nbsp;")
-                s_chunk_vis = s_chunk.replace(" ", "&nbsp;")
-                
                 if tag == 'equal':
-                    # הכל תקין - טקסט צהבהב רגיל
+                    # תואם לחלוטין - מודפס כפי שהוא
                     expected_display += e_chunk
                     student_display += s_chunk
                     
                 elif tag == 'delete':
-                    # התלמיד "מחק" (החסיר) טקסט שקיים בפלט המצופה (כמו המילה final)
-                    # נצבע את הטקסט החסר בצד של הפלט המצופה כדי שיבלוט לו!
-                    expected_display += f"<span style='background-color: #444; color: #fff; border-radius: 2px; padding: 0 2px;' title='טקסט שחסר אצלך'>{e_chunk_vis}</span>"
-                    # בצד התלמיד נוסיף סמן קטנטן שיראה לו שפה חסר משהו
-                    student_display += "<span style='background-color: #555; padding: 0 2px; margin: 0 1px;' title='חסר טקסט כאן'>&nbsp;</span>"
+                    # טקסט שקיים ב-expected אבל התלמיד לא הדפיס אותו
+                    # צובעים רק בצד של ה-expected. בצד של התלמיד לא מדפיסים כלום.
+                    expected_display += f"<span style='background-color: #444; color: #fff;' title='חסר אצלך'>{e_chunk}</span>"
                     
                 elif tag == 'insert':
-                    # התלמיד הכניס טקסט מיותר שאין בפלט המצופה
-                    student_display += f"<span style='background-color: #8b0000; color: #fff; border-radius: 2px;' title='טקסט מיותר'>{s_chunk_vis}</span>"
+                    # טקסט שהתלמיד הדפיס סתם (כולל רווחים מיותרים)
+                    # צובעים רק אצל התלמיד.
+                    student_display += f"<span style='background-color: #8b0000; color: #fff;' title='תוספת מיותרת'>{s_chunk}</span>"
                     
                 elif tag == 'replace':
-                    # התלמיד כתב משהו אחר לגמרי (למשל כתב a במקום b)
-                    expected_display += f"<span style='background-color: #444; color: #fff; border-radius: 2px;' title='היה אמור להיות'>{e_chunk_vis}</span>"
-                    student_display += f"<span style='background-color: #8b0000; color: #fff; border-radius: 2px;' title='טקסט שגוי'>{s_chunk_vis}</span>"
+                    # התלמיד הדפיס תו/מחרוזת אחרת ממה שהיה צריך
+                    expected_display += f"<span style='background-color: #444; color: #fff;' title='היה אמור להיות'>{e_chunk}</span>"
+                    student_display += f"<span style='background-color: #8b0000; color: #fff;' title='שגוי'>{s_chunk}</span>"
 
-        # הוספת השורה המעוצבת
+        # הוספת השורה המעוצבת לטרמינל (תכונת ה-pre-wrap שומרת על הרווחים הטבעיים)
         terminal_html += f"""
 <div style="display: flex; margin-bottom: 2px;">
 <div style="flex: 1; color: #dcdcaa; border-right: 1px solid #555; padding-right: 10px; word-break: break-all; white-space: pre-wrap;">{expected_display}</div>
