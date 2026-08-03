@@ -34,12 +34,15 @@ import requests
 # כתובת להכנסת נתונים על כל הרצה לגוגל שיט
 SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx5YwFj2JHlBkgSorDOo2C806vUQp6iY6GiWZMES5czGXwkNUy13d7X33u8KueNDHul/exec"
                      
+
 # # כתובת לקריאת נתונים מגוגל שיט                     
 # SHEET_WEB_APP_URL_GET = "https://script.google.com/macros/s/AKfycbxiSIj5baThkmI8iy7HhsQED_an-EUU-l5c6ViVe__7aZHd_u2Fdh8ijbjw8o4KF2CA/exec"
 
 active_engine=''  # gemini
 active_model='' # "llama-3.1-8b-instant" # 'gemini-2.5-flash'   # "llama-3.1-8b-instant"
 system_prompt=''
+allowed_ai_per_run=0
+
 kapi={}
 # in order to use AI ollama
 # add these rows to the start cell to run in user colab notebook
@@ -279,7 +282,7 @@ class CheckAssignment:
 
 
     def run_task(self,func, parms, in_list, expected_result, return_values,student_functions,question_set = "0",use_ai = False):
-        global  ai_calls_used
+        global  ai_calls_used,allowed_ai_per_run
 
         try:
             self.input_lst=in_list
@@ -311,7 +314,7 @@ class CheckAssignment:
             else:
                 # if use_ai:
                 
-                if ai_calls_used<=3:
+                if ai_calls_used<=allowed_ai_per_run:
                     ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                     ai_calls_used = ai_calls_used + 1
                 else:
@@ -417,7 +420,7 @@ def register_run(question_set):
 
 
 def load_settings():
-    global system_prompt,active_engine,active_model,kapi
+    global system_prompt,active_engine,active_model,allowed_ai_per_run,kapi
     try:
         # שליחת בקשה לגיליון
         response = requests.get(SHEET_WEB_APP_URL)
@@ -428,6 +431,7 @@ def load_settings():
         active_engine = data.get("engine", "")
         active_model = data.get("model", "")
         system_prompt = data.get("system_prompt", "")
+        allowed_ai_per_run=data.get("allowed_ai_per_run", "")
         print(active_engine,active_model)
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         raw_tuples = data.get("extra_field", "[]")
