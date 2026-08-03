@@ -5,6 +5,7 @@ from .auto_gradeing_code import test_weight,question_weight
 from .auto_gradeing_code import questions_dic
 from .auto_gradeing_code import get_questions
 from .auto_gradeing_code import import_tasks
+from .auto_gradeing_code import show_ai_helper_button
 
 from .auto_gradeing_code import custom_syntax_error_handler
 from .auto_gradeing_code import ai_manager
