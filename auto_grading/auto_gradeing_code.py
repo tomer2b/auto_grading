@@ -706,64 +706,27 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     
 # מציאת האורך המקסימלי כדי לכסות מצב שבו התלמיד הדפיס יותר או פחות שורות מהנדרש
 
-
-    # --- הקוד שלך לפני כן ---
-    # terminal_html += """ <div style="margin-top: ..."""
-    
-    # מציאת האורך המקסימלי כדי לכסות מצב שבו התלמיד הדפיס יותר או פחות שורות מהנדרש
     max_len = max(len(expected_out_list), len(student_out_list))
     
     for i in range(max_len):
-        # ניקוי ירידות שורה נסתרות
-        expected_val = str(expected_out_list[i]).rstrip('\r\n') if i < len(expected_out_list) else ""
-        student_val = str(student_out_list[i]).rstrip('\r\n') if i < len(student_out_list) else ""
+        # שליפת הערך או סימון חסר אם הגענו לסוף אחת הרשימות
+        expected_val = expected_out_list[i] if i < len(expected_out_list) else ""
+        student_val = student_out_list[i] if i < len(student_out_list) else ""
         
-        expected_display = ""
-        student_display = ""
+        expected_display = expected_val if i < len(expected_out_list) else "<i style='color: #666;'>(No output)</i>"
+        student_display = student_val if i < len(student_out_list) else "<i style='color: #666;'>(No output)</i>"
         
-        if i >= len(expected_out_list):
-            expected_display = ""
-            safe_student = student_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            student_display = f"<span style='background-color: #8b0000; color: #fff;'>{safe_student}</span>"
-            
-        elif i >= len(student_out_list):
-            student_display = ""
-            safe_expected = expected_val.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            expected_display = f"<span style='background-color: #444; color: #fff;'>{safe_expected}</span>"
-            
+        # השוואת הערכים (כהמרה למחרוזת כדי למנוע הבדלי טיפוסים) וקביעת צבע לתלמיד
+        if str(expected_val) == str(student_val):
+            student_color = "#dcdcaa" # צבע צהבהב רגיל של הטרמינל (תקין)
         else:
-            # פיצול השורה למילים/מספרים (\w+) ולרווחים/סימני פיסוק (\W+)
-            # בדרך זו "final:95" הופך לרשימה: ['final', ':', '95']
-            e_tokens = re.findall(r'\w+|\W+', expected_val)
-            s_tokens = re.findall(r'\w+|\W+', student_val)
+            student_color = "#f44336" # צבע אדום בולט (שגיאה)
             
-            # השוואה חכמה ברמת ה"מילה" (Token) במקום ברמת התו הבודד
-            matcher = difflib.SequenceMatcher(None, e_tokens, s_tokens)
-            
-            for tag, i1, i2, j1, j2 in matcher.get_opcodes():
-                # חיבור מחדש של חלקי המילים והמרה ל-HTML בטוח
-                e_chunk = "".join(e_tokens[i1:i2]).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                s_chunk = "".join(s_tokens[j1:j2]).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                
-                if tag == 'equal':
-                    expected_display += e_chunk
-                    student_display += s_chunk
-                    
-                elif tag == 'delete':
-                    expected_display += f"<span style='background-color: #444; color: #fff;' title='חסר אצלך'>{e_chunk}</span>"
-                    
-                elif tag == 'insert':
-                    student_display += f"<span style='background-color: #8b0000; color: #fff;' title='תוספת מיותרת'>{s_chunk}</span>"
-                    
-                elif tag == 'replace':
-                    expected_display += f"<span style='background-color: #444; color: #fff;' title='היה אמור להיות'>{e_chunk}</span>"
-                    student_display += f"<span style='background-color: #8b0000; color: #fff;' title='שגוי'>{s_chunk}</span>"
-
-        # הוספת השורה המעוצבת לטרמינל
+        # הוספת השורה שמפוצלת לשתי העמודות
         terminal_html += f"""
 <div style="display: flex; margin-bottom: 2px;">
 <div style="flex: 1; color: #dcdcaa; border-right: 1px solid #555; padding-right: 10px; word-break: break-all; white-space: pre-wrap;">{expected_display}</div>
-<div style="flex: 1; color: #dcdcaa; padding-left: 10px; word-break: break-all; white-space: pre-wrap;">{student_display}</div>
+<div style="flex: 1; color: {student_color}; padding-left: 10px; word-break: break-all; white-space: pre-wrap;">{student_display}</div>
 </div>
         """
             
