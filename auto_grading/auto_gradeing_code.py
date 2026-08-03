@@ -547,25 +547,25 @@ def get_student_ai_hint(
     מקבלת את השאלה, הקוד של התלמיד, תוצאות וערכי החזרה צפויים מול בפועל,
     ומחזירה הכוונה קצרה וקולעת בעברית ללא פתרון מלא.
     """
-    
+    global system_prompt
     lines=[line for line in student_code.strip().split('\n') if line.strip()]
     if len(lines)<=2:
         return 'בינה מסייעת רק משתי שורות ומעלה , עשו עוד מאמץ..'
     client=get_ai_engine(active_engine)
     
     # הנחיות מערכת מעודכנות הכוללות התייחסות לפלט וערכי החזרה
-    system_prompt = (
-    "Role: Python tutor. Analyze code and I/O gaps.\n"
-    "Rules:\n"
-    "1. NEVER give fixed code. Verbal hints ONLY.\n"
-    "2. You may quote ONLY 1 or 2 specific lines from the student's code to point out an error, NEVER the whole code.\n"
-    "3. Missing code? Guide to the immediate next step.\n"
-    "4. Max 1 syntax example using unrelated variables.\n"
-    "4. python code should be in ```python preceding new line "
-    "5. Format: HTML. <div dir='rtl'> for text, <pre dir='ltr'><code> for code.\n"
-    "6. Language: Ultra-short Hebrew.\n"
-    "7. Append 'END' at the finish."
-    )
+    # system_prompt = (
+    # "Role: Python tutor. Analyze code and I/O gaps.\n"
+    # "Rules:\n"
+    # "1. NEVER give fixed code. Verbal hints ONLY.\n"
+    # "2. You may quote ONLY 1 or 2 specific lines from the student's code to point out an error, NEVER the whole code.\n"
+    # "3. Missing code? Guide to the immediate next step.\n"
+    # "4. Max 1 syntax example using unrelated variables.\n"
+    # "4. python code should be in ```python preceding new line "
+    # "5. Format: HTML. <div dir='rtl'> for text, <pre dir='ltr'><code> for code.\n"
+    # "6. Language: Ultra-short Hebrew.\n"
+    # "7. Append 'END' at the finish."
+    # )
     
     user_content = (
         f"Task:\n{question_text}\n\n"
@@ -593,7 +593,7 @@ def get_student_ai_hint(
         else:
             response = client.models.generate_content(
             model=active_model,
-            max_output_tokens=600,
+            max_tokens=600,
             contents=[system_prompt, user_content], # אפשר לשלב את ההנחיות והתוכן יחד
             config={
                 "temperature": 0.0,  # ערכים נעים לרוב בין 0.0 (דטרמיניסטי ומדויק) ל-1.0 או 2.0 (יצירתי ומגוון)
