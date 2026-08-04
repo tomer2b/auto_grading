@@ -39,13 +39,13 @@ import requests
 SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAONezZwntSDVy0vyzSsyFsEZSHgr3cU_wA06mn45_Z7n3Fl3ubn_V0hnmX8GFbZRK/exec"
                      
 
-# # כתובת לקריאת נתונים מגוגל שיט                     
-# SHEET_WEB_APP_URL_GET = "https://script.google.com/macros/s/AKfycbxiSIj5baThkmI8iy7HhsQED_an-EUU-l5c6ViVe__7aZHd_u2Fdh8ijbjw8o4KF2CA/exec"
-
 active_engine=''  # gemini
 active_model='' # "llama-3.1-8b-instant" # 'gemini-2.5-flash'   # "llama-3.1-8b-instant"
 system_prompt=''
 allowed_ai_per_run=0
+ai_enabled_for_user=False
+ai_count=0
+
 
 kapi={}
 # in order to use AI ollama
@@ -318,7 +318,7 @@ class CheckAssignment:
             else:
                 # if use_ai:
                 
-                if ai_calls_used<allowed_ai_per_run:
+                if ai_calls_used<allowed_ai_per_run and ai_enabled_for_user:
                     ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
                     ai_calls_used = ai_calls_used + 1
                 else:
@@ -410,7 +410,8 @@ def register_run(question_set):
     payload = {
         "task_code": question_set,
         "academic_year": get_academic_year(),
-        "filename": get_notebook_filename()
+        "filename": get_notebook_filename(),
+        
     }
     
     try:
@@ -436,6 +437,7 @@ def load_settings():
         active_model = data.get("model", "")
         system_prompt = data.get("system_prompt", "")
         allowed_ai_per_run=data.get("allowed_ai_per_run", "")
+        ai_enabled_for_user=data.get("ai_enabled_for_user", "")
         # print(active_engine,active_model)
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         raw_tuples = data.get("extra_field", "[]")
