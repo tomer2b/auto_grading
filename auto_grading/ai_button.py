@@ -1,8 +1,9 @@
 import ipywidgets as widgets
+from .auto_gradeing_code import SHEET_WEB_APP_URL
 from IPython.display import display, clear_output
 import requests
 
-def show_ai_helper_button(ai_enabled_for_user):
+def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
     """
     פונקציה זו מציירת את לחצן ה-AI במחברת ומנהלת את הלוגיקה שלו.
     """
@@ -40,7 +41,8 @@ def show_ai_helper_button(ai_enabled_for_user):
                 # מפעילים את הפונקציות שהועברו מבחוץ
                 # log_usage_func()
                 # run_summary_func(ai_requested=True)
-                
+                update_ai_status_in_sheet(SHEET_WEB_APP_URL,task_code,filename,True) 
+
                 b.description = 'הסתר עזרת AI ❌'
                 b.button_style = 'danger'
                 b.disabled = False
@@ -51,6 +53,7 @@ def show_ai_helper_button(ai_enabled_for_user):
                 b.description = ' קבל עזרה חכמה מ-AI 💡'
                 b.button_style = 'primary'
                 b.ai_is_on = False
+                update_ai_status_in_sheet(SHEET_WEB_APP_URL,task_code,filename,False) 
 
     ai_button.on_click(on_ai_button_clicked)
     
