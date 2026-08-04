@@ -424,11 +424,12 @@ def register_run(question_set):
         pass
 
 
-def load_settings():
+def load_settings(question_set):
     global system_prompt,active_engine,active_model,allowed_ai_per_run,ai_enabled_for_user,kapi
     try:
         my_params = {
-            "filename": get_notebook_filename()
+            "filename": get_notebook_filename(),
+            "task_code": question_set,
 
         }
         # שליחת בקשה לגיליון
@@ -487,7 +488,7 @@ def run_test(tasks,student_functions,question_set="0"):
     run_ai_manager()
     if question_set!="0":
        register_run(question_set)
-       active_engine,active_model,system_prompt,kapi = load_settings()
+       active_engine,active_model,system_prompt,kapi = load_settings(question_set)
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
     for i in range(len(tasks)):
         run.test_mode = True
