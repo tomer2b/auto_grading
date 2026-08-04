@@ -425,7 +425,7 @@ def register_run(question_set):
 
 
 def load_settings():
-    global system_prompt,active_engine,active_model,allowed_ai_per_run,kapi
+    global system_prompt,active_engine,active_model,allowed_ai_per_run,ai_enabled_for_user,kapi
     try:
         # שליחת בקשה לגיליון
         response = requests.get(SHEET_WEB_APP_URL)
