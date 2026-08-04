@@ -9,11 +9,11 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
     """
     # הגדרת המצב ההתחלתי של הלחצן לפי המשתנה שהתקבל
     if ai_enabled_for_user:
-        initial_desc = 'הסתר עזרת AI ❌'
+        initial_desc = 'הפסק בינה מלאכותית'
         initial_style = 'danger'
         initial_state = True
     else:
-        initial_desc = ' קבל עזרה חכמה מ-AI 💡'
+        initial_desc = 'הפעל עזרה מבינה מלאכותית'
         initial_style = 'primary'
         initial_state = False
 
@@ -54,14 +54,14 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
                 # run_summary_func(ai_requested=True)
                 update_ai_status_in_sheet(SHEET_WEB_APP_URL,task_code,filename,True) 
 
-                b.description = 'הסתר עזרת AI ❌'
+                b.description ='הפסק בינה מלאכותית'
                 b.button_style = 'danger'
                 b.disabled = False
                 b.ai_is_on = True 
                 
             else:
                 clear_output() 
-                b.description = ' קבל עזרה חכמה מ-AI 💡'
+                b.description = 'הפעל עזרה מבינה מלאכותית'
                 b.button_style = 'primary'
                 b.ai_is_on = False
                 update_ai_status_in_sheet(SHEET_WEB_APP_URL,task_code,filename,False) 
@@ -93,12 +93,12 @@ def update_ai_status_in_sheet(web_app_url, task_code, filename, ai_enabled):
         result = response.json()
         
         if result.get("status") == "success":
-            print("✅ סטטוס ה-AI עודכן בהצלחה בגיליון.")
+            print("<div dir=rtl><center>✅ סטטוס ה-AI עודכן בהצלחה בגיליון.</center></div>")
         else:
-            print(f"❌ שגיאה בעדכון הגיליון: {result.get('message')}")
+            print(f"<div dir=rtl><center>❌ שגיאה בעדכון הגיליון: {result.get('message')}</center></div>")
             
         return result
         
     except Exception as e:
-        print(f"❌ שגיאת תקשורת: {str(e)}")
+        print(f"<div dir=rtl><center>❌ שגיאת תקשורת: {str(e)}</center></div>")
         return {"status": "error", "message": str(e)}
