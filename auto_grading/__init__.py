@@ -7,6 +7,8 @@ from .auto_gradeing_code import get_questions
 from .auto_gradeing_code import import_tasks
 from .auto_gradeing_code import show_ai_helper_button
 from .auto_gradeing_code import update_ai_status_in_sheet
+from .auto_gradeing_code import get_notebook_filename
+
 
 
 from .auto_gradeing_code import ai_enabled_for_user
