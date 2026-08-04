@@ -7,8 +7,9 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
     """
     פונקציה זו מציירת את לחצן ה-AI במחברת ומנהלת את הלוגיקה שלו.
     """
+    is_ai_active = str(ai_enabled_for_user).strip().lower() in ['true', '1', 'yes']
     # הגדרת המצב ההתחלתי של הלחצן לפי המשתנה שהתקבל
-    if ai_enabled_for_user:
+    if is_ai_active:
         initial_desc = 'הפסק בינה מלאכותית'
         initial_style = 'danger'
         initial_state = True
@@ -29,8 +30,8 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
 
     # כעת ניצור לחצן רגיל, וה-CSS שהזרקנו יעניק לו פינות מעוגלות
     ai_button = widgets.Button(
-        description=' קבל עזרה חכמה מ-AI 💡',
-        button_style='primary',
+        description=initial_desc,
+        button_style=initial_style,
         layout=widgets.Layout(
             width='280px', height='45px', 
             font_weight='bold', margin='15px 0px'
