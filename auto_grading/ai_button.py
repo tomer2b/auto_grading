@@ -1,5 +1,6 @@
 import ipywidgets as widgets
 from IPython.display import display, clear_output
+import requests
 
 def show_ai_helper_button(ai_enabled_for_user):
     """
@@ -60,3 +61,30 @@ def show_ai_helper_button(ai_enabled_for_user):
     
     # מציגים את הקופסה הממורכזת (שמכילה את הלחצן), ואת אזור הפלט מתחתיה
     display(centered_layout, out)
+
+
+def update_ai_status_in_sheet(web_app_url, task_code, filename, ai_enabled):
+    """
+    מעדכנת את סטטוס הפעלת ה-AI עבור משתמש ומשימה ספציפיים בגוגל שיטס.
+    """
+    payload = {
+        "action": "update_ai_status",
+        "task_code": task_code,
+        "filename": filename,
+        "ai_enabled": ai_enabled
+    }
+    
+    try:
+        response = requests.post(web_app_url, json=payload)
+        result = response.json()
+        
+        if result.get("status") == "success":
+            print("✅ סטטוס ה-AI עודכן בהצלחה בגיליון.")
+        else:
+            print(f"❌ שגיאה בעדכון הגיליון: {result.get('message')}")
+            
+        return result
+        
+    except Exception as e:
+        print(f"❌ שגיאת תקשורת: {str(e)}")
+        return {"status": "error", "message": str(e)}

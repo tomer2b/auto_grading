@@ -411,6 +411,7 @@ def get_notebook_filename():
 
 def register_run(question_set):
     payload = {
+        "action": "log_run",
         "task_code": question_set,
         "academic_year": get_academic_year(),
         "filename": get_notebook_filename(),
