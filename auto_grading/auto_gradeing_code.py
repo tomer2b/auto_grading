@@ -22,6 +22,7 @@ import urllib
 from .constants import tasks_db
 
 from .constants import error_explanations
+from .ai_button import *
 
 from IPython.display import display, HTML
 import traceback
@@ -317,14 +318,16 @@ class CheckAssignment:
                 return True,func_call,short_run_summary,self.output_lst, list(result),'',''
             else:
                 # if use_ai:
-                
-                if ai_calls_used<allowed_ai_per_run and ai_enabled_for_user:
-                    ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
-                    ai_calls_used = ai_calls_used + 1
+                if use_ai:
+                    if ai_calls_used < allowed_ai_per_run :
+                        ai_help_text=get_student_ai_hint(function_code,tasks_db[str(question_set)][func],expected_result,self.output_lst,return_values,list(result))
+                        ai_calls_used = ai_calls_used + 1
+                    else:
+                        ai_help_text=f'יש להשתמש ברמזים קודמים ! תקן את ההערות הקודמות כדי לקבל עוד רמזים'
+                    # else:
+                    #     ai_help_text=''
                 else:
-                    ai_help_text=f'יש להשתמש ברמזים קודמים ! תקן את ההערות הקודמות כדי לקבל עוד רמזים'
-                # else:
-                #     ai_help_text=''
+                    ai_help_text=f'יש להפעיל קודם את  הבינה מלאכותית על ידי לחיצה על הלחצן '
                 return False,func_call,short_run_summary,self.output_lst, list(result),ai_help_text,'',''
               
           
@@ -418,7 +421,7 @@ def register_run(question_set):
         # שולחים את הבקשה לגוגל. הגבלנו ל-2 שניות כדי שגם במקרה
         # של בעיית רשת, המחברת של התלמיד לא "תיתקע"
         response=requests.post(SHEET_WEB_APP_URL, json=payload, timeout=2)
-        print(response.json())
+        # print(response.json())
     except Exception:
         # אם יש שגיאת אינטרנט או שגוגל חסום בבית הספר,
         # פשוט ממשיכים הלאה בשקט מבלי להפריע לתלמיד
@@ -435,7 +438,7 @@ def load_settings(question_set):
         }
         # שליחת בקשה לגיליון
         response = requests.get(SHEET_WEB_APP_URL, params=my_params)
-        print(response.text)
+        # print(response.text)
         response.raise_for_status() # בדיקה שאין שגיאת רשת
         data = response.json()
         
@@ -465,7 +468,7 @@ def load_settings(question_set):
         #     print(f"Model: {active_model}")
         #     print(f"System Prompt: {system_prompt}")
         #     print(f"kapi Dictionary: {kapi}")
-        return active_engine, active_model, system_prompt, kapi
+        return active_engine, active_model, system_prompt,ai_enabled_for_user, kapi
         
     except Exception as e:
         print(f"שגיאה בהבאת הנתונים: {e}")
@@ -475,7 +478,7 @@ def load_settings(question_set):
 
 
 def run_test(tasks,student_functions,question_set="0"):
-    global ai_calls_used,active_engine,active_model,system_prompt,kapi
+    global ai_calls_used,active_engine,active_model,system_prompt,ai_enabled_for_user,kapi
     ai_calls_used=0
 
     output = ''
@@ -486,15 +489,15 @@ def run_test(tasks,student_functions,question_set="0"):
     ex_count = 0
     global run
     run=CheckAssignment()
-    run_ai_manager()
+    # run_ai_manager()
     if question_set!="0":
        register_run(question_set)
-       active_engine,active_model,system_prompt,kapi = load_settings(question_set)
+       active_engine,active_model,system_prompt,ai_enabled_for_user,kapi = load_settings(question_set)
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
     for i in range(len(tasks)):
         run.test_mode = True
         start = time.time()
-        run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4],student_functions,question_set)
+        run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4],student_functions,question_set,ai_enabled_for_user)
         end = time.time()
         
         run.test_mode = False
@@ -530,7 +533,7 @@ def run_test(tasks,student_functions,question_set="0"):
     final_grade=test_weight*tests_score + question_weight*question_grade
     if question_set!="0":
         output=display_all_results(tasks,run_results,final_grade)
-    return round(tests_score),output,round(question_grade),round(final_grade)
+    return round(tests_score),output,round(question_grade),round(final_grade),ai_enabled_for_user
 
 
 from groq import Groq
@@ -745,65 +748,6 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     # סגירת תגית הטרמינל
     terminal_html += "</div>"
     return terminal_html
-
-
-# grader.py (בתוך חבילת הפייתון שלך)
-import ipywidgets as widgets
-from IPython.display import display, clear_output
-
-def show_ai_helper_button():
-    """
-    פונקציה זו מציירת את לחצן ה-AI במחברת ומנהלת את הלוגיקה שלו.
-    
-    פרמטרים:
-    run_summary_func: הפונקציה שמריצה את ה-AI ומדפיסה תוצאות.
-    log_usage_func: הפונקציה ששולחת את ה-V לגוגל שיטס.
-    """
-    ai_button = widgets.Button(
-        description=' קבל עזרה חכמה מ-AI 💡',
-        button_style='primary',
-        layout=widgets.Layout(
-            width='280px', height='45px', 
-            border_radius='25px', font_weight='bold', margin='15px 0px'
-        )
-    )
-    
-    ai_button.ai_is_on = False 
-    out = widgets.Output()
-    
-    def on_ai_button_clicked(b):
-        with out:
-            if not b.ai_is_on:
-                clear_output()
-                b.disabled = True
-                b.description = 'מנתח שגיאות... ⏳'
-                b.button_style = 'warning'
-                
-                # מפעילים את הפונקציות שהועברו מבחוץ
-                # log_usage_func()
-                # run_summary_func(ai_requested=True)
-                
-                b.description = 'הסתר עזרת AI ❌'
-                b.button_style = 'danger'
-                b.disabled = False
-                b.ai_is_on = True 
-                
-            else:
-                clear_output() 
-                b.description = ' קבל עזרה חכמה מ-AI 💡'
-                b.button_style = 'primary'
-                b.ai_is_on = False
-
-    ai_button.on_click(on_ai_button_clicked)
-    centered_layout = widgets.HBox(
-        [ai_button], 
-        layout=widgets.Layout(justify_content='center')
-    )
-    
-    # מציגים את הקופסה הממורכזת (שמכילה את הלחצן), ואת אזור הפלט מתחתיה
-    
-    
-    display(centered_layout, out)
 
 
 

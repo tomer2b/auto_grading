@@ -1,0 +1,62 @@
+import ipywidgets as widgets
+from IPython.display import display, clear_output
+
+def show_ai_helper_button(ai_enabled_for_user):
+    """
+    פונקציה זו מציירת את לחצן ה-AI במחברת ומנהלת את הלוגיקה שלו.
+    """
+    # הגדרת המצב ההתחלתי של הלחצן לפי המשתנה שהתקבל
+    if ai_enabled_for_user:
+        initial_desc = 'הסתר עזרת AI ❌'
+        initial_style = 'danger'
+        initial_state = True
+    else:
+        initial_desc = ' קבל עזרה חכמה מ-AI 💡'
+        initial_style = 'primary'
+        initial_state = False
+
+    ai_button = widgets.Button(
+        description=initial_desc,
+        button_style=initial_style,
+        layout=widgets.Layout(
+            width='280px', height='45px', 
+            border_radius='25px', font_weight='bold', margin='15px 0px'
+        )
+    )
+    
+    # עדכון משתנה המצב הפנימי של הלחצן
+    ai_button.ai_is_on = initial_state 
+    out = widgets.Output()
+    
+    def on_ai_button_clicked(b):
+        with out:
+            if not b.ai_is_on:
+                clear_output()
+                b.disabled = True
+                b.description = 'מנתח שגיאות... ⏳'
+                b.button_style = 'warning'
+                
+                # מפעילים את הפונקציות שהועברו מבחוץ
+                # log_usage_func()
+                # run_summary_func(ai_requested=True)
+                
+                b.description = 'הסתר עזרת AI ❌'
+                b.button_style = 'danger'
+                b.disabled = False
+                b.ai_is_on = True 
+                
+            else:
+                clear_output() 
+                b.description = ' קבל עזרה חכמה מ-AI 💡'
+                b.button_style = 'primary'
+                b.ai_is_on = False
+
+    ai_button.on_click(on_ai_button_clicked)
+    
+    centered_layout = widgets.HBox(
+        [ai_button], 
+        layout=widgets.Layout(justify_content='center')
+    )
+    
+    # מציגים את הקופסה הממורכזת (שמכילה את הלחצן), ואת אזור הפלט מתחתיה
+    display(centered_layout, out)
