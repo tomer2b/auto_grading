@@ -429,6 +429,7 @@ def load_settings():
     try:
         # שליחת בקשה לגיליון
         response = requests.get(SHEET_WEB_APP_URL)
+        print(response)
         response.raise_for_status() # בדיקה שאין שגיאת רשת
         data = response.json()
         
