@@ -417,7 +417,8 @@ def register_run(question_set):
     try:
         # שולחים את הבקשה לגוגל. הגבלנו ל-2 שניות כדי שגם במקרה
         # של בעיית רשת, המחברת של התלמיד לא "תיתקע"
-        requests.post(SHEET_WEB_APP_URL, json=payload, timeout=2)
+        response=requests.post(SHEET_WEB_APP_URL, json=payload, timeout=2)
+        print(response.json())
     except Exception:
         # אם יש שגיאת אינטרנט או שגוגל חסום בבית הספר,
         # פשוט ממשיכים הלאה בשקט מבלי להפריע לתלמיד
