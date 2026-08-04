@@ -1,6 +1,6 @@
 import ipywidgets as widgets
 from .constants import SHEET_WEB_APP_URL
-from IPython.display import display, clear_output
+from IPython.display import HTML, display, clear_output
 import requests
 
 def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
@@ -17,12 +17,23 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
         initial_style = 'primary'
         initial_state = False
 
+    custom_css = """
+    <style>
+        /* זה ישפיע על כל הלחצנים של ipywidgets במחברת */
+        .jupyter-widgets.jupyter-button {
+            border-radius: 25px !important; /* !important מבטיח שהעיצוב הזה יעקוף את ברירת המחדל */
+        }
+    </style>
+    """
+    display(HTML(custom_css))
+
+    # כעת ניצור לחצן רגיל, וה-CSS שהזרקנו יעניק לו פינות מעוגלות
     ai_button = widgets.Button(
-        description=initial_desc,
-        button_style=initial_style,
+        description=' קבל עזרה חכמה מ-AI 💡',
+        button_style='primary',
         layout=widgets.Layout(
             width='280px', height='45px', 
-            border_radius='25px', font_weight='bold', margin='15px 0px'
+            font_weight='bold', margin='15px 0px'
         )
     )
     
