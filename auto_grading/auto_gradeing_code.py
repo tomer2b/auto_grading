@@ -469,7 +469,7 @@ def load_settings(question_set):
         
     except Exception as e:
         print(f"שגיאה בהבאת הנתונים: {e}")
-        return None, None, None, None
+        return None, None, None, None,None
 
 # --- הפעלת הקוד בחבילה ---
 
