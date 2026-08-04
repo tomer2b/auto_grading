@@ -47,7 +47,7 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
             if not b.ai_is_on:
                 clear_output()
                 b.disabled = True
-                b.description = 'מנתח שגיאות... ⏳'
+                b.description = 'מעדכן הגדרות... ⏳'
                 b.button_style = 'warning'
                 
                 # מפעילים את הפונקציות שהועברו מבחוץ
@@ -93,13 +93,13 @@ def update_ai_status_in_sheet(web_app_url, task_code, filename, ai_enabled):
         response = requests.post(web_app_url, json=payload)
         result = response.json()
         
-        if result.get("status") == "success":
-            print("<div dir=rtl><center>✅ סטטוס ה-AI עודכן בהצלחה בגיליון.</center></div>")
-        else:
-            print(f"<div dir=rtl><center>❌ שגיאה בעדכון הגיליון: {result.get('message')}</center></div>")
+        # if result.get("status") == "success":
+        #     print("✅ סטטוס ה-AI עודכן בהצלחה בגיליון.")
+        # else:
+        #     print(f"❌ שגיאה בעדכון הגיליון: {result.get('message')}")
             
         return result
         
     except Exception as e:
-        print(f"<div dir=rtl><center>❌ שגיאת תקשורת: {str(e)}</center></div>")
+        print(f"❌ שגיאת תקשורת: {str(e)}")
         return {"status": "error", "message": str(e)}
