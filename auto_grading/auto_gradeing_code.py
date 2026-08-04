@@ -20,7 +20,7 @@ import difflib
 import urllib
 
 from .constants import tasks_db
-
+from .constants import SHEET_WEB_APP_URL
 from .constants import error_explanations
 from .ai_button import *
 
@@ -34,11 +34,6 @@ import requests
 
 # 1. משתנה גלובלי: קוד המשימה
 
-
-# 2. הכתובת שהעתקת משלב 3:
-# כתובת להכנסת נתונים על כל הרצה לגוגל שיט
-SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAONezZwntSDVy0vyzSsyFsEZSHgr3cU_wA06mn45_Z7n3Fl3ubn_V0hnmX8GFbZRK/exec"
-                     
 
 active_engine=''  # gemini
 active_model='' # "llama-3.1-8b-instant" # 'gemini-2.5-flash'   # "llama-3.1-8b-instant"

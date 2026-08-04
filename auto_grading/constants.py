@@ -6,6 +6,11 @@ data = pkgutil.get_data(__name__, 'tasks_db.json')
 tasks_db = json.loads(data.decode('utf-8'))
 
 
+# 2. הכתובת שהעתקת משלב 3:
+# כתובת להכנסת נתונים על כל הרצה לגוגל שיט
+SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAONezZwntSDVy0vyzSsyFsEZSHgr3cU_wA06mn45_Z7n3Fl3ubn_V0hnmX8GFbZRK/exec"
+                     
+
 
 error_explanations = {
     "NameError": """

@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from .auto_gradeing_code import SHEET_WEB_APP_URL
+from .constants import SHEET_WEB_APP_URL
 from IPython.display import display, clear_output
 import requests
 
