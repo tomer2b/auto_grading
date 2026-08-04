@@ -1,3 +1,4 @@
+import datetime
 import json
 import pkgutil
 
@@ -10,6 +11,15 @@ tasks_db = json.loads(data.decode('utf-8'))
 # כתובת להכנסת נתונים על כל הרצה לגוגל שיט
 SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAONezZwntSDVy0vyzSsyFsEZSHgr3cU_wA06mn45_Z7n3Fl3ubn_V0hnmX8GFbZRK/exec"
                      
+def get_academic_year():
+    today = datetime.datetime.now()
+    # לפי ההגדרה שלך: חודשים 9 (ספטמבר) עד 12 שייכים לשנה הנוכחית
+    # חודשים 1 עד 8 שייכים לשנה הקודמת של תחילת שנת הלימודים
+    if today.month >= 9:
+        return str(today.year)
+    else:
+        return str(today.year - 1)
+
 
 
 error_explanations = {

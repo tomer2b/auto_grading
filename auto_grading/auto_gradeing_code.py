@@ -21,6 +21,7 @@ import urllib
 
 from .constants import tasks_db
 from .constants import SHEET_WEB_APP_URL
+from .constants import get_academic_year
 from .constants import error_explanations
 from .ai_button import *
 
@@ -371,15 +372,6 @@ def grade_student_functions(req_functions,student_functions):
     else:
        grade = 100* count/len(req_functions)
     return grade
-
-def get_academic_year():
-    today = datetime.datetime.now()
-    # לפי ההגדרה שלך: חודשים 9 (ספטמבר) עד 12 שייכים לשנה הנוכחית
-    # חודשים 1 עד 8 שייכים לשנה הקודמת של תחילת שנת הלימודים
-    if today.month >= 9:
-        return str(today.year)
-    else:
-        return str(today.year - 1)
 
 
 def get_notebook_filename():

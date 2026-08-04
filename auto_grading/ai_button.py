@@ -86,7 +86,8 @@ def update_ai_status_in_sheet(web_app_url, task_code, filename, ai_enabled):
         "action": "update_ai_status",
         "task_code": task_code,
         "filename": filename,
-        "ai_enabled": ai_enabled
+        "ai_enabled": ai_enabled,
+        "academic_year": get_academic_year()
     }
     
     try:
