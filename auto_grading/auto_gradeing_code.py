@@ -427,8 +427,12 @@ def register_run(question_set):
 def load_settings():
     global system_prompt,active_engine,active_model,allowed_ai_per_run,ai_enabled_for_user,kapi
     try:
+        my_params = {
+            "filename": get_notebook_filename()
+
+        }
         # שליחת בקשה לגיליון
-        response = requests.get(SHEET_WEB_APP_URL)
+        response = requests.get(SHEET_WEB_APP_URL, params=my_params)
         print(response.text)
         response.raise_for_status() # בדיקה שאין שגיאת רשת
         data = response.json()
