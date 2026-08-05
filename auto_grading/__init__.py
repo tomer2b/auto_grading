@@ -9,7 +9,7 @@ from .auto_gradeing_code import show_ai_helper_button
 from .auto_gradeing_code import update_ai_status_in_sheet
 # from .auto_gradeing_code import get_academic_year
 # from .auto_gradeing_code import get_notebook_filename
-from .user_gui import run_dashboard
+from .auto_gradeing_code import run_dashboard
 
 
 
