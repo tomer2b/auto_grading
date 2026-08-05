@@ -323,7 +323,7 @@ def run_dashboard(notebook_globals,  question_set='',grade=0):
     
     # 3. מציגים את לחצן ה-AI למעלה
     # (בהנחה ש-get_notebook_filename זמינה בחבילה שלך)
-    show_ai_helper_button(ai_enabled_for_user  question_set, , test_results_out)
+    show_ai_helper_button(ai_enabled_for_user , question_set,get_notebook_filename(), test_results_out)
     
     # 4. מציגים את התוצאות למטה
     display(test_results_out)

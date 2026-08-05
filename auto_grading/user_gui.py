@@ -10,7 +10,7 @@ import requests
 
 
 
-def show_ai_helper_button(ai_enabled_for_user,filename, results_widget=None):
+def show_ai_helper_button(ai_enabled_for_user,task_code,filename, results_widget=None):
     """
     פונקציה זו מציירת את לחצן ה-AI במחברת ומנהלת את הלוגיקה שלו.
     """
