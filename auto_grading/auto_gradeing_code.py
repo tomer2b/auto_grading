@@ -303,8 +303,12 @@ def setup_notebook_environment():
     if ipython:
         ipython.set_custom_exc((SyntaxError,), custom_syntax_error_handler)
         print("✅ סביבת המחברת הוגדרה בהצלחה (כולל זיהוי שגיאות חכם).")
-        
-def run_dashboard(notebook_globals,  question_set,grade):
+
+def run_dashboard(notebook_globals,  question_set='',grade=0):
+    # במידה ולא הועברו קוד משימה לקחת משם המחברת
+    if question_set=='' or grade==0:
+        notebook_name=get_notebook_filename()
+        question_set=notebook_name.split('_')[0][2:]
 
     questions=get_questions(question_set)
     tasks = import_tasks(grade,question_set,questions)
@@ -319,7 +323,7 @@ def run_dashboard(notebook_globals,  question_set,grade):
     
     # 3. מציגים את לחצן ה-AI למעלה
     # (בהנחה ש-get_notebook_filename זמינה בחבילה שלך)
-    show_ai_helper_button(ai_enabled_for_user,  question_set, get_notebook_filename(), test_results_out)
+    show_ai_helper_button(ai_enabled_for_user  question_set, , test_results_out)
     
     # 4. מציגים את התוצאות למטה
     display(test_results_out)
