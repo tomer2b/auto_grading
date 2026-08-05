@@ -4,7 +4,7 @@ from .constants import get_academic_year
 from IPython.display import HTML, display, clear_output
 import requests
 
-def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
+def show_ai_helper_button(ai_enabled_for_user,task_code,filename, results_widget=None):
     """
     פונקציה זו מציירת את לחצן ה-AI במחברת ומנהלת את הלוגיקה שלו.
     """
@@ -47,6 +47,8 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
         with out:
             if not b.ai_is_on:
                 clear_output()
+                if results_widget:
+                    results_widget.layout.display = 'none'
                 b.disabled = True
                 b.description = 'מעדכן הגדרות... ⏳'
                 b.button_style = 'warning'
@@ -60,13 +62,22 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename):
                 b.button_style = 'danger'
                 b.disabled = False
                 b.ai_is_on = True 
-                
+
+                alert_msg = """
+                <div dir="rtl" style="text-align: center; margin-top: 15px; font-size: 16px; color: #31708f; background-color: #d9edf7; padding: 12px; border-radius: 10px; border: 1px solid #bce8f1; font-family: sans-serif;">
+                    <strong>שים לב:</strong> סטטוס העזרה התעדכן בהצלחה.<br>
+                    יש <b>להריץ את התא מחדש</b> (Shift + Enter) כדי לקבל את הניתוח של הבינה המלאכותית 🚀
+                </div>
+                """
+                display(HTML(alert_msg))
             else:
                 clear_output() 
+                if results_widget:
+                    results_widget.layout.display = 'block'
+                update_ai_status_in_sheet(SHEET_WEB_APP_URL,task_code,filename,False) 
                 b.description = 'הפעל עזרה מבינה מלאכותית'
                 b.button_style = 'primary'
                 b.ai_is_on = False
-                update_ai_status_in_sheet(SHEET_WEB_APP_URL,task_code,filename,False) 
 
     ai_button.on_click(on_ai_button_clicked)
     
