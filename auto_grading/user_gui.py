@@ -1,8 +1,37 @@
 import ipywidgets as widgets
+
+from auto_grading.auto_gradeing_code import get_notebook_filename, get_questions, import_tasks, run_test
 from .constants import SHEET_WEB_APP_URL
 from .constants import get_academic_year
-from IPython.display import HTML, display, clear_output
+from IPython.display import HTML, Javascript,display, clear_output
+
 import requests
+
+
+
+def run_dashboard(notebook_globals,  question_set,grade):
+
+    questions=get_questions(question_set)
+    tasks = import_tasks(grade,question_set,questions)
+    student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
+    
+    score, output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
+    
+    test_results_out = widgets.Output()
+    with test_results_out:
+        display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
+        display(HTML(output))
+    
+    # 3. מציגים את לחצן ה-AI למעלה
+    # (בהנחה ש-get_notebook_filename זמינה בחבילה שלך)
+    show_ai_helper_button(ai_enabled_for_user, SHEET_WEB_APP_URL, question_set, get_notebook_filename(), test_results_out)
+    
+    # 4. מציגים את התוצאות למטה
+    display(test_results_out)
+    
+    # 5. כוונון גובה נוסף
+    display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
+
 
 def show_ai_helper_button(ai_enabled_for_user,task_code,filename, results_widget=None):
     """
