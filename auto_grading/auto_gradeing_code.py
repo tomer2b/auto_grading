@@ -308,8 +308,8 @@ def run_dashboard(notebook_globals,  question_set='',grade=0):
     # במידה ולא הועברו קוד משימה לקחת משם המחברת
     if question_set=='' or grade==0:
         notebook_name=get_notebook_filename()
-        question_set=notebook_name.split('_')[0][2:]
-        print(notebook_name.split('_'),question_set)
+        question_set=notebook_name.split()[0][2:]
+        print(notebook_name.split(),question_set)
 
     questions=get_questions(question_set)
     tasks = import_tasks(grade,question_set,questions)
