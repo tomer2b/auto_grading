@@ -7,10 +7,10 @@ import ast
 import base64
 import json
 import datetime
-
+import importlib.resources as pkg_resource
 from google import genai
 import pandas as pd
-import importlib.resources as pkg_resource
+
 import time
 import queue
 import builtins as __builtin__
@@ -130,31 +130,6 @@ def get_questions(exercise_key):
     return []
   
 
-def import_tasks(grade,question_set,questions ):
-  t=[]
-  with pkg_resource.open_text('auto_grading','tasks.csv') as file:
-    df = pd.read_csv(file,sep=',',on_bad_lines='skip',encoding='utf-8')
-
-  # df = df[df['class']==grade]
-  df.question_set = df.question_set.astype(str)
-  # ignore last letter of exercise_set in case last letter is subset of questions
-  exerciser_set=str(question_set)[:-1] if not str(question_set).isnumeric() else str(question_set)
-  df = df[df['question_set']==exerciser_set]     
-  df = df[df['function'].isin([f'{str(q)}' for q in questions]) ]
-  # df = df[df['question_set'].str.contains(1)]
-  #   print(df[['function','func_arg_list','in_list','exp_out_list','return_values']])
-
-  for key, value in df.iterrows():
-    sublist=[]
-    sublist.append(value["function"])
-    sublist.append([]) if value["func_arg_list"]==None else  sublist.append(value["func_arg_list"])
-    sublist.append([]) if value["in_list"]==None else  sublist.append(eval(value["in_list"] ))
-    sublist.append([]) if value["exp_out_list"]==None else  sublist.append(eval(value["exp_out_list"]) )
-    sublist.append([]) if value["return_values"]==None else  sublist.append(eval(value["return_values"]) )
-    t.append(sublist)
-  return t
-
-
 run = None
 
 def print(*args,  **kwargs):
@@ -255,6 +230,95 @@ def custom_syntax_error_handler(shell, etype, evalue, tb, tb_offset=None):
     
     display(HTML(html_content))
     return None
+
+
+
+def import_tasks(grade,question_set,questions ):
+  t=[]
+  with pkg_resource.open_text('auto_grading','tasks.csv') as file:
+    df = pd.read_csv(file,sep=',',on_bad_lines='skip',encoding='utf-8')
+
+  # df = df[df['class']==grade]
+  df.question_set = df.question_set.astype(str)
+  # ignore last letter of exercise_set in case last letter is subset of questions
+  exerciser_set=str(question_set)[:-1] if not str(question_set).isnumeric() else str(question_set)
+  df = df[df['question_set']==exerciser_set]     
+  df = df[df['function'].isin([f'{str(q)}' for q in questions]) ]
+  # df = df[df['question_set'].str.contains(1)]
+  #   print(df[['function','func_arg_list','in_list','exp_out_list','return_values']])
+
+  for key, value in df.iterrows():
+    sublist=[]
+    sublist.append(value["function"])
+    sublist.append([]) if value["func_arg_list"]==None else  sublist.append(value["func_arg_list"])
+    sublist.append([]) if value["in_list"]==None else  sublist.append(eval(value["in_list"] ))
+    sublist.append([]) if value["exp_out_list"]==None else  sublist.append(eval(value["exp_out_list"]) )
+    sublist.append([]) if value["return_values"]==None else  sublist.append(eval(value["return_values"]) )
+    t.append(sublist)
+  return t
+
+
+
+
+def grade_student_functions(req_functions,student_functions):
+    count = 0
+    for q in req_functions:
+      if q in student_functions.keys() :
+         count+=1
+    if count==0 or req_functions==[]:
+       grade=0
+    else:
+       grade = 100* count/len(req_functions)
+    return grade
+
+
+def get_notebook_filename():
+    possible_ips = ['172.28.0.2', '172.28.0.12', '127.0.0.1']
+    
+    for ip in possible_ips:
+        try:
+            url = f"http://{ip}:9000/api/sessions"
+            response = urllib.request.urlopen(url, timeout=1)
+            sessions = json.loads(response.read().decode('utf-8'))
+            
+            if len(sessions) > 0 and 'name' in sessions[0]:
+                raw_file_name = sessions[0]['name']
+                
+                # תרגום הקודים המקודדים (כמו %20 ו-%D7) בחזרה לאותיות בעברית
+                decoded_file_name = urllib.parse.unquote(raw_file_name)
+                
+                return decoded_file_name
+                
+        except Exception:
+            continue
+            
+    return "מחברת_ללא_שם"
+
+
+
+def run_dashboard(notebook_globals,  question_set,grade):
+
+    questions=get_questions(question_set)
+    tasks = import_tasks(grade,question_set,questions)
+    student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
+    
+    score, output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
+    
+    test_results_out = widgets.Output()
+    with test_results_out:
+        display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
+        display(HTML(output))
+    
+    # 3. מציגים את לחצן ה-AI למעלה
+    # (בהנחה ש-get_notebook_filename זמינה בחבילה שלך)
+    show_ai_helper_button(ai_enabled_for_user, SHEET_WEB_APP_URL, question_set, get_notebook_filename(), test_results_out)
+    
+    # 4. מציגים את התוצאות למטה
+    display(test_results_out)
+    
+    # 5. כוונון גובה נוסף
+    display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
+
 
 class CheckAssignment:
 
@@ -361,40 +425,6 @@ class CheckAssignment:
             """
             
             return False, func_call,'',[],[],ai_help,error_msg
-
-def grade_student_functions(req_functions,student_functions):
-    count = 0
-    for q in req_functions:
-      if q in student_functions.keys() :
-         count+=1
-    if count==0 or req_functions==[]:
-       grade=0
-    else:
-       grade = 100* count/len(req_functions)
-    return grade
-
-
-def get_notebook_filename():
-    possible_ips = ['172.28.0.2', '172.28.0.12', '127.0.0.1']
-    
-    for ip in possible_ips:
-        try:
-            url = f"http://{ip}:9000/api/sessions"
-            response = urllib.request.urlopen(url, timeout=1)
-            sessions = json.loads(response.read().decode('utf-8'))
-            
-            if len(sessions) > 0 and 'name' in sessions[0]:
-                raw_file_name = sessions[0]['name']
-                
-                # תרגום הקודים המקודדים (כמו %20 ו-%D7) בחזרה לאותיות בעברית
-                decoded_file_name = urllib.parse.unquote(raw_file_name)
-                
-                return decoded_file_name
-                
-        except Exception:
-            continue
-            
-    return "מחברת_ללא_שם"
 
 def register_run(question_set):
     payload = {
