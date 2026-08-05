@@ -792,7 +792,10 @@ def display_all_results(tasks, results,final_grade):
     html_elements = []
     grade_row =  f"""
     <div style="font-family: Arial, sans-serif; direction: rtl; text-align: center; background-color: #e3f2fd; color: #0d47a1; padding: 15px; border: 1px solid #90caf9; border-radius: 8px; margin-bottom: 25px; font-size: 24px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
-    ציון סופי במשימה: {round(final_grade,0)}
+    ציון סופי במשימה: {round(final_grade,0)}<br>
+    <div dir="rtl" style="background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 10px;font-size: 12px;">
+    💡 <b>טיפ נוחות:</b> לחצו על 3 הנקודות בפינת חלון זה (⋮) ובחרו ב-<b>Mirror cell in tab</b> כדי שהלוח ילווה אתכם תמיד בצד המסך!
+    </div>
     </div>
     """
     html_elements.append(grade_row)
