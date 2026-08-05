@@ -10,6 +10,8 @@ from .auto_gradeing_code import update_ai_status_in_sheet
 # from .auto_gradeing_code import get_academic_year
 # from .auto_gradeing_code import get_notebook_filename
 from .auto_gradeing_code import run_dashboard
+from .auto_gradeing_code import setup_notebook_environment
+
 
 
 

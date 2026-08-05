@@ -295,7 +295,15 @@ def get_notebook_filename():
     return "מחברת_ללא_שם"
 
 
-
+def setup_notebook_environment():
+    """
+    מגדירה את סביבת המחברת של התלמיד, כולל לכידת שגיאות מותאמת אישית.
+    """
+    ipython = get_ipython()
+    if ipython:
+        ipython.set_custom_exc((SyntaxError,), custom_syntax_error_handler)
+        print("✅ סביבת המחברת הוגדרה בהצלחה (כולל זיהוי שגיאות חכם).")
+        
 def run_dashboard(notebook_globals,  question_set,grade):
 
     questions=get_questions(question_set)
