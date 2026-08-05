@@ -66,7 +66,7 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename, results_widget
                 alert_msg = """
                 <div dir="rtl" style="text-align: center; margin-top: 15px; font-size: 16px; color: #31708f; background-color: #d9edf7; padding: 12px; border-radius: 10px; border: 1px solid #bce8f1; font-family: sans-serif;">
                     <strong>שים לב:</strong> סטטוס העזרה התעדכן בהצלחה.<br>
-                    יש <b>להריץ את התא מחדש</b> (Shift + Enter) כדי לקבל את הניתוח של הבינה המלאכותית 🚀
+                    יש <b>להריץ את התא מחדש</b> כדי לקבל את הניתוח של הבינה המלאכותית 🚀
                 </div>
                 """
                 display(HTML(alert_msg))
