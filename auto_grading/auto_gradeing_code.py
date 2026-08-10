@@ -295,6 +295,7 @@ def get_notebook_filename():
     return "מחברת_ללא_שם"
 
 
+from google.colab import output
 def setup_notebook_environment():
     """
     מגדירה את סביבת המחברת של התלמיד, כולל לכידת שגיאות מותאמת אישית.
@@ -303,6 +304,7 @@ def setup_notebook_environment():
     if ipython:
         ipython.set_custom_exc((SyntaxError,), custom_syntax_error_handler)
         print("✅ סביבת המחברת הוגדרה בהצלחה (כולל זיהוי שגיאות חכם).")
+    output.enable_custom_widget_manager()
 
 def run_dashboard(notebook_globals,  question_set='',grade=0):
     # במידה ולא הועברו קוד משימה לקחת משם המחברת
