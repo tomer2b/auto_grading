@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="auto_grading",
-    version="0.36241",
+    version="0.36242",
     packages=find_packages(),
     install_requires=[
         'groq',

@@ -396,12 +396,12 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     # 4. בניית הממשק (HTML)
     # ==========================================
     if is_ai_active:
-        btn_text = 'הסתר עזרת AI ❌'
+        btn_text ='הפסק בינה מלאכותית'
         btn_color = '#d9534f' # אדום
         action = 'false'
         # results_display = 'none' # מסתיר את התוצאות הישנות
     else:
-        btn_text = ' קבל עזרה חכמה מ-AI 💡'
+        btn_text = 'הפעל עזרה מבינה מלאכותית'
         btn_color = '#0275d8' # כחול
         action = 'true'
     results_display = 'block' # מציג את התוצאות
