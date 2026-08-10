@@ -337,9 +337,12 @@ def run_dashboard_with_widget(notebook_globals,  question_set='',grade=0):
 
 
 def run_dashboard(notebook_globals, question_set='', grade=0):
+    if question_set=='' or grade==0:
+        notebook_name=get_notebook_filename()
+        question_set=notebook_name.split()[3].split('_')[0].lower()[2:]
+       
     # 1. משיכת המשתנים הנדרשים מתוך סביבת המחברת (globals)
     tasks = notebook_globals.get('tasks', {})
-    web_app_url = notebook_globals.get('WEB_APP_URL', '') 
     
     # שולפים את פונקציות התלמיד
     student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
@@ -359,7 +362,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
         filename = notebook_globals.get('STUDENT_NAME', get_notebook_filename())
         
         # עדכון הגיליון
-        update_ai_status_in_sheet(web_app_url, question_set, filename, turn_ai_on)
+        update_ai_status_in_sheet(SHEET_WEB_APP_URL, question_set, filename, turn_ai_on)
         
         if turn_ai_on:
             msg = """
@@ -403,7 +406,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
         </button>
     </div>
     
-    <!-- קופסת התוצאות הרגילה (מוסתרת או מוצגת לפי המצב) -->
+    
     <div style="display: {results_display};">
         {test_output}
     </div>
