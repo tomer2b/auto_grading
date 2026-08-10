@@ -121,4 +121,4 @@ def update_ai_status_in_sheet(web_app_url, task_code, filename, ai_enabled):
         
     except Exception as e:
         print(f"❌ שגיאת תקשורת: {str(e)}")
-        return {"status": "error", "message": str(e),"payload":{payload}}
+        return {"status": "error", "message": str(e)}

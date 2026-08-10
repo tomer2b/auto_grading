@@ -349,7 +349,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     tasks = import_tasks(grade, question_set, questions)
     
     # שליפת כתובת הגיליון (אם קיימת בגלובלס)
-    web_app_url = notebook_globals.get('WEB_APP_URL', '') 
+    # web_app_url = notebook_globals.get('WEB_APP_URL', '') 
     
     # שולפים את פונקציות התלמיד
     student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
@@ -371,7 +371,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
         filename = get_notebook_filename()
         
         # עדכון הגיליון
-        update_ai_status_in_sheet(web_app_url, question_set, filename, turn_ai_on)
+        update_ai_status_in_sheet(SHEET_WEB_APP_URL, question_set, filename, turn_ai_on)
         
         if turn_ai_on:
             msg = """
