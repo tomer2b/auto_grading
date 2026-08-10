@@ -481,7 +481,7 @@ def load_settings(question_set):
         ai_enabled_for_user=data.get("ai_enabled_for_user", "")
         # print(active_engine,active_model)
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
-        print(ai_enabled_for_user)
+        
         raw_tuples = data.get("extra_field", "[]")
         
         try:
