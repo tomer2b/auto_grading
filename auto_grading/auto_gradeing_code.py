@@ -336,18 +336,27 @@ def run_dashboard_with_widget(notebook_globals,  question_set='',grade=0):
 
 
 
+
 def run_dashboard(notebook_globals, question_set='', grade=0):
-    if question_set=='' or grade==0:
-        notebook_name=get_notebook_filename()
-        question_set=notebook_name.split()[3].split('_')[0].lower()[2:]
-       
-    # 1. משיכת המשתנים הנדרשים מתוך סביבת המחברת (globals)
-    tasks = notebook_globals.get('tasks', {})
+    # ==========================================
+    # 1. הלוגיקה המקורית שלך להכנת נתוני הבדיקה
+    # ==========================================
+    if question_set == '' or grade == 0:
+        notebook_name = get_notebook_filename()
+        question_set = notebook_name.split()[3].split('_')[0].lower()[2:]
+        
+    questions = get_questions(question_set)
+    tasks = import_tasks(grade, question_set, questions)
+    
+    # שליפת כתובת הגיליון (אם קיימת בגלובלס)
+    web_app_url = notebook_globals.get('WEB_APP_URL', '') 
     
     # שולפים את פונקציות התלמיד
     student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
     
-    # 2. מריצים את הבדיקה
+    # ==========================================
+    # 2. הרצת הבדיקה (עכשיו test_output יכיל את התוצאות!)
+    # ==========================================
     score, test_output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
     
     is_ai_active = str(ai_enabled_for_user).strip().lower() in ['true', '1', 'yes']
@@ -358,11 +367,11 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     def on_html_button_clicked(turn_ai_on):
         clear_output()
         
-        # שולפים את שם הקובץ/תלמיד מהגלובלס (בהתאם לאיך שהגדרתם)
-        filename = notebook_globals.get('STUDENT_NAME', get_notebook_filename())
+        # שולפים את שם הקובץ לצורך עדכון הגיליון
+        filename = get_notebook_filename()
         
         # עדכון הגיליון
-        update_ai_status_in_sheet(SHEET_WEB_APP_URL, question_set, filename, turn_ai_on)
+        update_ai_status_in_sheet(web_app_url, question_set, filename, turn_ai_on)
         
         if turn_ai_on:
             msg = """
@@ -380,7 +389,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
             """
             display(HTML(msg))
             
-    # חיבור הפונקציה לממשק של קולאב כדי ש-JS יוכל לקרוא לה!
+    # חיבור הפונקציה לממשק של קולאב
     output.register_callback('toggle_ai_action', on_html_button_clicked)
     
     # ==========================================
@@ -399,20 +408,19 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
         
     html_dashboard = f"""
     <div style="text-align: center; margin: 15px 0;">
-        <!-- לחצן שקורא לפונקציית הפייתון כלוחצים עליו -->
         <button onclick="google.colab.kernel.invokeFunction('toggle_ai_action', [{action}], {{}})" 
                 style="background-color: {btn_color}; color: white; border: none; padding: 10px 20px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; width: 280px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             {btn_text}
         </button>
     </div>
     
-    
+    <!-- קופסת התוצאות הרגילה -->
     <div style="display: {results_display};">
         {test_output}
     </div>
     """
     
-    # הצגה סופית למסך
+    # הצגה סופית למסך וכיוונון גובה התא
     display(HTML(html_dashboard))
     display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
 
