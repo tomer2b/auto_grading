@@ -25,7 +25,7 @@ from .constants import get_academic_year
 from .constants import error_explanations
 from .user_gui import *
 
-from IPython.display import display, HTML
+from IPython.display import display, HTML,clear_output,Javascript
 import traceback
 import markdown
 
@@ -306,7 +306,7 @@ def setup_notebook_environment():
         print("✅ סביבת המחברת הוגדרה בהצלחה (כולל זיהוי שגיאות חכם).")
     output.enable_custom_widget_manager()
 
-def run_dashboard(notebook_globals,  question_set='',grade=0):
+def run_dashboard_with_widget(notebook_globals,  question_set='',grade=0):
     # במידה ולא הועברו קוד משימה לקחת משם המחברת
     if question_set=='' or grade==0:
         notebook_name=get_notebook_filename()
@@ -334,6 +334,84 @@ def run_dashboard(notebook_globals,  question_set='',grade=0):
     # 5. כוונון גובה נוסף
     display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
 
+
+
+def run_dashboard(notebook_globals, question_set='', grade=0):
+    # 1. משיכת המשתנים הנדרשים מתוך סביבת המחברת (globals)
+    tasks = notebook_globals.get('tasks', {})
+    web_app_url = notebook_globals.get('WEB_APP_URL', '') 
+    
+    # שולפים את פונקציות התלמיד
+    student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
+    
+    # 2. מריצים את הבדיקה
+    score, test_output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
+    
+    is_ai_active = str(ai_enabled_for_user).strip().lower() in ['true', '1', 'yes']
+    
+    # ==========================================
+    # 3. הגדרת פעולת הלחיצה על הלחצן
+    # ==========================================
+    def on_html_button_clicked(turn_ai_on):
+        clear_output()
+        
+        # שולפים את שם הקובץ/תלמיד מהגלובלס (בהתאם לאיך שהגדרתם)
+        filename = notebook_globals.get('STUDENT_NAME', get_notebook_filename())
+        
+        # עדכון הגיליון
+        update_ai_status_in_sheet(web_app_url, question_set, filename, turn_ai_on)
+        
+        if turn_ai_on:
+            msg = """
+            <div dir="rtl" style="text-align: center; margin-top: 15px; color: #31708f; background-color: #d9edf7; padding: 12px; border-radius: 10px; border: 1px solid #bce8f1; font-family: sans-serif;">
+                <strong>שים לב:</strong> העזרה החכמה הופעלה.<br>
+                יש <b>להריץ את התא מחדש</b> (Shift + Enter) כדי לקבל את הניתוח 🚀
+            </div>
+            """
+            display(HTML(msg))
+        else:
+            msg = """
+            <div dir="rtl" style="text-align: center; margin-top: 15px; color: #3c763d; background-color: #dff0d8; padding: 12px; border-radius: 10px; border: 1px solid #d6e9c6; font-family: sans-serif;">
+                עזרת ה-AI כובתה.<br>הרץ את התא מחדש כדי לראות את תוצאות הבדיקה הרגילות.
+            </div>
+            """
+            display(HTML(msg))
+            
+    # חיבור הפונקציה לממשק של קולאב כדי ש-JS יוכל לקרוא לה!
+    output.register_callback('toggle_ai_action', on_html_button_clicked)
+    
+    # ==========================================
+    # 4. בניית הממשק (HTML)
+    # ==========================================
+    if is_ai_active:
+        btn_text = 'הסתר עזרת AI ❌'
+        btn_color = '#d9534f' # אדום
+        action = 'false'
+        results_display = 'none' # מסתיר את התוצאות הישנות
+    else:
+        btn_text = ' קבל עזרה חכמה מ-AI 💡'
+        btn_color = '#0275d8' # כחול
+        action = 'true'
+        results_display = 'block' # מציג את התוצאות
+        
+    html_dashboard = f"""
+    <div style="text-align: center; margin: 15px 0;">
+        <!-- לחצן שקורא לפונקציית הפייתון כלוחצים עליו -->
+        <button onclick="google.colab.kernel.invokeFunction('toggle_ai_action', [{action}], {{}})" 
+                style="background-color: {btn_color}; color: white; border: none; padding: 10px 20px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; width: 280px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            {btn_text}
+        </button>
+    </div>
+    
+    <!-- קופסת התוצאות הרגילה (מוסתרת או מוצגת לפי המצב) -->
+    <div style="display: {results_display};">
+        {test_output}
+    </div>
+    """
+    
+    # הצגה סופית למסך
+    display(HTML(html_dashboard))
+    display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
 
 class CheckAssignment:
 
