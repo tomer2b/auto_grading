@@ -399,12 +399,12 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
         btn_text = 'הסתר עזרת AI ❌'
         btn_color = '#d9534f' # אדום
         action = 'false'
-        results_display = 'none' # מסתיר את התוצאות הישנות
+        # results_display = 'none' # מסתיר את התוצאות הישנות
     else:
         btn_text = ' קבל עזרה חכמה מ-AI 💡'
         btn_color = '#0275d8' # כחול
         action = 'true'
-        results_display = 'block' # מציג את התוצאות
+    results_display = 'block' # מציג את התוצאות
         
     html_dashboard = f"""
     <div style="text-align: center; margin: 15px 0;">
