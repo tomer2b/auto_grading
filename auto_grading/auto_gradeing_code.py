@@ -33,6 +33,13 @@ import datetime
 import os
 import requests
 
+# רלבנטי רק בהרצת colab
+try:
+    from google.colab import output
+    IN_COLAB = True
+except ImportError:
+    IN_COLAB = False
+
 # 1. משתנה גלובלי: קוד המשימה
 
 
@@ -295,7 +302,6 @@ def get_notebook_filename():
     return "מחברת_ללא_שם"
 
 
-from google.colab import output
 def setup_notebook_environment():
     """
     מגדירה את סביבת המחברת של התלמיד, כולל לכידת שגיאות מותאמת אישית.
@@ -304,35 +310,8 @@ def setup_notebook_environment():
     if ipython:
         ipython.set_custom_exc((SyntaxError,), custom_syntax_error_handler)
         print("✅ סביבת המחברת הוגדרה בהצלחה (כולל זיהוי שגיאות חכם).")
-    output.enable_custom_widget_manager()
-
-def run_dashboard_with_widget(notebook_globals,  question_set='',grade=0):
-    # במידה ולא הועברו קוד משימה לקחת משם המחברת
-    if question_set=='' or grade==0:
-        notebook_name=get_notebook_filename()
-        question_set=notebook_name.split()[3].split('_')[0].lower()[2:]
-       
-
-    questions=get_questions(question_set)
-    tasks = import_tasks(grade,question_set,questions)
-    student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
-    
-    score, output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
-    
-    test_results_out = widgets.Output()
-    with test_results_out:
-        display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
-        display(HTML(output))
-    
-    # 3. מציגים את לחצן ה-AI למעלה
-    # (בהנחה ש-get_notebook_filename זמינה בחבילה שלך)
-    show_ai_helper_button(ai_enabled_for_user , question_set,get_notebook_filename(), test_results_out)
-    
-    # 4. מציגים את התוצאות למטה
-    display(test_results_out)
-    
-    # 5. כוונון גובה נוסף
-    display(Javascript('google.colab.output.setIframeHeight(0, true, {maxHeight: 10000})'))
+    if IN_COLAB:
+        output.enable_custom_widget_manager()
 
 
 
@@ -390,7 +369,8 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
             display(HTML(msg))
             
     # חיבור הפונקציה לממשק של קולאב
-    output.register_callback('toggle_ai_action', on_html_button_clicked)
+    if IN_COLAB:
+        output.register_callback('toggle_ai_action', on_html_button_clicked)
     
     # ==========================================
     # 4. בניית הממשק (HTML)
