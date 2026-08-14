@@ -692,7 +692,7 @@ def get_student_ai_hint(
     """
     global system_prompt
     lines=[line for line in student_code.strip().split('\n') if line.strip()]
-    if len(lines)<=2:
+    if len(lines)<=1:
         return 'בינה מסייעת רק משתי שורות ומעלה , עשו עוד מאמץ..'
     client=get_ai_engine(active_engine)
     
@@ -814,9 +814,9 @@ def generate_terminal_simulation(in_list, expected_out_list, student_out_list):
     if in_list:
         for item in in_list:
             if isinstance(item, int):
-                prompt = "Enter number number:"
+                prompt = "Enter integer number:"
             elif isinstance(item, float):
-                prompt = "Enter number number:"
+                prompt = "Enter floating number:"
             elif isinstance(item, str):
                 prompt = "Enter text:"
             else:
