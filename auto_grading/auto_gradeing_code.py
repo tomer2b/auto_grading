@@ -946,17 +946,17 @@ def display_all_results(tasks, results,final_grade):
                                         """
 
             else:
-                # # אם הפער הוא בהדפסה
-                # if not print_match:
-                #     details_html += f"""
-                #     <div style='margin-bottom: 15px;'>
-                #         <b style='color: #d32f2f;'>שגיאה בהדפסה (Print):</b><br>
-                #         <span style='font-size: 13px;'>פלט התלמיד:</span>
-                #         {create_terminal_window(actual_prints_str)}
-                #         <span style='font-size: 13px;'>פלט מצופה:</span>
-                #         {create_terminal_window(expected_prints_str)}
-                #     </div>
-                #     """
+                                # # אם הפער הוא בהדפסה
+                if not print_match:
+                    details_html += f"""
+                    <div style='margin-bottom: 15px;'>
+                        <b style='color: #d32f2f;'>שגיאה בהדפסה (Print):</b><br>
+                        <span style='font-size: 13px;'>פלט התלמיד:</span>
+                        {create_terminal_window(actual_prints_str)}
+                        <span style='font-size: 13px;'>פלט מצופה:</span>
+                        {create_terminal_window(expected_prints_str)}
+                    </div>
+                    """
                 
                 # אם הפער הוא בערך המוחזר
                 if not return_match:
