@@ -158,7 +158,7 @@ def input(prompt=None):
         run.input_counter += 1
     else:
         batch_input = __builtin__.input(prompt)
-    return batch_input
+    return str(batch_input)
 
 # def set_run(new_val):
 #     global run
