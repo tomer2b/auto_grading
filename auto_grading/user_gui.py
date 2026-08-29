@@ -122,3 +122,26 @@ def update_ai_status_in_sheet(web_app_url, task_code, filename, ai_enabled):
     except Exception as e:
         print(f"❌ שגיאת תקשורת: {str(e)}")
         return {"status": "error", "message": str(e)}
+
+
+def update_grade_in_sheet(web_app_url, task_code, filename, grade):
+
+    payload = {
+        "action": "update_ai_status",
+        "task_code": task_code,
+        "filename": filename,
+        "grade": grade,
+        "academic_year": get_academic_year()
+    }
+
+    try:
+        response = requests.post(web_app_url, json=payload)
+        result = response.json()
+        
+
+            
+        return result
+        
+    except Exception as e:
+        print(f"❌ שגיאת תקשורת: {str(e)}")
+        return {"status": "error", "message": str(e)}

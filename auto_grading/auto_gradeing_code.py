@@ -315,7 +315,8 @@ def setup_notebook_environment():
 
 
 
-
+# grade = שכבה
+# question_set = קוד משימה 
 def run_dashboard(notebook_globals, question_set='', grade=0):
     # ==========================================
     # 1. הלוגיקה המקורית שלך להכנת נתוני הבדיקה
@@ -593,6 +594,7 @@ def run_test(tasks,student_functions,question_set="0"):
     global run
     run=CheckAssignment()
     # run_ai_manager()
+    # check if question_set was supplied as other then zero
     if question_set!="0":
        register_run(question_set)
        active_engine,active_model,system_prompt,ai_enabled_for_user,kapi = load_settings(question_set)
@@ -635,6 +637,7 @@ def run_test(tasks,student_functions,question_set="0"):
       question_grade=0
     final_grade=test_weight*tests_score + question_weight*question_grade
     if question_set!="0":
+        update_grade_in_sheet(SHEET_WEB_APP_URL,question_set,get_notebook_filename(),final_grade)
         output=display_all_results(tasks,run_results,final_grade)
     return round(tests_score),output,round(question_grade),round(final_grade),ai_enabled_for_user
 
