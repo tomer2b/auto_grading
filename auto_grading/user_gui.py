@@ -127,7 +127,7 @@ def update_ai_status_in_sheet(web_app_url, task_code, filename, ai_enabled):
 def update_grade_in_sheet(web_app_url, task_code, filename, grade):
 
     payload = {
-        "action": "update_ai_status",
+        "action": "update_grade",
         "task_code": task_code,
         "filename": filename,
         "grade": grade,
