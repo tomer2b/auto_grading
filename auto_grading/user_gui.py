@@ -16,7 +16,7 @@ def show_ai_helper_button(ai_enabled_for_user,task_code,filename, results_widget
     """
     is_ai_active = str(ai_enabled_for_user).strip().lower() in ['true', '1', 'yes']
     # הגדרת המצב ההתחלתי של הלחצן לפי המשתנה שהתקבל
-    x  = 13
+
     if is_ai_active:
         initial_desc = 'הפסק בינה מלאכותית'
         initial_style = 'danger'
