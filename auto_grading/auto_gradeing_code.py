@@ -556,17 +556,19 @@ def register_run(question_set):
 def load_settings(question_set):
     global system_prompt,active_engine,active_model,allowed_ai_per_run,ai_enabled_for_user,kapi
     try:
+        print(datetime.datetime.today(),'before setting myparms : ')
         my_params = {
             "filename": get_notebook_filename(),
             "task_code": question_set,
 
         }
+        print(datetime.datetime.today(),'before setting  get  : ')
         # שליחת בקשה לגיליון
         response = requests.get(SHEET_WEB_APP_URL, params=my_params)
         # print(response.text)
         response.raise_for_status() # בדיקה שאין שגיאת רשת
         data = response.json()
-        
+        print(datetime.datetime.today(),'after jsons : ')
         # שאיבת המשתנים
         active_engine = data.get("engine", "")
         active_model = data.get("model", "")
@@ -577,10 +579,11 @@ def load_settings(question_set):
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         
         raw_tuples = data.get("extra_field", "[]")
-        
+        print(datetime.datetime.today(),'before setting literaleval : ')
         try:
             # ast.literal_eval בטוח יותר מ-eval והופך מחרוזת מפורמטת לקוד פייתון אמיתי
             parsed_tuples = ast.literal_eval(raw_tuples)
+            print(datetime.datetime.today(),'after setting literaleval : ')
         except (ValueError, SyntaxError):
             print("שגיאה בפענוח הטאפלים, מגדיר רשימה ריקה.")
             parsed_tuples = []
