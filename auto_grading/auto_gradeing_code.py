@@ -8,6 +8,7 @@ import base64
 import json
 import datetime
 import importlib.resources as pkg_resource
+import types
 from google import genai
 import pandas as pd
 
@@ -333,7 +334,10 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     # web_app_url = notebook_globals.get('WEB_APP_URL', '') 
     
     # שולפים את פונקציות התלמיד
-    student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
+    student_functions = {
+        k: v for (k, v) in notebook_globals.items() 
+        if isinstance(v, types.FunctionType) and not k.startswith('_')
+    }
     print(datetime.datetime.today(),'before tests : ')
     # ==========================================
     # 2. הרצת הבדיקה (עכשיו test_output יכיל את התוצאות!)
