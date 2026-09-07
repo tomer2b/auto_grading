@@ -439,19 +439,34 @@ class CheckAssignment:
             self.input_lst=in_list
             self.input_counter = 0
             self.output_lst = []
-            print(datetime.datetime.today(),'before eval run : ')
-            if 'create_queue' in parms and func in student_functions:
-                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
+            
+            # 1. Resolve the target callable function object
+            if func in student_functions:
+                target_func = student_functions[func]
+            elif isinstance(func, str):
+                target_func = globals()[func]
             else:
-                result = eval(func + '(' + str(parms)[1:-1] + ')')
-            print(datetime.datetime.today(),'after eval run : ')
-            if type(result) == tuple:
+                target_func = func
+
+            # 2. Normalize arguments into a tuple for unpacking (*args)
+            if isinstance(parms, (tuple, list)):
+                args = parms
+            elif parms is None:
+                args = ()
+            else:
+                args = (parms,)
+
+            # 3. Direct execution (Zero eval, instant speed)
+            result = target_func(*args)
+            
+            # 4. Handle and normalize result types
+            if isinstance(result, tuple):
                 result = list(result)
-            elif isinstance(result, queue.Queue) :
+            elif isinstance(result, queue.Queue):
                 result = list(result.queue)
             else:
                 result = [result]
-
+                
             func_call = func + '(' + str(parms)[1:-1] + ')'
             expected_result = [str(x) for x in expected_result]
             func_obj = student_functions.get(func)
@@ -601,6 +616,10 @@ def run_test(tasks,student_functions,question_set="0"):
        register_run(question_set)
        active_engine,active_model,system_prompt,ai_enabled_for_user,kapi = load_settings(question_set)
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
+
+    # Inject create_queue into all captured student functions at once
+    for func_obj in student_functions.values():
+        func_obj.__globals__['create_queue'] = create_queue
     for i in range(len(tasks)):
         print(datetime.datetime.today(),'before one run : ')
         run.test_mode = True
