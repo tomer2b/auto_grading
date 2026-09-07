@@ -334,12 +334,12 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     
     # שולפים את פונקציות התלמיד
     student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
-    print('before tests : ',datetime.datetime.today())
+    print(datetime.datetime.today(),'before tests : ')
     # ==========================================
     # 2. הרצת הבדיקה (עכשיו test_output יכיל את התוצאות!)
     # ==========================================
     score, test_output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
-    print('after tests : ',datetime.datetime.today())
+    print(datetime.datetime.today(),'after tests : ')
     is_ai_active = str(ai_enabled_for_user).strip().lower() in ['true', '1', 'yes']
     
     # ==========================================
@@ -601,6 +601,7 @@ def run_test(tasks,student_functions,question_set="0"):
        active_engine,active_model,system_prompt,ai_enabled_for_user,kapi = load_settings(question_set)
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
     for i in range(len(tasks)):
+        print(datetime.datetime.today(),'before one run : ')
         run.test_mode = True
         start = time.time()
         run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4],student_functions,question_set,ai_enabled_for_user)
@@ -623,7 +624,7 @@ def run_test(tasks,student_functions,question_set="0"):
             output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {run_results[ex_count][6]}{answer}'
             # print(output)
             output += '\n'
-
+        print(datetime.datetime.today(),'after one run : ')
         ex_count += 1
     # print('----------')
     # print('grade:',round(100 * correct_answer / len(run_results)))
