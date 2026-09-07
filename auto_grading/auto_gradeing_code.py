@@ -334,6 +334,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     # web_app_url = notebook_globals.get('WEB_APP_URL', '') 
     
     # שולפים את פונקציות התלמיד
+    
     student_functions = {
         k: v for (k, v) in notebook_globals.items() 
         if isinstance(v, types.FunctionType) and not k.startswith('_')
