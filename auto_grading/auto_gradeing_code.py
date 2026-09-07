@@ -334,7 +334,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     # web_app_url = notebook_globals.get('WEB_APP_URL', '') 
     
     # שולפים את פונקציות התלמיד
-    
+
     student_functions = {
         k: v for (k, v) in notebook_globals.items() 
         if isinstance(v, types.FunctionType) and not k.startswith('_')
@@ -619,7 +619,9 @@ def run_test(tasks,student_functions,question_set="0"):
     # check if question_set was supplied as other then zero
     if question_set!="0":
        register_run(question_set)
+       print(datetime.datetime.today(),'before setting load : ')
        active_engine,active_model,system_prompt,ai_enabled_for_user,kapi = load_settings(question_set)
+       print(datetime.datetime.today(),'after setting load : ')
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
 
     # Inject create_queue into all captured student functions at once
