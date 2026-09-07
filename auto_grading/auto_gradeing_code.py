@@ -609,7 +609,7 @@ def load_settings(question_set):
 def run_test(tasks,student_functions,question_set="0"):
     global ai_calls_used,active_engine,active_model,system_prompt,ai_enabled_for_user,kapi
     ai_calls_used=0
-
+    print(datetime.datetime.today(),'before setting check assignment : ')
     output = ''
     correct_answer = 0
     run_results = {}
