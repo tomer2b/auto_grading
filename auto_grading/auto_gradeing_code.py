@@ -301,7 +301,8 @@ def get_notebook_filename():
             
     return "מחברת_ללא_שם"
 
-
+dt = datetime.datetime.today()
+print('before env : ',dt)
 def setup_notebook_environment():
     """
     מגדירה את סביבת המחברת של התלמיד, כולל לכידת שגיאות מותאמת אישית.
@@ -312,7 +313,7 @@ def setup_notebook_environment():
         print("✅ סביבת המחברת הוגדרה בהצלחה (כולל זיהוי שגיאות חכם).")
     if IN_COLAB:
         output.enable_custom_widget_manager()
-
+    print('after env : ',datetime.datetime.today())
 
 
 # grade = שכבה
@@ -324,7 +325,7 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     if question_set == '' or grade == 0:
         notebook_name = get_notebook_filename()
         question_set = notebook_name.split()[3].split('_')[0].lower()[2:]
-        
+    print('before questions task',datetime.datetime.today())        
     questions = get_questions(question_set)
     tasks = import_tasks(grade, question_set, questions)
     
@@ -333,12 +334,12 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     
     # שולפים את פונקציות התלמיד
     student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
-    
+    print('before tests : ',datetime.datetime.today())
     # ==========================================
     # 2. הרצת הבדיקה (עכשיו test_output יכיל את התוצאות!)
     # ==========================================
     score, test_output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
-    
+    print('after tests : ',datetime.datetime.today())
     is_ai_active = str(ai_enabled_for_user).strip().lower() in ['true', '1', 'yes']
     
     # ==========================================
