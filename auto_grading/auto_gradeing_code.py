@@ -439,11 +439,12 @@ class CheckAssignment:
             self.input_lst=in_list
             self.input_counter = 0
             self.output_lst = []
+            print(datetime.datetime.today(),'before eval run : ')
             if 'create_queue' in parms and func in student_functions:
                 result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
             else:
                 result = eval(func + '(' + str(parms)[1:-1] + ')')
-                
+            print(datetime.datetime.today(),'after eval run : ')
             if type(result) == tuple:
                 result = list(result)
             elif isinstance(result, queue.Queue) :
