@@ -8,7 +8,6 @@ import base64
 import json
 import datetime
 import importlib.resources as pkg_resource
-import types
 from google import genai
 import pandas as pd
 
@@ -334,17 +333,13 @@ def run_dashboard(notebook_globals, question_set='', grade=0):
     # web_app_url = notebook_globals.get('WEB_APP_URL', '') 
     
     # שולפים את פונקציות התלמיד
-
-    student_functions = {
-        k: v for (k, v) in notebook_globals.items() 
-        if isinstance(v, types.FunctionType) and not k.startswith('_')
-    }
-    print(datetime.datetime.today(),'before tests : ')
+    student_functions = {k: v for (k, v) in notebook_globals.items() if callable(v)}
+    print('before tests : ',datetime.datetime.today())
     # ==========================================
     # 2. הרצת הבדיקה (עכשיו test_output יכיל את התוצאות!)
     # ==========================================
     score, test_output, question_grade, final_grade, ai_enabled_for_user = run_test(tasks, student_functions, question_set)
-    print(datetime.datetime.today(),'after tests : ')
+    print('after tests : ',datetime.datetime.today())
     is_ai_active = str(ai_enabled_for_user).strip().lower() in ['true', '1', 'yes']
     
     # ==========================================
@@ -444,34 +439,18 @@ class CheckAssignment:
             self.input_lst=in_list
             self.input_counter = 0
             self.output_lst = []
-            
-            # 1. Resolve the target callable function object
-            if func in student_functions:
-                target_func = student_functions[func]
-            elif isinstance(func, str):
-                target_func = globals()[func]
+            if 'create_queue' in parms and func in student_functions:
+                result = eval(func + '(' + str(parms)[1:-1] + ')',{'create_queue':create_queue,func:student_functions[func]})
             else:
-                target_func = func
-
-            # 2. Normalize arguments into a tuple for unpacking (*args)
-            if isinstance(parms, (tuple, list)):
-                args = parms
-            elif parms is None:
-                args = ()
-            else:
-                args = (parms,)
-
-            # 3. Direct execution (Zero eval, instant speed)
-            result = target_func(*args)
-            
-            # 4. Handle and normalize result types
-            if isinstance(result, tuple):
+                result = eval(func + '(' + str(parms)[1:-1] + ')')
+                
+            if type(result) == tuple:
                 result = list(result)
-            elif isinstance(result, queue.Queue):
+            elif isinstance(result, queue.Queue) :
                 result = list(result.queue)
             else:
                 result = [result]
-                
+
             func_call = func + '(' + str(parms)[1:-1] + ')'
             expected_result = [str(x) for x in expected_result]
             func_obj = student_functions.get(func)
@@ -556,19 +535,17 @@ def register_run(question_set):
 def load_settings(question_set):
     global system_prompt,active_engine,active_model,allowed_ai_per_run,ai_enabled_for_user,kapi
     try:
-        print(datetime.datetime.today(),'before setting myparms : ')
         my_params = {
             "filename": get_notebook_filename(),
             "task_code": question_set,
 
         }
-        print(datetime.datetime.today(),'before setting  get  : ')
         # שליחת בקשה לגיליון
         response = requests.get(SHEET_WEB_APP_URL, params=my_params)
         # print(response.text)
         response.raise_for_status() # בדיקה שאין שגיאת רשת
         data = response.json()
-        print(datetime.datetime.today(),'after jsons : ')
+        
         # שאיבת המשתנים
         active_engine = data.get("engine", "")
         active_model = data.get("model", "")
@@ -579,11 +556,10 @@ def load_settings(question_set):
         # המרת המחרוזת של הטאפלים מהגיליון למבנה נתונים בפייתון
         
         raw_tuples = data.get("extra_field", "[]")
-        print(datetime.datetime.today(),'before setting literaleval : ')
+        
         try:
             # ast.literal_eval בטוח יותר מ-eval והופך מחרוזת מפורמטת לקוד פייתון אמיתי
             parsed_tuples = ast.literal_eval(raw_tuples)
-            print(datetime.datetime.today(),'after setting literaleval : ')
         except (ValueError, SyntaxError):
             print("שגיאה בפענוח הטאפלים, מגדיר רשימה ריקה.")
             parsed_tuples = []
@@ -609,12 +585,12 @@ def load_settings(question_set):
 def run_test(tasks,student_functions,question_set="0"):
     global ai_calls_used,active_engine,active_model,system_prompt,ai_enabled_for_user,kapi
     ai_calls_used=0
-    print(datetime.datetime.today(),'before setting check assignment : ')
+
     output = ''
     correct_answer = 0
     run_results = {}
-    # for k,v in student_functions.items():
-    #     globals()[k]=v
+    for k,v in student_functions.items():
+        globals()[k]=v
     ex_count = 0
     global run
     run=CheckAssignment()
@@ -622,16 +598,9 @@ def run_test(tasks,student_functions,question_set="0"):
     # check if question_set was supplied as other then zero
     if question_set!="0":
        register_run(question_set)
-       print(datetime.datetime.today(),'before setting load : ')
        active_engine,active_model,system_prompt,ai_enabled_for_user,kapi = load_settings(question_set)
-       print(datetime.datetime.today(),'after setting load : ')
     # tasks = function :0 , func_arg_list :1 ,   in_list :2  ,  exp_out_list :3  ,  return_values :4
-
-    # Inject create_queue into all captured student functions at once
-    for func_obj in student_functions.values():
-        func_obj.__globals__['create_queue'] = create_queue
     for i in range(len(tasks)):
-        print(datetime.datetime.today(),'before one run : ')
         run.test_mode = True
         start = time.time()
         run_results[ex_count] = run.run_task(tasks[i][0], tasks[i][1], tasks[i][2], tasks[i][3], tasks[i][4],student_functions,question_set,ai_enabled_for_user)
@@ -654,7 +623,7 @@ def run_test(tasks,student_functions,question_set="0"):
             output += f'{RED_TEXT}X{REGULAR_TEXT}  {tasks[i][0]}({"" if tasks[i][1]==[] else tasks[i][1]})  \tinput: {tasks[i][2]} \tMessage: {run_results[ex_count][6]}{answer}'
             # print(output)
             output += '\n'
-        print(datetime.datetime.today(),'after one run : ')
+
         ex_count += 1
     # print('----------')
     # print('grade:',round(100 * correct_answer / len(run_results)))
