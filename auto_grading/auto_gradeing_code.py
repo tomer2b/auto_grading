@@ -613,8 +613,8 @@ def run_test(tasks,student_functions,question_set="0"):
     output = ''
     correct_answer = 0
     run_results = {}
-    for k,v in student_functions.items():
-        globals()[k]=v
+    # for k,v in student_functions.items():
+    #     globals()[k]=v
     ex_count = 0
     global run
     run=CheckAssignment()
